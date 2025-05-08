@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="基礎的基礎Widgets (小部件) 說明：在 Flutter 中，幾乎所有的東西都是 Widget。可以把 Widget 想像成應用程式介面 (UI) 的一個個積木。例如，一個按鈕是一個 Widget，一段文字是一個 Widget，甚至整個應用程式本身也是一個 Widget。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter 基礎的基礎">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/05/08/Flutter-%E5%9F%BA%E7%A4%8E%E7%9A%84%E5%9F%BA%E7%A4%8E/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="基礎的基礎Widgets (小部件) 說明：在 Flutter 中，幾乎所有的東西都是 Widget。可以把 Widget 想像成應用程式介面 (UI) 的一個個積木。例如，一個按鈕是一個 Widget，一段文字是一個 Widget，甚至整個應用程式本身也是一個 Widget。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2025-05-08T09:38:29.000Z">
+<meta property="article:modified_time" content="2025-05-08T09:43:36.860Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/05/08/Flutter-%E5%9F%BA%E7%A4%8E%E7%9A%84%E5%9F%BA%E7%A4%8E/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>Flutter 基礎的基礎 | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/08/Flutter-%E5%9F%BA%E7%A4%8E%E7%9A%84%E5%9F%BA%E7%A4%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flutter 基礎的基礎
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-05-08 17:38:29 / 修改時間：17:43:36" itemprop="dateCreated datePublished" datetime="2025-05-08T17:38:29+08:00">2025-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/05/08/Flutter-%E5%9F%BA%E7%A4%8E%E7%9A%84%E5%9F%BA%E7%A4%8E/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/08/Flutter-基礎的基礎/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="基礎的基礎"><a href="#基礎的基礎" class="headerlink" title="基礎的基礎"></a>基礎的基礎</h1><h2 id="Widgets-小部件"><a href="#Widgets-小部件" class="headerlink" title="Widgets (小部件)"></a>Widgets (小部件)</h2><ul>
+<li><strong>說明</strong>：在 Flutter 中，幾乎所有的東西都是 Widget。可以把 Widget 想像成應用程式介面 (UI) 的一個個積木。例如，一個按鈕是一個 Widget，一段文字是一個 Widget，甚至整個應用程式本身也是一個 Widget。</li>
+</ul>
+<span id="more"></span>
+<ul>
+<li><strong>重點</strong>：Widgets 描述了在給定其當前配置和狀態下，它們的視圖應該是什麼樣子。當 Widget 的狀態改變時，它會重新建構其描述，框架會將其與先前的描述進行比較，以確定對底層渲染樹進行最小更改，從而轉換到下一個狀態。</li>
+</ul>
+<h2 id="StatelessWidget-無狀態小部件"><a href="#StatelessWidget-無狀態小部件" class="headerlink" title="StatelessWidget (無狀態小部件)"></a>StatelessWidget (無狀態小部件)</h2><ul>
+<li><p><strong>說明</strong>：這種類型的 Widget 在其生命週期內狀態不會改變。也就是說，一旦創建，它們的屬性就不能更改。</p>
+</li>
+<li><p><strong>用途</strong>：用於顯示靜態內容，例如標題、圖標或任何不需要內部狀態改變的 UI 元素。</p>
+</li>
+<li><p><strong>範例</strong>：</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyStatelessWidget</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> title;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 建構函數，接收一個 title 參數</span></span><br><span class="line">  <span class="keyword">const</span> MyStatelessWidget(&#123;<span class="keyword">super</span>.key, <span class="keyword">required</span> <span class="keyword">this</span>.title&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">// build 方法描述了這個 widget 如何顯示</span></span><br><span class="line">    <span class="comment">// Text 是一個顯示文字的 widget</span></span><br><span class="line">    <span class="keyword">return</span> Text(</span><br><span class="line">      title, <span class="comment">// 顯示傳入的 title</span></span><br><span class="line">      style: <span class="keyword">const</span> TextStyle(fontSize: <span class="number">24</span>),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="StatefulWidget-有狀態小部件"><a href="#StatefulWidget-有狀態小部件" class="headerlink" title="StatefulWidget (有狀態小部件)"></a>StatefulWidget (有狀態小部件)</h2><ul>
+<li><p><strong>說明</strong>：這種類型的 Widget 的狀態可以在其生命週期內改變。當狀態改變時，Widget 會被重建以反映新的狀態。</p>
+</li>
+<li><p><strong>用途</strong>：用於顯示動態內容，例如使用者輸入、動畫，或任何會因互動或時間而改變的 UI 元素。</p>
+</li>
+<li><p><strong>結構</strong>：StatefulWidget 由兩個類別組成：</p>
+<ul>
+<li>一個繼承自 <code>StatefulWidget</code> 的類別，它本身是不可變的，但它會創建一個 <code>State</code> 物件。</li>
+<li>一個繼承自 <code>State</code> 的類別，這個類別包含了 Widget 的可變狀態，以及 <code>build()</code> 方法。</li>
+</ul>
+</li>
+<li><p><strong>範例</strong>：</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyStatefulWidget</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> MyStatefulWidget(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">State&lt;MyStatefulWidget&gt; createState() =&gt; _MyStatefulWidgetState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_MyStatefulWidgetState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">MyStatefulWidget</span>&gt; </span>&#123;</span><br><span class="line">  <span class="built_in">int</span> _counter = <span class="number">0</span>; <span class="comment">// 這是一個可變的狀態</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> _incrementCounter() &#123;</span><br><span class="line">    <span class="comment">// setState 會通知 Flutter 狀態已改變，需要重建 UI</span></span><br><span class="line">    setState(() &#123;</span><br><span class="line">      _counter++;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Column( <span class="comment">// Column 是一個將子 widget 垂直排列的 widget</span></span><br><span class="line">      mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">      children: &lt;Widget&gt;[</span><br><span class="line">        <span class="keyword">const</span> Text(</span><br><span class="line">          <span class="string">&#x27;你點擊按鈕的次數：&#x27;</span>,</span><br><span class="line">        ),</span><br><span class="line">        Text(</span><br><span class="line">          <span class="string">&#x27;<span class="subst">$_counter</span>&#x27;</span>, <span class="comment">// 顯示計數器的值</span></span><br><span class="line">          style: Theme.of(context).textTheme.headlineMedium,</span><br><span class="line">        ),</span><br><span class="line">        ElevatedButton( <span class="comment">// 一個可以點擊的按鈕</span></span><br><span class="line">          onPressed: _incrementCounter, <span class="comment">// 按鈕被按下時調用 _incrementCounter 方法</span></span><br><span class="line">          child: <span class="keyword">const</span> Text(<span class="string">&#x27;點我增加&#x27;</span>),</span><br><span class="line">        ),</span><br><span class="line">      ],</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="佈局-Widgets-Layout-Widgets"><a href="#佈局-Widgets-Layout-Widgets" class="headerlink" title="佈局 Widgets (Layout Widgets)"></a>佈局 Widgets (Layout Widgets)</h2><ul>
+<li><p><strong>說明</strong>：Flutter 提供了多種 Widget 來幫助你排列和組織其他 Widgets。</p>
+</li>
+<li><p><strong>常見的佈局 Widgets</strong>：</p>
+<ul>
+<li><code>Container</code>: 一個方便的 Widget，可以組合繪製、定位和大小調整。你可以用它來設置背景顏色、邊距 (margin)、填充 (padding)、邊框等。</li>
+<li><code>Row</code>: 在水平方向上排列其子 Widgets。</li>
+<li><code>Column</code>: 在垂直方向上排列其子 Widgets。</li>
+<li><code>Stack</code>: 將其子 Widgets 堆疊在一起 (例如，一個 Widget 疊在另一個 Widget 之上)。</li>
+<li><code>ListView</code>: 一個可滾動的列表。</li>
+<li><code>GridView</code>: 一個可滾動的網格列表。</li>
+<li><code>Expanded</code> 和 <code>Flexible</code>: 用於在 <code>Row</code> 或 <code>Column</code> 中控制子 Widget 如何分配可用空間。</li>
+</ul>
+</li>
+<li><p><strong>範例 (使用 Row 和 Column)</strong>：</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLayoutWidget</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> MyLayoutWidget(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold( <span class="comment">// Scaffold 是一個提供基本應用程式結構的 widget (例如 app bar, body)</span></span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: <span class="keyword">const</span> Text(<span class="string">&#x27;佈局範例&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: Column( <span class="comment">// 垂直排列</span></span><br><span class="line">        mainAxisAlignment: MainAxisAlignment.center, <span class="comment">// 主軸居中 (垂直方向)</span></span><br><span class="line">        children: &lt;Widget&gt;[</span><br><span class="line">          <span class="keyword">const</span> Text(<span class="string">&#x27;這是 Column 中的第一個元素&#x27;</span>),</span><br><span class="line">          <span class="keyword">const</span> SizedBox(height: <span class="number">20</span>), <span class="comment">// 用於在 widgets 之間添加固定大小的空間</span></span><br><span class="line">          Row( <span class="comment">// 水平排列</span></span><br><span class="line">            mainAxisAlignment: MainAxisAlignment.spaceAround, <span class="comment">// 主軸平均分配空間 (水平方向)</span></span><br><span class="line">            children: &lt;Widget&gt;[</span><br><span class="line">              Icon(Icons.star, size: <span class="number">50</span>, color: Colors.yellow),</span><br><span class="line">              Icon(Icons.favorite, size: <span class="number">50</span>, color: Colors.red),</span><br><span class="line">              Icon(Icons.thumb_up, size: <span class="number">50</span>, color: Colors.blue),</span><br><span class="line">            ],</span><br><span class="line">          ),</span><br><span class="line">          <span class="keyword">const</span> SizedBox(height: <span class="number">20</span>),</span><br><span class="line">          <span class="keyword">const</span> Text(<span class="string">&#x27;這是 Column 中的第三個元素&#x27;</span>),</span><br><span class="line">        ],</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/05/08/Flutter-%E5%9F%BA%E7%A4%8E%E7%9A%84%E5%9F%BA%E7%A4%8E/" title="Flutter 基礎的基礎">https://jumbojay06.github.io/2025/05/08/Flutter-基礎的基礎/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Flutter/" rel="tag"># Flutter</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/30/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" rel="prev" title="我的第一篇文章">
+      <i class="fa fa-chevron-left"></i> 我的第一篇文章
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/05/08/Flutter-%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/" rel="next" title="Flutter 多國語系">
+      Flutter 多國語系 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A4%8E%E7%9A%84%E5%9F%BA%E7%A4%8E"><span class="nav-number">1.</span> <span class="nav-text">基礎的基礎</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Widgets-%E5%B0%8F%E9%83%A8%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">Widgets (小部件)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StatelessWidget-%E7%84%A1%E7%8B%80%E6%85%8B%E5%B0%8F%E9%83%A8%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">StatelessWidget (無狀態小部件)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StatefulWidget-%E6%9C%89%E7%8B%80%E6%85%8B%E5%B0%8F%E9%83%A8%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">StatefulWidget (有狀態小部件)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%88%E5%B1%80-Widgets-Layout-Widgets"><span class="nav-number">1.4.</span> <span class="nav-text">佈局 Widgets (Layout Widgets)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/05/08/Flutter-%E5%9F%BA%E7%A4%8E%E7%9A%84%E5%9F%BA%E7%A4%8E/";
+    this.page.identifier = "2025/05/08/Flutter-基礎的基礎/";
+    this.page.title = "Flutter 基礎的基礎";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="多國語系在 Flutter 中實作多國語系（也稱為國際化 i18n 或本地化 l10n）是一個常見的需求。Flutter 官方提供了強大的支援來處理這個問題，主要是透過 flutter_localizations 套件和 intl 工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter 多國語系">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/05/08/Flutter-%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="多國語系在 Flutter 中實作多國語系（也稱為國際化 i18n 或本地化 l10n）是一個常見的需求。Flutter 官方提供了強大的支援來處理這個問題，主要是透過 flutter_localizations 套件和 intl 工具。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2025-05-08T09:45:04.000Z">
+<meta property="article:modified_time" content="2025-05-08T09:46:43.799Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/05/08/Flutter-%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>Flutter 多國語系 | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/08/Flutter-%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flutter 多國語系
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-05-08 17:45:04 / 修改時間：17:46:43" itemprop="dateCreated datePublished" datetime="2025-05-08T17:45:04+08:00">2025-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/05/08/Flutter-%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/08/Flutter-多國語系/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="多國語系"><a href="#多國語系" class="headerlink" title="多國語系"></a>多國語系</h1><p>在 Flutter 中實作多國語系（也稱為國際化 i18n 或本地化 l10n）是一個常見的需求。Flutter 官方提供了強大的支援來處理這個問題，主要是透過 <code>flutter_localizations</code> 套件和 <code>intl</code> 工具。</p>
+<span id="more"></span>
+<p>以下是如何在 Flutter 專案中實作多國語系的步驟和說明：</p>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><ol>
+<li><strong>LocalizationsDelegates</strong>: 這些代理負責載入特定語言環境的本地化字串和資源。</li>
+<li><strong>SupportedLocales</strong>: 你的應用程式支援的語言列表。</li>
+<li><strong>.arb (Application Resource Bundle) 檔案</strong>: 這些 JSON 格式的檔案用於儲存每種語言的翻譯字串。</li>
+<li><strong>Generated Dart Code</strong>: Flutter 工具會根據你的 <code>.arb</code> 檔案自動產生 Dart 程式碼，讓你在應用程式中方便地存取這些字串。</li>
+</ol>
+<h3 id="實作步驟"><a href="#實作步驟" class="headerlink" title="實作步驟"></a>實作步驟</h3><h3 id="加入依賴套件"><a href="#加入依賴套件" class="headerlink" title="加入依賴套件"></a>加入依賴套件</h3><p>首先，你需要將 <code>flutter_localizations</code> 和 <code>intl</code> 套件加入到你的 <code>pubspec.yaml</code> 檔案中。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dependencies:</span></span><br><span class="line">  <span class="attr">flutter:</span></span><br><span class="line">    <span class="attr">sdk:</span> <span class="string">flutter</span></span><br><span class="line">  <span class="attr">flutter_localizations:</span> <span class="comment"># 新增這個套件</span></span><br><span class="line">    <span class="attr">sdk:</span> <span class="string">flutter</span>         <span class="comment"># 新增這個套件</span></span><br><span class="line">  <span class="attr">intl:</span> <span class="string">^0.19.0</span> <span class="comment"># 新增這個套件 (版本號可能會有更新，請使用最新穩定版)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>flutter_localizations</code>: 提供 Flutter Widgets 的本地化值 (例如 Material 和 Cupertino Widgets 的按鈕文字、日期格式等)。</li>
+<li><code>intl</code>: 提供了國際化和本地化的工具，包括日期&#x2F;數字格式化、雙向文字處理和訊息翻譯。</li>
+</ul>
+<h3 id="建立-arb-翻譯檔案"><a href="#建立-arb-翻譯檔案" class="headerlink" title="建立 .arb 翻譯檔案"></a>建立 .arb 翻譯檔案</h3><p>在 <code>l10n.yaml</code> 中指定的 <code>arb-dir</code> 目錄下 (例如 <code>lib/l10n/</code>)，為你想要支援的每種語言建立 <code>.arb</code> 檔案。</p>
+<p>檔案命名慣例是 <code>app_&lt;languageCode&gt;.arb</code>，例如：</p>
+<ul>
+<li><code>app_en.arb</code> (英文)</li>
+<li><code>app_zh.arb</code> (中文 - 通用)<ul>
+<li>你也可以更具體，例如 <code>app_zh_CN.arb</code> (簡體中文，中國大陸) 或 <code>app_zh_TW.arb</code> (繁體中文，台灣)。</li>
+</ul>
+</li>
+</ul>
+<p><strong>範例 <code>lib/l10n/app_en.arb</code> (英文):</strong></p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;@@locale&quot;</span><span class="punctuation">:</span> <span class="string">&quot;en&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;helloWorld&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Hello World!&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;pageTitle&quot;</span><span class="punctuation">:</span> <span class="string">&quot;My Awesome App&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;welcomeMessage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Welcome &#123;userName&#125; to our application.&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;@welcomeMessage&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;A welcome message with a placeholder for the user&#x27;s name&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;placeholders&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;userName&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;String&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;example&quot;</span><span class="punctuation">:</span> <span class="string">&quot;John Doe&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;itemCount&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;count, plural, =0&#123;No items&#125; =1&#123;1 item&#125; other&#123;&#123;count&#125; items&#125;&#125;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;@itemCount&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;A message showing the number of items&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;placeholders&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;int&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>範例 <code>lib/l10n/app_zh_TW.arb</code> (繁體中文 - 台灣):</strong></p>
+<p>JSON</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;@@locale&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zh_TW&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;helloWorld&quot;</span><span class="punctuation">:</span> <span class="string">&quot;哈囉世界！&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;pageTitle&quot;</span><span class="punctuation">:</span> <span class="string">&quot;我的精彩應用程式&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;welcomeMessage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;歡迎 &#123;userName&#125; 使用我們的應用程式。&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;itemCount&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;count, plural, =0&#123;沒有項目&#125; =1&#123;1 個項目&#125; other&#123;&#123;count&#125; 個項目&#125;&#125;&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong><code>.arb</code> 檔案說明:</strong></p>
+<ul>
+<li><code>&quot;@@locale&quot;: &quot;en&quot;</code>: 指定這個檔案的語言代碼。</li>
+<li><code>&quot;key&quot;: &quot;value&quot;</code>: <code>key</code> 是你在程式碼中用來引用字串的識別碼，<code>value</code> 是該語言的翻譯。</li>
+<li><code>&quot;keyNameWithPlaceholder&quot;: &quot;Some text &#123;placeholderName&#125;&quot;</code>: 你可以在字串中定義佔位符。</li>
+<li><code>&quot;@keyNameWithPlaceholder&quot;</code>: (可選但推薦) 用於提供關於這個字串的額外元數據，例如描述和佔位符的類型。</li>
+<li><code>plural</code>: 用於處理根據數量變化的字串 (例如單數&#x2F;複數)。</li>
+</ul>
+<h2 id="產生-Dart-本地化代碼"><a href="#產生-Dart-本地化代碼" class="headerlink" title="產生 Dart 本地化代碼"></a>產生 Dart 本地化代碼</h2><p>如果你在 <code>pubspec.yaml</code> 中設定了 <code>flutter: generate: true</code>，Flutter 會在你建置或執行 <code>flutter pub get</code> 後自動產生本地化代碼。</p>
+<p>產生的檔案預設會放在 <code>.dart_tool/flutter_gen/gen_l10n/</code> 目錄下，並且會根據你在 <code>l10n.yaml</code> 中設定的 <code>output-localization-file</code> (例如 <code>app_localizations.dart</code>) 來命名。</p>
+<p>你也可以手動執行命令來產生或更新這些檔案：</p>
+<p>Bash</p>
+<p><code>flutter gen-l10n</code></p>
+<h2 id="設定-MaterialApp"><a href="#設定-MaterialApp" class="headerlink" title="設定 MaterialApp"></a>設定 MaterialApp</h2><p>現在，你需要在你的 <code>MaterialApp</code> (或 <code>CupertinoApp</code>) Widget 中設定本地化代理和支援的語言。</p>
+<p>打開你的 <code>main.dart</code> (或你的應用程式根 Widget 檔案)，並進行如下修改：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter_localizations/flutter_localizations.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;generated/l10n.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">    <span class="meta">@override</span></span><br><span class="line">    Widget build(BuildContext context) &#123;</span><br><span class="line">        <span class="keyword">return</span> MaterialApp(</span><br><span class="line">			      title: <span class="string">&#x27;Flutter Demo&#x27;</span>, <span class="comment">// 這個 title 不會被自動本地化，除非你手動處理</span></span><br><span class="line">			      <span class="comment">// 2. 設定本地化代理</span></span><br><span class="line">			      localizationsDelegates: <span class="keyword">const</span> [</span><br><span class="line">			        AppLocalizations.delegate, <span class="comment">// 你自己 App 的本地化代理</span></span><br><span class="line">			        GlobalMaterialLocalizations.delegate, <span class="comment">// Material Components 的本地化</span></span><br><span class="line">			        GlobalWidgetsLocalizations.delegate,  <span class="comment">// Widgets (如文字方向) 的本地化</span></span><br><span class="line">			        GlobalCupertinoLocalizations.delegate, <span class="comment">// Cupertino Components 的本地化 (如果使用)</span></span><br><span class="line">			      ],</span><br><span class="line">			      <span class="comment">// 3. 設定支援的語言列表</span></span><br><span class="line">			      supportedLocales: <span class="keyword">const</span> [</span><br><span class="line">			        Locale(<span class="string">&#x27;en&#x27;</span>, <span class="string">&#x27;&#x27;</span>), <span class="comment">// 英文，沒有國家代碼</span></span><br><span class="line">			        Locale(<span class="string">&#x27;zh&#x27;</span>, <span class="string">&#x27;TW&#x27;</span>), <span class="comment">// 繁體中文，台灣</span></span><br><span class="line">			        <span class="comment">// Locale(&#x27;zh&#x27;, &#x27;CN&#x27;), // 簡體中文，中國大陸 (如果需要)</span></span><br><span class="line">			        <span class="comment">// 添加你支援的其他語言</span></span><br><span class="line">			      ],</span><br><span class="line">			      <span class="comment">// (可選) 設置預設語言解析邏輯</span></span><br><span class="line">			      <span class="comment">// localeResolutionCallback: (locale, supportedLocales) &#123;</span></span><br><span class="line">			      <span class="comment">//   // 檢查當前設備的語言是否被支援</span></span><br><span class="line">			      <span class="comment">//   for (var supportedLocale in supportedLocales) &#123;</span></span><br><span class="line">			      <span class="comment">//     if (supportedLocale.languageCode == locale?.languageCode &amp;&amp;</span></span><br><span class="line">			      <span class="comment">//         (locale?.countryCode == null || supportedLocale.countryCode == locale?.countryCode)) &#123;</span></span><br><span class="line">			      <span class="comment">//       return supportedLocale;</span></span><br><span class="line">			      <span class="comment">//     &#125;</span></span><br><span class="line">			      <span class="comment">//   &#125;</span></span><br><span class="line">			      <span class="comment">//   // 如果設備的語言不被支援，則返回第一個支援的語言 (例如英文)</span></span><br><span class="line">			      <span class="comment">//   return supportedLocales.first;</span></span><br><span class="line">			      <span class="comment">// &#125;,</span></span><br><span class="line">			      home: <span class="keyword">const</span> MyHomePage(),</span><br><span class="line">    );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>說明:</strong></p>
+<ul>
+<li><code>AppLocalizations.delegate</code>: 這是由 <code>flutter gen-l10n</code> 工具根據你的 <code>.arb</code> 檔案自動產生的代理。</li>
+<li><code>GlobalMaterialLocalizations.delegate</code>, <code>GlobalWidgetsLocalizations.delegate</code>, <code>GlobalCupertinoLocalizations.delegate</code>: 這些是 Flutter 提供的內建代理，用於本地化 Material 和 Cupertino Widgets 的預設文字 (例如 “OK”, “Cancel” 按鈕，日期選擇器等)。</li>
+<li><code>supportedLocales</code>: 一個 <code>Locale</code> 物件的列表，指定你的應用程式支援哪些語言。<code>Locale(&#39;en&#39;, &#39;&#39;)</code> 代表英文，<code>Locale(&#39;zh&#39;, &#39;TW&#39;)</code> 代表繁體中文（台灣）。</li>
+<li><code>AppLocalizations.of(context)!</code>: 用於在你的 Widgets 中獲取當前語言環境的 <code>AppLocalizations</code> 實例，然後你就可以像 <code>localizations.yourStringKey</code> 這樣來存取翻譯後的字串。</li>
+</ul>
+<h2 id="iOS-應用程式的額外設定："><a href="#iOS-應用程式的額外設定：" class="headerlink" title="*iOS 應用程式的額外設定："></a>*iOS 應用程式的額外設定：</h2><p>若要為 iOS 應用程式啟用本地化，請<code>ios/Runner/Info.plist</code>使用支援的語言環境設定擴充功能。此列表應與<code>lib/l10n</code>資料夾中列出的語言環境一致。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;key&gt;CFBundleLocalizations&lt;/key&gt;</span><br><span class="line">&lt;array&gt;</span><br><span class="line">    &lt;string&gt;en&lt;/string&gt;</span><br><span class="line">    &lt;string&gt;de_DE&lt;/string&gt;</span><br><span class="line">    ...</span><br><span class="line">&lt;/array&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="plugin"><a href="#plugin" class="headerlink" title="*plugin"></a>*plugin</h2><p>可以搭配使用 Flutter Intl 套件，有一些自動化的流程可以使用，VS Code 跟 Android Studio 都有。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/05/08/Flutter-%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/" title="Flutter 多國語系">https://jumbojay06.github.io/2025/05/08/Flutter-多國語系/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Flutter/" rel="tag"># Flutter</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/08/Flutter-%E5%9F%BA%E7%A4%8E%E7%9A%84%E5%9F%BA%E7%A4%8E/" rel="prev" title="Flutter 基礎的基礎">
+      <i class="fa fa-chevron-left"></i> Flutter 基礎的基礎
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB"><span class="nav-number">1.</span> <span class="nav-text">多國語系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%A6%E4%BD%9C%E6%AD%A5%E9%A9%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">實作步驟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E4%BE%9D%E8%B3%B4%E5%A5%97%E4%BB%B6"><span class="nav-number">1.1.2.</span> <span class="nav-text">加入依賴套件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B-arb-%E7%BF%BB%E8%AD%AF%E6%AA%94%E6%A1%88"><span class="nav-number">1.1.3.</span> <span class="nav-text">建立 .arb 翻譯檔案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A2%E7%94%9F-Dart-%E6%9C%AC%E5%9C%B0%E5%8C%96%E4%BB%A3%E7%A2%BC"><span class="nav-number">1.2.</span> <span class="nav-text">產生 Dart 本地化代碼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A-MaterialApp"><span class="nav-number">1.3.</span> <span class="nav-text">設定 MaterialApp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS-%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E7%9A%84%E9%A1%8D%E5%A4%96%E8%A8%AD%E5%AE%9A%EF%BC%9A"><span class="nav-number">1.4.</span> <span class="nav-text">*iOS 應用程式的額外設定：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#plugin"><span class="nav-number">1.5.</span> <span class="nav-text">*plugin</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/05/08/Flutter-%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/";
+    this.page.identifier = "2025/05/08/Flutter-多國語系/";
+    this.page.title = "Flutter 多國語系";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
