@@ -44,15 +44,15 @@
   const analytics = getAnalytics(app);
 </script>
 
-  <meta name="description" content="Flutter 粗談 go_router使用 Router API 提供方便的、基於 url 的 API，用於在不同螢幕之間導航。您可以定義 URL 模式、使用 URL 進行導航、處理深層連結以及許多其他與導航相關的場景。">
+  <meta name="description" content="粗談 go_router使用 Router API 提供方便的、基於 url 的 API，用於在不同螢幕之間導航。您可以定義 URL 模式、使用 URL 進行導航、處理深層連結以及許多其他與導航相關的場景。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Flutter 粗談 go_router">
 <meta property="og:url" content="https://jumbojay06.github.io/2025/05/09/Flutter-%E7%B2%97%E8%AB%87-go-router/">
 <meta property="og:site_name" content="JumBoJay 小小筆記">
-<meta property="og:description" content="Flutter 粗談 go_router使用 Router API 提供方便的、基於 url 的 API，用於在不同螢幕之間導航。您可以定義 URL 模式、使用 URL 進行導航、處理深層連結以及許多其他與導航相關的場景。">
+<meta property="og:description" content="粗談 go_router使用 Router API 提供方便的、基於 url 的 API，用於在不同螢幕之間導航。您可以定義 URL 模式、使用 URL 進行導航、處理深層連結以及許多其他與導航相關的場景。">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2025-05-09T09:12:56.000Z">
-<meta property="article:modified_time" content="2025-05-09T09:15:26.019Z">
+<meta property="article:modified_time" content="2025-05-09T09:32:33.629Z">
 <meta property="article:author" content="JumBoJay">
 <meta property="article:tag" content="Flutter">
 <meta name="twitter:card" content="summary">
@@ -216,7 +216,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2025-05-09 17:12:56 / 修改時間：17:15:26" itemprop="dateCreated datePublished" datetime="2025-05-09T17:12:56+08:00">2025-05-09</time>
+              <time title="創建時間：2025-05-09 17:12:56 / 修改時間：17:32:33" itemprop="dateCreated datePublished" datetime="2025-05-09T17:12:56+08:00">2025-05-09</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,7 +253,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="Flutter-粗談-go-router"><a href="#Flutter-粗談-go-router" class="headerlink" title="Flutter 粗談 go_router"></a>Flutter 粗談 go_router</h1><p>使用 Router API 提供方便的、基於 url 的 API，用於在不同螢幕之間導航。您可以定義 URL 模式、使用 URL 進行導航、處理深層連結以及許多其他與導航相關的場景。</p>
+        <h1 id="粗談-go-router"><a href="#粗談-go-router" class="headerlink" title="粗談 go_router"></a>粗談 go_router</h1><p>使用 Router API 提供方便的、基於 url 的 API，用於在不同螢幕之間導航。您可以定義 URL 模式、使用 URL 進行導航、處理深層連結以及許多其他與導航相關的場景。</p>
 <span id="more"></span>
 
 <h3 id="Depend-on-it"><a href="#Depend-on-it" class="headerlink" title="Depend on it"></a><strong>Depend on it</strong></h3><p><code>$ flutter pub add go_router</code></p>
@@ -392,7 +392,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Flutter-%E7%B2%97%E8%AB%87-go-router"><span class="nav-number">1.</span> <span class="nav-text">Flutter 粗談 go_router</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Depend-on-it"><span class="nav-number">1.0.1.</span> <span class="nav-text">Depend on it</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%87%89%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">應用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A2%E7%94%9F%E5%A6%B3%E7%9A%84-Router"><span class="nav-number">1.1.1.</span> <span class="nav-text">產生妳的 Router</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%88%B0%E4%BD%A0%E7%9A%84-Flutter"><span class="nav-number">1.1.2.</span> <span class="nav-text">配置到你的 Flutter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B-Router-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">建立 Router 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%A0%81%E9%9D%A2"><span class="nav-number">1.2.1.</span> <span class="nav-text">新增頁面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%83%E6%95%B8"><span class="nav-number">1.2.2.</span> <span class="nav-text">參數</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8E%E8%88%AA"><span class="nav-number">1.3.</span> <span class="nav-text">導航</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#context-go"><span class="nav-number">1.3.1.</span> <span class="nav-text">context.go</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-push"><span class="nav-number">1.3.2.</span> <span class="nav-text">context.push</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-pop"><span class="nav-number">1.3.3.</span> <span class="nav-text">context.pop</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.4.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B2%97%E8%AB%87-go-router"><span class="nav-number">1.</span> <span class="nav-text">粗談 go_router</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Depend-on-it"><span class="nav-number">1.0.1.</span> <span class="nav-text">Depend on it</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%87%89%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">應用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A2%E7%94%9F%E5%A6%B3%E7%9A%84-Router"><span class="nav-number">1.1.1.</span> <span class="nav-text">產生妳的 Router</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%88%B0%E4%BD%A0%E7%9A%84-Flutter"><span class="nav-number">1.1.2.</span> <span class="nav-text">配置到你的 Flutter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B-Router-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">建立 Router 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%A0%81%E9%9D%A2"><span class="nav-number">1.2.1.</span> <span class="nav-text">新增頁面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%83%E6%95%B8"><span class="nav-number">1.2.2.</span> <span class="nav-text">參數</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8E%E8%88%AA"><span class="nav-number">1.3.</span> <span class="nav-text">導航</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#context-go"><span class="nav-number">1.3.1.</span> <span class="nav-text">context.go</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-push"><span class="nav-number">1.3.2.</span> <span class="nav-text">context.push</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-pop"><span class="nav-number">1.3.3.</span> <span class="nav-text">context.pop</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.4.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
