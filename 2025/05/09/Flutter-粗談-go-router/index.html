@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="Flutter 粗談 go_router使用 Router API 提供方便的、基於 url 的 API，用於在不同螢幕之間導航。您可以定義 URL 模式、使用 URL 進行導航、處理深層連結以及許多其他與導航相關的場景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter 粗談 go_router">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/05/09/Flutter-%E7%B2%97%E8%AB%87-go-router/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="Flutter 粗談 go_router使用 Router API 提供方便的、基於 url 的 API，用於在不同螢幕之間導航。您可以定義 URL 模式、使用 URL 進行導航、處理深層連結以及許多其他與導航相關的場景。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2025-05-09T09:12:56.000Z">
+<meta property="article:modified_time" content="2025-05-09T09:15:26.019Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/05/09/Flutter-%E7%B2%97%E8%AB%87-go-router/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>Flutter 粗談 go_router | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/09/Flutter-%E7%B2%97%E8%AB%87-go-router/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flutter 粗談 go_router
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-05-09 17:12:56 / 修改時間：17:15:26" itemprop="dateCreated datePublished" datetime="2025-05-09T17:12:56+08:00">2025-05-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/05/09/Flutter-%E7%B2%97%E8%AB%87-go-router/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/09/Flutter-粗談-go-router/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Flutter-粗談-go-router"><a href="#Flutter-粗談-go-router" class="headerlink" title="Flutter 粗談 go_router"></a>Flutter 粗談 go_router</h1><p>使用 Router API 提供方便的、基於 url 的 API，用於在不同螢幕之間導航。您可以定義 URL 模式、使用 URL 進行導航、處理深層連結以及許多其他與導航相關的場景。</p>
+<span id="more"></span>
+
+<h3 id="Depend-on-it"><a href="#Depend-on-it" class="headerlink" title="Depend on it"></a><strong>Depend on it</strong></h3><p><code>$ flutter pub add go_router</code></p>
+<h2 id="應用"><a href="#應用" class="headerlink" title="應用"></a>應用</h2><h3 id="產生妳的-Router"><a href="#產生妳的-Router" class="headerlink" title="產生妳的 Router"></a>產生妳的 Router</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:go_router/go_router.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GoRouter configuration</span></span><br><span class="line"><span class="keyword">final</span> _router = GoRouter(</span><br><span class="line">  routes: [</span><br><span class="line">    GoRoute(</span><br><span class="line">      path: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">      builder: (context, state) =&gt; HomeScreen(),</span><br><span class="line">    ),</span><br><span class="line">  ],</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置到你的-Flutter"><a href="#配置到你的-Flutter" class="headerlink" title="配置到你的 Flutter"></a>配置到你的 Flutter</h3><p>請使用<code>MaterialApp.router</code>或 <code>CupertinoApp.router</code>建構函式並將<code>routerConfig</code>參數設定為您的 GoRouter 配置物件</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> MaterialApp.router(</span><br><span class="line">      routerConfig: _router,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="建立-Router-配置"><a href="#建立-Router-配置" class="headerlink" title="建立 Router 配置"></a>建立 Router 配置</h2><h3 id="新增頁面"><a href="#新增頁面" class="headerlink" title="新增頁面"></a>新增頁面</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">GoRouter(</span><br><span class="line">  routes: [</span><br><span class="line">    GoRoute(</span><br><span class="line">      path: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">      builder: (context, state) =&gt; <span class="keyword">const</span> Page1Screen(),</span><br><span class="line">    ),</span><br><span class="line">    GoRoute( <span class="comment">// new page</span></span><br><span class="line">      path: <span class="string">&#x27;/page2&#x27;</span>,</span><br><span class="line">      builder: (context, state) =&gt; <span class="keyword">const</span> Page2Screen(),</span><br><span class="line">      routes: [</span><br><span class="line">		    GoRoute(</span><br><span class="line">		      path: <span class="string">&#x27;details&#x27;</span>, <span class="comment">// 子路由</span></span><br><span class="line">		      builder: (context, state) &#123;</span><br><span class="line">		        <span class="keyword">return</span> DetailsScreen();</span><br><span class="line">		      &#125;,</span><br><span class="line">		      rotues: [</span><br><span class="line">			      <span class="comment">// 子路由也有自己的子路由</span></span><br><span class="line">		      ],</span><br><span class="line">		    ),</span><br><span class="line">		    <span class="comment">// 可以多個子路由</span></span><br><span class="line">		  ],</span><br><span class="line">    ),</span><br><span class="line">  ],</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="參數"><a href="#參數" class="headerlink" title="參數"></a>參數</h3><ul>
+<li><p>Path</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GoRoute(</span><br><span class="line">  path: <span class="string">&#x27;/users/:userId&#x27;</span>,</span><br><span class="line">  builder: (context, state) =&gt; <span class="keyword">const</span> UserScreen(id: state.pathParameters[<span class="string">&#x27;userId&#x27;</span>]),</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Query</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GoRoute(</span><br><span class="line">  path: <span class="string">&#x27;/users&#x27;</span>,</span><br><span class="line">  builder: (context, state) =&gt; <span class="keyword">const</span> UsersScreen(filter: state.uri.queryParameters[<span class="string">&#x27;filter&#x27;</span>]),</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Extra</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GoRoute(</span><br><span class="line">  path: <span class="string">&#x27;/users&#x27;</span>,</span><br><span class="line">  builder: (context, state) =&gt; <span class="keyword">const</span> UsersScreen(filter: state.extra <span class="keyword">as</span> <span class="built_in">String</span>),</span><br><span class="line">),</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="導航"><a href="#導航" class="headerlink" title="導航"></a>導航</h2><h3 id="context-go"><a href="#context-go" class="headerlink" title="context.go"></a>context.go</h3><p>一般來說都會使用這個來導航到想要的頁面，特別注意的是 context.go 的用法，如果你的 path 有多個層級(e.g. <code>‘/page2/detail’</code>)，這時候會取代目前堆疊，建立新的堆疊，除非當前頁面是父層頁面(e.g. <code>‘page2’</code>)，才不會取代掉</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">build(BuildContext context) &#123;</span><br><span class="line">  <span class="keyword">return</span> TextButton(</span><br><span class="line">    onPressed: () =&gt; context.go(<span class="string">&#x27;/page2/detail&#x27;</span>),</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>若要帶參數的話</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">context.go(</span><br><span class="line">	<span class="built_in">Uri</span>( <span class="comment">// 也可以直接寫成 &#x27;/page2/detail/adc?filter=abc&#x27;</span></span><br><span class="line">		path: <span class="string">&#x27;/page2/detail/adc&#x27;</span>,</span><br><span class="line">		queryParameters: &#123;<span class="string">&#x27;filter&#x27;</span>: <span class="string">&#x27;abc&#x27;</span>&#125;,</span><br><span class="line">	).toString(),</span><br><span class="line">	extra: <span class="string">&#x27;abc&#x27;</span>,</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>等待回傳值</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">onTap: () <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">bool?</span> result = <span class="keyword">await</span> context.push&lt;<span class="built_in">bool</span>&gt;(<span class="string">&#x27;/page2/detail/adc?filter=abc&#x27;</span>);</span><br><span class="line">  <span class="keyword">if</span>(result ?? <span class="keyword">false</span>)...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="context-push"><a href="#context-push" class="headerlink" title="context.push"></a>context.push</h3><p>直接加到當前堆疊，不會重新建立堆疊，用法同 context.go</p>
+<h3 id="context-pop"><a href="#context-pop" class="headerlink" title="context.pop"></a>context.pop</h3><p>回收當前頁面</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">context.pop();</span><br><span class="line"><span class="comment">// 如果有要回傳值</span></span><br><span class="line">context.pop(<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>go_router 還有很多其他功能，e.g. Deep Link、Redirection、可以跟<code>BottomNavigationBar</code> 搭配的<br><code>ShellRoute</code> 、頁面跳轉動畫，可以參考<a target="_blank" rel="noopener" href="https://pub.dev/documentation/go_router/latest/topics/Get%20started-topic.html">這個</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/05/09/Flutter-%E7%B2%97%E8%AB%87-go-router/" title="Flutter 粗談 go_router">https://jumbojay06.github.io/2025/05/09/Flutter-粗談-go-router/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Flutter/" rel="tag"># Flutter</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/08/Flutter-%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/" rel="prev" title="Flutter 多國語系">
+      <i class="fa fa-chevron-left"></i> Flutter 多國語系
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Flutter-%E7%B2%97%E8%AB%87-go-router"><span class="nav-number">1.</span> <span class="nav-text">Flutter 粗談 go_router</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Depend-on-it"><span class="nav-number">1.0.1.</span> <span class="nav-text">Depend on it</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%87%89%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">應用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A2%E7%94%9F%E5%A6%B3%E7%9A%84-Router"><span class="nav-number">1.1.1.</span> <span class="nav-text">產生妳的 Router</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%88%B0%E4%BD%A0%E7%9A%84-Flutter"><span class="nav-number">1.1.2.</span> <span class="nav-text">配置到你的 Flutter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B-Router-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">建立 Router 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E9%A0%81%E9%9D%A2"><span class="nav-number">1.2.1.</span> <span class="nav-text">新增頁面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%83%E6%95%B8"><span class="nav-number">1.2.2.</span> <span class="nav-text">參數</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8E%E8%88%AA"><span class="nav-number">1.3.</span> <span class="nav-text">導航</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#context-go"><span class="nav-number">1.3.1.</span> <span class="nav-text">context.go</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-push"><span class="nav-number">1.3.2.</span> <span class="nav-text">context.push</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-pop"><span class="nav-number">1.3.3.</span> <span class="nav-text">context.pop</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.4.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/05/09/Flutter-%E7%B2%97%E8%AB%87-go-router/";
+    this.page.identifier = "2025/05/09/Flutter-粗談-go-router/";
+    this.page.title = "Flutter 粗談 go_router";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
