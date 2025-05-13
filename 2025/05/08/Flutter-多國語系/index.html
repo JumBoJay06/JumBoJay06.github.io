@@ -52,9 +52,9 @@
 <meta property="og:description" content="多國語系在 Flutter 中實作多國語系（也稱為國際化 i18n 或本地化 l10n）是一個常見的需求。Flutter 官方提供了強大的支援來處理這個問題，主要是透過 flutter_localizations 套件和 intl 工具。">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2025-05-08T09:45:04.000Z">
-<meta property="article:modified_time" content="2025-05-12T09:37:25.732Z">
+<meta property="article:modified_time" content="2025-05-13T10:05:31.726Z">
 <meta property="article:author" content="JumBoJay">
-<meta property="article:tag" content="Flutter">
+<meta property="article:tag" content="多國語系">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://jumbojay06.github.io/2025/05/08/Flutter-%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/">
@@ -222,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2025-05-12 17:37:25" itemprop="dateModified" datetime="2025-05-12T17:37:25+08:00">2025-05-12</time>
+                <time title="修改時間：2025-05-13 18:05:31" itemprop="dateModified" datetime="2025-05-13T18:05:31+08:00">2025-05-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -231,6 +231,10 @@
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Flutter/" itemprop="url" rel="index"><span itemprop="name">Flutter</span></a>
                 </span>
             </span>
 
@@ -307,7 +311,7 @@
 <p><code>flutter gen-l10n</code></p>
 <h2 id="設定-MaterialApp"><a href="#設定-MaterialApp" class="headerlink" title="設定 MaterialApp"></a>設定 MaterialApp</h2><p>現在，你需要在你的 <code>MaterialApp</code> (或 <code>CupertinoApp</code>) Widget 中設定本地化代理和支援的語言。</p>
 <p>打開你的 <code>main.dart</code> (或你的應用程式根 Widget 檔案)，並進行如下修改：</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter_localizations/flutter_localizations.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;generated/l10n.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">    <span class="meta">@override</span></span><br><span class="line">    Widget build(BuildContext context) &#123;</span><br><span class="line">        <span class="keyword">return</span> MaterialApp(</span><br><span class="line">            title: <span class="string">&#x27;Flutter Demo&#x27;</span>, <span class="comment">// 這個 title 不會被自動本地化，除非你手動處理</span></span><br><span class="line">            <span class="comment">// 2. 設定本地化代理</span></span><br><span class="line">            localizationsDelegates: <span class="keyword">const</span> [</span><br><span class="line">            AppLocalizations.delegate, <span class="comment">// 你自己 App 的本地化代理</span></span><br><span class="line">            GlobalMaterialLocalizations.delegate, <span class="comment">// Material Components 的本地化</span></span><br><span class="line">            GlobalWidgetsLocalizations.delegate,  <span class="comment">// Widgets (如文字方向) 的本地化</span></span><br><span class="line">            GlobalCupertinoLocalizations.delegate, <span class="comment">// Cupertino Components 的本地化 (如果使用)</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="comment">// 3. 設定支援的語言列表</span></span><br><span class="line">            supportedLocales: <span class="keyword">const</span> [</span><br><span class="line">            Locale(<span class="string">&#x27;en&#x27;</span>, <span class="string">&#x27;&#x27;</span>), <span class="comment">// 英文，沒有國家代碼</span></span><br><span class="line">            Locale(<span class="string">&#x27;zh&#x27;</span>, <span class="string">&#x27;TW&#x27;</span>), <span class="comment">// 繁體中文，台灣</span></span><br><span class="line">            <span class="comment">// Locale(&#x27;zh&#x27;, &#x27;CN&#x27;), // 簡體中文，中國大陸 (如果需要)</span></span><br><span class="line">            <span class="comment">// 添加你支援的其他語言</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="comment">// (可選) 設置預設語言解析邏輯</span></span><br><span class="line">            <span class="comment">// localeResolutionCallback: (locale, supportedLocales) &#123;</span></span><br><span class="line">            <span class="comment">//   // 檢查當前設備的語言是否被支援</span></span><br><span class="line">            <span class="comment">//   for (var supportedLocale in supportedLocales) &#123;</span></span><br><span class="line">            <span class="comment">//     if (supportedLocale.languageCode == locale?.languageCode &amp;&amp;</span></span><br><span class="line">            <span class="comment">//         (locale?.countryCode == null || supportedLocale.countryCode == locale?.countryCode)) &#123;</span></span><br><span class="line">            <span class="comment">//       return supportedLocale;</span></span><br><span class="line">            <span class="comment">//     &#125;</span></span><br><span class="line">            <span class="comment">//   &#125;</span></span><br><span class="line">            <span class="comment">//   // 如果設備的語言不被支援，則返回第一個支援的語言 (例如英文)</span></span><br><span class="line">            <span class="comment">//   return supportedLocales.first;</span></span><br><span class="line">            <span class="comment">// &#125;,</span></span><br><span class="line">            home: <span class="keyword">const</span> MyHomePage(),</span><br><span class="line">    );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter_localizations/flutter_localizations.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;generated/l10n.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">    <span class="meta">@override</span></span><br><span class="line">    Widget build(BuildContext context) &#123;</span><br><span class="line">        <span class="keyword">const</span> appLocalizationDelegate = AppLocalizationDelegate(); <span class="comment">// 你自己 App 的本地化代理(使用 plugins intl 可以幫你實作)</span></span><br><span class="line">        <span class="keyword">return</span> MaterialApp(</span><br><span class="line">            title: <span class="string">&#x27;Flutter Demo&#x27;</span>, <span class="comment">// 這個 title 不會被自動本地化，除非你手動處理</span></span><br><span class="line">            <span class="comment">// 2. 設定本地化代理</span></span><br><span class="line">            localizationsDelegates: <span class="keyword">const</span> [</span><br><span class="line">            appLocalizationDelegate,</span><br><span class="line">            GlobalMaterialLocalizations.delegate, <span class="comment">// Material Components 的本地化</span></span><br><span class="line">            GlobalWidgetsLocalizations.delegate,  <span class="comment">// Widgets (如文字方向) 的本地化</span></span><br><span class="line">            GlobalCupertinoLocalizations.delegate, <span class="comment">// Cupertino Components 的本地化 (如果使用)</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="comment">// 3. 設定支援的語言列表</span></span><br><span class="line">            supportedLocales: <span class="keyword">const</span> [</span><br><span class="line">            Locale(<span class="string">&#x27;en&#x27;</span>, <span class="string">&#x27;&#x27;</span>), <span class="comment">// 英文，沒有國家代碼</span></span><br><span class="line">            Locale(<span class="string">&#x27;zh&#x27;</span>, <span class="string">&#x27;TW&#x27;</span>), <span class="comment">// 繁體中文，台灣</span></span><br><span class="line">            <span class="comment">// 添加你支援的其他語言</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="comment">// or plugins intl</span></span><br><span class="line">			<span class="comment">// supportedLocales: appLocalizationDelegate.supportedLocales,</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// (可選) 設置預設語言解析邏輯</span></span><br><span class="line">            <span class="comment">// localeResolutionCallback: (locale, supportedLocales) &#123;</span></span><br><span class="line">            <span class="comment">//   // 檢查當前設備的語言是否被支援</span></span><br><span class="line">            <span class="comment">//   for (var supportedLocale in supportedLocales) &#123;</span></span><br><span class="line">            <span class="comment">//     if (supportedLocale.languageCode == locale?.languageCode &amp;&amp;</span></span><br><span class="line">            <span class="comment">//         (locale?.countryCode == null || supportedLocale.countryCode == locale?.countryCode)) &#123;</span></span><br><span class="line">            <span class="comment">//       return supportedLocale;</span></span><br><span class="line">            <span class="comment">//     &#125;</span></span><br><span class="line">            <span class="comment">//   &#125;</span></span><br><span class="line">            <span class="comment">//   // 如果設備的語言不被支援，則返回第一個支援的語言 (例如英文)</span></span><br><span class="line">            <span class="comment">//   return supportedLocales.first;</span></span><br><span class="line">            <span class="comment">// &#125;,</span></span><br><span class="line">            home: <span class="keyword">const</span> MyHomePage(),</span><br><span class="line">    );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>說明:</strong></p>
 <ul>
@@ -346,7 +350,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Flutter/" rel="tag"># Flutter</a>
+              <a href="/tags/%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/" rel="tag"># 多國語系</a>
           </div>
 
         
@@ -440,20 +444,20 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分類</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>

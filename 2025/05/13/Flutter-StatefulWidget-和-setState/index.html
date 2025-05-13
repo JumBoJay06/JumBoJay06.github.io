@@ -44,19 +44,20 @@
   const analytics = getAnalytics(app);
 </script>
 
-  <meta name="description" content="Hi 我是 JumBoJay前言">
+  <meta name="description" content="StatefulWidget 和 setState()利用 setState() 使其 Widget 與子 Widget 刷新頁面，一種簡單暴力的狀態管理方式。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="我的第一篇文章">
-<meta property="og:url" content="https://jumbojay06.github.io/2025/04/30/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">
+<meta property="og:title" content="Flutter StatefulWidget 和 setState()">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/">
 <meta property="og:site_name" content="JumBoJay 小小筆記">
-<meta property="og:description" content="Hi 我是 JumBoJay前言">
+<meta property="og:description" content="StatefulWidget 和 setState()利用 setState() 使其 Widget 與子 Widget 刷新頁面，一種簡單暴力的狀態管理方式。">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2025-04-30T06:38:11.000Z">
-<meta property="article:modified_time" content="2025-04-30T09:38:23.191Z">
+<meta property="article:published_time" content="2025-05-13T10:15:50.000Z">
+<meta property="article:modified_time" content="2025-05-13T10:18:34.806Z">
 <meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="setState()">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://jumbojay06.github.io/2025/04/30/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">
+<link rel="canonical" href="https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/">
 
 
 <script id="page-configurations">
@@ -69,7 +70,7 @@
   };
 </script>
 
-  <title>我的第一篇文章 | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  <title>Flutter StatefulWidget 和 setState() | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
     <script>
@@ -191,7 +192,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/04/30/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -204,7 +205,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          我的第一篇文章
+          Flutter StatefulWidget 和 setState()
         </h1>
 
         <div class="post-meta">
@@ -215,7 +216,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2025-04-30 14:38:11 / 修改時間：17:38:23" itemprop="dateCreated datePublished" datetime="2025-04-30T14:38:11+08:00">2025-04-30</time>
+              <time title="創建時間：2025-05-13 18:15:50 / 修改時間：18:18:34" itemprop="dateCreated datePublished" datetime="2025-05-13T18:15:50+08:00">2025-05-13</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -223,7 +224,15 @@
               </span>
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%9F%E6%B4%BB/" itemprop="url" rel="index"><span itemprop="name">生活</span></a>
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Flutter/" itemprop="url" rel="index"><span itemprop="name">Flutter</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Flutter/%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">狀態管理</span></a>
                 </span>
             </span>
 
@@ -236,8 +245,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2025/04/30/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/04/30/我的第一篇文章/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/13/Flutter-StatefulWidget-和-setState/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -252,12 +261,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Hi-我是-JumBoJay"><a href="#Hi-我是-JumBoJay" class="headerlink" title="Hi 我是 JumBoJay"></a>Hi 我是 JumBoJay</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><span id="more"></span>
-<p>首先，這是我的第一篇 Blog，就不長篇大論打一對字了。</p>
-<h3 id="期望"><a href="#期望" class="headerlink" title="期望"></a>期望</h3><p>稍微講一下為什麼要做這個 Git Page，其實很早以前就有想要執行了，因為懶而沒去做。</p>
-<p>那預期這邊不限制分享什麼，主要可能會是程式或是生活相關的文章，盡量讓自己維持寫筆記的習慣，順便留個紀錄之類的。</p>
-<h3 id="結尾"><a href="#結尾" class="headerlink" title="結尾"></a>結尾</h3><p>最後就給自己一個期許吧，希望這次可以持之以恆。 </p>
-
+        <h1 id="StatefulWidget-和-setState"><a href="#StatefulWidget-和-setState" class="headerlink" title="StatefulWidget 和 setState()"></a>StatefulWidget 和 setState()</h1><p>利用 <code>setState()</code> 使其 Widget 與子 Widget 刷新頁面，一種簡單暴力的狀態管理方式。</p>
+<span id="more"></span>
+<p>當執行 setState() 時，會標記此 Widget 與子 Widget 為 dirty，當系統刷新時就會更新被標記 dirty的 Widget，由這種方式達到畫面與狀態同步。</p>
+<ul>
+<li>Example</li>
+</ul>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:my_sample/generated/l10n.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SetStatePage</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> SetStatePage(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  State&lt;SetStatePage&gt; createState() =&gt; _SetStatePageState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SetStatePageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">SetStatePage</span>&gt; </span>&#123;</span><br><span class="line">  <span class="built_in">int</span> _counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> _incrementCounter() &#123;</span><br><span class="line">    <span class="comment">// 會使整個頁面刷新</span></span><br><span class="line">    setState(() &#123;</span><br><span class="line">      _counter++;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment"><span class="language-markdown">/**</span></span></span><br><span class="line"><span class="language-markdown"><span class="comment"><span class="bullet">	*</span> 當畫面刷新時，</span></span></span><br><span class="line"><span class="language-markdown"><span class="comment"><span class="bullet">	*</span> 只會執行 build</span></span></span><br><span class="line"><span class="language-markdown"><span class="comment"><span class="bullet">	*</span> 其他生命週期都不會執行</span></span></span><br><span class="line"><span class="language-markdown"><span class="comment"><span class="code">	*/</span></span></span></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(MyLocalizations.of(context).example_set_state_title),</span><br><span class="line">      ),</span><br><span class="line">      body: Center(</span><br><span class="line">        child: Column(</span><br><span class="line">          mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            Text(MyLocalizations.of(context).example_set_state_content),</span><br><span class="line">            Text(</span><br><span class="line">              <span class="string">&#x27;<span class="subst">$_counter</span>&#x27;</span>,</span><br><span class="line">              style: Theme.of(context).textTheme.headlineLarge,</span><br><span class="line">            ),</span><br><span class="line">          ],</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">      floatingActionButton: FloatingActionButton(</span><br><span class="line">        onPressed: _incrementCounter,</span><br><span class="line">        tooltip: <span class="string">&#x27;Increment&#x27;</span>,</span><br><span class="line">        child: <span class="keyword">const</span> Icon(Icons.add),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -272,7 +282,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>文章連結：</strong>
-    <a href="https://jumbojay06.github.io/2025/04/30/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" title="我的第一篇文章">https://jumbojay06.github.io/2025/04/30/我的第一篇文章/</a>
+    <a href="https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/" title="Flutter StatefulWidget 和 setState()">https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-和-setState/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
@@ -282,17 +292,20 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/setState/" rel="tag"># setState()</a>
+          </div>
 
         
 
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2025/05/08/Flutter-%E5%9F%BA%E7%A4%8E%E7%9A%84%E5%9F%BA%E7%A4%8E/" rel="next" title="Flutter 基礎的基礎">
-      Flutter 基礎的基礎 <i class="fa fa-chevron-right"></i>
+    <a href="/2025/05/13/Flutter-%E5%85%A7%E5%BB%BA%E7%9A%84%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95/" rel="prev" title="Flutter 內建的狀態管理方法">
+      <i class="fa fa-chevron-left"></i> Flutter 內建的狀態管理方法
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -358,7 +371,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hi-%E6%88%91%E6%98%AF-JumBoJay"><span class="nav-number">1.</span> <span class="nav-text">Hi 我是 JumBoJay</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B"><span class="nav-number">1.2.</span> <span class="nav-text">期望</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B5%90%E5%B0%BE"><span class="nav-number">1.3.</span> <span class="nav-text">結尾</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#StatefulWidget-%E5%92%8C-setState"><span class="nav-number">1.</span> <span class="nav-text">StatefulWidget 和 setState()</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -490,9 +503,9 @@
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "https://jumbojay06.github.io/2025/04/30/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/";
-    this.page.identifier = "2025/04/30/我的第一篇文章/";
-    this.page.title = "我的第一篇文章";
+    this.page.url = "https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/";
+    this.page.identifier = "2025/05/13/Flutter-StatefulWidget-和-setState/";
+    this.page.title = "Flutter StatefulWidget 和 setState()";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
