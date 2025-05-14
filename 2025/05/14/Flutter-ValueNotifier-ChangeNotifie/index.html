@@ -44,20 +44,20 @@
   const analytics = getAnalytics(app);
 </script>
 
-  <meta name="description" content="內建的狀態管理方法這些是 Flutter SDK 自帶的，適合簡單場景或作為理解更複雜工具的基礎。">
+  <meta name="description" content="ValueNotifier &#x2F; ChangeNotifier簡單說就是把資料變成可被觀察的感覺">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Flutter 內建的狀態管理方法">
-<meta property="og:url" content="https://jumbojay06.github.io/2025/05/13/Flutter-%E5%85%A7%E5%BB%BA%E7%9A%84%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95/">
+<meta property="og:title" content="Flutter ValueNotifier &#x2F; ChangeNotifie">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/">
 <meta property="og:site_name" content="JumBoJay 小小筆記">
-<meta property="og:description" content="內建的狀態管理方法這些是 Flutter SDK 自帶的，適合簡單場景或作為理解更複雜工具的基礎。">
+<meta property="og:description" content="ValueNotifier &#x2F; ChangeNotifier簡單說就是把資料變成可被觀察的感覺">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2025-05-13T10:12:41.000Z">
-<meta property="article:modified_time" content="2025-05-13T10:18:28.266Z">
+<meta property="article:published_time" content="2025-05-14T09:31:02.000Z">
+<meta property="article:modified_time" content="2025-05-14T09:34:01.783Z">
 <meta property="article:author" content="JumBoJay">
-<meta property="article:tag" content="基基本本">
+<meta property="article:tag" content="ValueNotifier &#x2F; ChangeNotifie">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://jumbojay06.github.io/2025/05/13/Flutter-%E5%85%A7%E5%BB%BA%E7%9A%84%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95/">
+<link rel="canonical" href="https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/">
 
 
 <script id="page-configurations">
@@ -70,7 +70,7 @@
   };
 </script>
 
-  <title>Flutter 內建的狀態管理方法 | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  <title>Flutter ValueNotifier / ChangeNotifie | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
     <script>
@@ -192,7 +192,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/13/Flutter-%E5%85%A7%E5%BB%BA%E7%9A%84%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -205,7 +205,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Flutter 內建的狀態管理方法
+          Flutter ValueNotifier / ChangeNotifie
         </h1>
 
         <div class="post-meta">
@@ -216,7 +216,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2025-05-13 18:12:41 / 修改時間：18:18:28" itemprop="dateCreated datePublished" datetime="2025-05-13T18:12:41+08:00">2025-05-13</time>
+              <time title="創建時間：2025-05-14 17:31:02 / 修改時間：17:34:01" itemprop="dateCreated datePublished" datetime="2025-05-14T17:31:02+08:00">2025-05-14</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,8 +245,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2025/05/13/Flutter-%E5%85%A7%E5%BB%BA%E7%9A%84%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/13/Flutter-內建的狀態管理方法/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/14/Flutter-ValueNotifier-ChangeNotifie/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -261,29 +261,23 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="內建的狀態管理方法"><a href="#內建的狀態管理方法" class="headerlink" title="內建的狀態管理方法"></a>內建的狀態管理方法</h1><p>這些是 Flutter SDK 自帶的，適合簡單場景或作為理解更複雜工具的基礎。</p>
+        <h1 id="ValueNotifier-ChangeNotifier"><a href="#ValueNotifier-ChangeNotifier" class="headerlink" title="ValueNotifier &#x2F; ChangeNotifier"></a>ValueNotifier &#x2F; ChangeNotifier</h1><p>簡單說就是把資料變成可被觀察的感覺</p>
 <span id="more"></span>
-<h3 id="StatefulWidget-和-setState"><a href="#StatefulWidget-和-setState" class="headerlink" title="StatefulWidget 和 setState()"></a><strong><code>StatefulWidget</code> 和 <code>setState()</code></strong></h3><ul>
-<li><strong>說明</strong>：這是最基本、最直接的狀態管理方式。當 <code>StatefulWidget</code> 的內部狀態改變時，呼叫 <code>setState()</code> 會通知 Flutter 框架該 Widget 的 <code>build()</code> 方法需要重新執行以更新 UI。</li>
-<li><strong>適用場景</strong>：管理 Widget 內部的、局部的狀態，例如一個 checkbox 是否被選中，或者一個動畫的當前值。</li>
-<li><strong>優點</strong>：簡單易懂，無需額外套件。</li>
-<li><strong>缺點</strong>：共用狀態會變得困難，當多個 Widget 需要共享和修改同一個狀態時，程式碼會變得複雜且難以維護。</li>
+
+<ul>
+<li>ValueNotifier 範例</li>
 </ul>
-<h3 id="InheritedWidget"><a href="#InheritedWidget" class="headerlink" title="InheritedWidget"></a><strong><code>InheritedWidget</code></strong></h3><ul>
-<li><strong>說明</strong>：<code>InheritedWidget</code> 是一種特殊的 Widget，它可以將資料有效地從 Widget 樹的父節點向下傳遞到子節點。當 <code>InheritedWidget</code> 更新時，依賴它的子 Widget 會被重建。</li>
-<li><strong>適用場景</strong>：在 Widget 樹中跨多個層級共享資料，例如應用程式的主題 (Theme)、本地化設定 (Locale) 或使用者認證狀態。</li>
-<li><strong>優點</strong>：高效的資料傳遞方式。</li>
-<li><strong>缺點</strong>：直接使用 <code>InheritedWidget</code> 樣板程式碼較多，且狀態的修改邏輯需要自行處理。許多更高級的狀態管理工具 (如 Provider) 底層都使用了 <code>InheritedWidget</code>。</li>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> ValueNotifier&lt;<span class="built_in">int</span>&gt; _counter = ValueNotifier&lt;<span class="built_in">int</span>&gt;(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用這個更改數值</span></span><br><span class="line"><span class="keyword">void</span> _incrementCounter() &#123;</span><br><span class="line">  _counter.value++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Column(</span><br><span class="line">  mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">  children: &lt;Widget&gt;[</span><br><span class="line">    Text(</span><br><span class="line">      MyLocalizations.of(context).example_notifier_content,</span><br><span class="line">      style: <span class="keyword">const</span> TextStyle(fontSize: <span class="number">20</span>, color: Colors.black),</span><br><span class="line">    ),</span><br><span class="line">    SizedBox(height: <span class="number">16</span>),</span><br><span class="line">    <span class="comment">// 監聽數值，當有變化時，builder 會執行</span></span><br><span class="line">    ValueListenableBuilder&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">      valueListenable: _counter,</span><br><span class="line">      builder: (context, value, child) &#123;</span><br><span class="line">        <span class="keyword">return</span> Text(</span><br><span class="line">          <span class="string">&#x27;<span class="subst">$value</span>&#x27;</span>,</span><br><span class="line">          style: <span class="keyword">const</span> TextStyle(</span><br><span class="line">            fontSize: <span class="number">26</span>,</span><br><span class="line">            color: Colors.blue,</span><br><span class="line">            fontWeight: FontWeight.w700,</span><br><span class="line">          ),</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    ),</span><br><span class="line">    SizedBox(height: <span class="number">16</span>),</span><br><span class="line">    TextButton(</span><br><span class="line">      onPressed: _incrementCounter,</span><br><span class="line">      child: Text(<span class="string">&#x27;ValueNotifier Click!&#x27;</span>),</span><br><span class="line">    ),</span><br><span class="line">  ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ChangeNotifier 範例</li>
 </ul>
-<h3 id="ValueNotifier-ChangeNotifier-搭配-ValueListenableBuilder-AnimatedBuilder-ListenableBuilder"><a href="#ValueNotifier-ChangeNotifier-搭配-ValueListenableBuilder-AnimatedBuilder-ListenableBuilder" class="headerlink" title="ValueNotifier &#x2F; ChangeNotifier 搭配 ValueListenableBuilder &#x2F; AnimatedBuilder &#x2F; ListenableBuilder"></a><strong><code>ValueNotifier</code> &#x2F; <code>ChangeNotifier</code> 搭配 <code>ValueListenableBuilder</code> &#x2F; <code>AnimatedBuilder</code> &#x2F; <code>ListenableBuilder</code></strong></h3><ul>
-<li><strong><code>ChangeNotifier</code></strong>：一個簡單的類別，它提供變更通知 API (使用 <code>notifyListeners()</code>）。你可以擴展它或混入 (mixin) <code>ChangeNotifier</code> 來管理狀態。</li>
-<li><strong><code>ValueNotifier</code></strong>：一個特殊的 <code>ChangeNotifier</code>，它只持有一個值，並在值改變時通知監聽者。</li>
-<li><strong><code>ValueListenableBuilder</code></strong>：一個 Widget，它監聽 <code>ValueListenable</code> (如 <code>ValueNotifier</code>) 並在值改變時重建其子樹。</li>
-<li><strong><code>AnimatedBuilder</code> &#x2F; <code>ListenableBuilder</code></strong>：更通用的 Widget，可以監聽任何 <code>Listenable</code> (如 <code>ChangeNotifier</code>)。</li>
-<li><strong>適用場景</strong>：比 <code>setState()</code> 更進一步，可以將狀態邏輯與 UI 分離，適合中等複雜度的狀態共享。</li>
-<li><strong>優點</strong>：相對簡單，是 Provider 等套件的基礎概念之一。</li>
-<li><strong>缺點</strong>：需要手動管理 <code>ChangeNotifier</code> 的生命週期 (例如 <code>dispose</code>)，對於大型應用，依賴注入和狀態管理職責劃分仍需自行設計。</li>
-</ul>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CounterModel</span> <span class="keyword">extends</span> <span class="title">ChangeNotifier</span> </span>&#123;</span><br><span class="line">  <span class="built_in">int</span> _counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">int</span> <span class="keyword">get</span> counter =&gt; _counter;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> incrementCounter() &#123;</span><br><span class="line">    _counter++;</span><br><span class="line">    <span class="comment">// 通知所有監聽者</span></span><br><span class="line">    notifyListeners(); </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> CounterModel _counterModel = CounterModel();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用這個更改數值</span></span><br><span class="line"><span class="keyword">void</span> _incrementCounter() &#123;</span><br><span class="line">  _counterModel.incrementCounter();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Column(</span><br><span class="line">  mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">  children: &lt;Widget&gt;[</span><br><span class="line">    Text(</span><br><span class="line">      MyLocalizations.of(context).example_notifier_content,</span><br><span class="line">      style: <span class="keyword">const</span> TextStyle(fontSize: <span class="number">20</span>, color: Colors.black),</span><br><span class="line">    ),</span><br><span class="line">    SizedBox(height: <span class="number">16</span>),</span><br><span class="line">    <span class="comment">// 監聽數值，當有變化時，builder 會執行</span></span><br><span class="line">    AnimatedBuilder(</span><br><span class="line">      animation: _counterModel,</span><br><span class="line">      builder: (BuildContext context, Widget? child) &#123;</span><br><span class="line">        <span class="keyword">return</span> Text(</span><br><span class="line">          <span class="string">&#x27;AnimatedBuilder <span class="subst">$&#123;_counterModel.counter&#125;</span>&#x27;</span>,</span><br><span class="line">          style: <span class="keyword">const</span> TextStyle(</span><br><span class="line">            fontSize: <span class="number">26</span>,</span><br><span class="line">            color: Colors.blue,</span><br><span class="line">            fontWeight: FontWeight.w700,</span><br><span class="line">          ),</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    ),</span><br><span class="line">    <span class="comment">// 監聽數值，當有變化時，builder 會執行</span></span><br><span class="line">    ListenableBuilder(</span><br><span class="line">      listenable: _counterModel,</span><br><span class="line">      builder: (BuildContext context, Widget? child) &#123;</span><br><span class="line">        <span class="keyword">return</span> Text(</span><br><span class="line">          <span class="string">&#x27;ListenableBuilder <span class="subst">$&#123;_counterModel.counter&#125;</span>&#x27;</span>,</span><br><span class="line">          style: <span class="keyword">const</span> TextStyle(</span><br><span class="line">            fontSize: <span class="number">26</span>,</span><br><span class="line">            color: Colors.blue,</span><br><span class="line">            fontWeight: FontWeight.w700,</span><br><span class="line">          ),</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    ),</span><br><span class="line">    SizedBox(height: <span class="number">16</span>),</span><br><span class="line">    TextButton(</span><br><span class="line">      onPressed: _incrementCounter,</span><br><span class="line">      child: Text(<span class="string">&#x27;ChangeNotifier Click!&#x27;</span>),</span><br><span class="line">    ),</span><br><span class="line">  ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>雖然 <code>AnimatedBuilder</code> 跟 <code>ListenableBuilder</code> 感覺使用上沒有什麼差別，但一般使用時建議使用<code>ListenableBuilder</code> ，有動畫需求時才用<code>AnimatedBuilder</code> 。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/JumBoJay06/FlutterExample">程式碼</a></p>
+</blockquote>
 
     </div>
 
@@ -299,7 +293,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>文章連結：</strong>
-    <a href="https://jumbojay06.github.io/2025/05/13/Flutter-%E5%85%A7%E5%BB%BA%E7%9A%84%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95/" title="Flutter 內建的狀態管理方法">https://jumbojay06.github.io/2025/05/13/Flutter-內建的狀態管理方法/</a>
+    <a href="https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/" title="Flutter ValueNotifier &#x2F; ChangeNotifie">https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
@@ -310,7 +304,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%9F%BA%E5%9F%BA%E6%9C%AC%E6%9C%AC/" rel="tag"># 基基本本</a>
+              <a href="/tags/ValueNotifier-ChangeNotifie/" rel="tag"># ValueNotifier / ChangeNotifie</a>
           </div>
 
         
@@ -319,13 +313,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/05/09/Flutter-%E7%B2%97%E8%AB%87-go-router/" rel="prev" title="Flutter 粗談 go_router">
-      <i class="fa fa-chevron-left"></i> Flutter 粗談 go_router
+    <a href="/2025/05/14/Flutter-InheritedWidget/" rel="prev" title="Flutter InheritedWidget">
+      <i class="fa fa-chevron-left"></i> Flutter InheritedWidget
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/" rel="next" title="Flutter StatefulWidget 和 setState()">
-      Flutter StatefulWidget 和 setState() <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -391,7 +382,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%BB%BA%E7%9A%84%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">內建的狀態管理方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#StatefulWidget-%E5%92%8C-setState"><span class="nav-number">1.0.1.</span> <span class="nav-text">StatefulWidget 和 setState()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InheritedWidget"><span class="nav-number">1.0.2.</span> <span class="nav-text">InheritedWidget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ValueNotifier-ChangeNotifier-%E6%90%AD%E9%85%8D-ValueListenableBuilder-AnimatedBuilder-ListenableBuilder"><span class="nav-number">1.0.3.</span> <span class="nav-text">ValueNotifier &#x2F; ChangeNotifier 搭配 ValueListenableBuilder &#x2F; AnimatedBuilder &#x2F; ListenableBuilder</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ValueNotifier-ChangeNotifier"><span class="nav-number">1.</span> <span class="nav-text">ValueNotifier &#x2F; ChangeNotifier</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -523,9 +514,9 @@
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "https://jumbojay06.github.io/2025/05/13/Flutter-%E5%85%A7%E5%BB%BA%E7%9A%84%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95/";
-    this.page.identifier = "2025/05/13/Flutter-內建的狀態管理方法/";
-    this.page.title = "Flutter 內建的狀態管理方法";
+    this.page.url = "https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/";
+    this.page.identifier = "2025/05/14/Flutter-ValueNotifier-ChangeNotifie/";
+    this.page.title = "Flutter ValueNotifier / ChangeNotifie";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
