@@ -44,20 +44,20 @@
   const analytics = getAnalytics(app);
 </script>
 
-  <meta name="description" content="ValueNotifier &#x2F; ChangeNotifier簡單說就是把資料變成可被觀察的感覺">
+  <meta name="description" content="ProviderProvider封裝了InheritedWidget的功能，並讓我們能更容易地使用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Flutter ValueNotifier &#x2F; ChangeNotifie">
-<meta property="og:url" content="https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/">
+<meta property="og:title" content="Flutter Provider">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/05/15/Flutter-Provider/">
 <meta property="og:site_name" content="JumBoJay 小小筆記">
-<meta property="og:description" content="ValueNotifier &#x2F; ChangeNotifier簡單說就是把資料變成可被觀察的感覺">
+<meta property="og:description" content="ProviderProvider封裝了InheritedWidget的功能，並讓我們能更容易地使用">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2025-05-14T09:31:02.000Z">
-<meta property="article:modified_time" content="2025-05-14T09:34:01.783Z">
+<meta property="article:published_time" content="2025-05-15T09:42:16.000Z">
+<meta property="article:modified_time" content="2025-05-15T09:45:37.654Z">
 <meta property="article:author" content="JumBoJay">
-<meta property="article:tag" content="ValueNotifier &#x2F; ChangeNotifie">
+<meta property="article:tag" content="Provider">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/">
+<link rel="canonical" href="https://jumbojay06.github.io/2025/05/15/Flutter-Provider/">
 
 
 <script id="page-configurations">
@@ -70,7 +70,7 @@
   };
 </script>
 
-  <title>Flutter ValueNotifier / ChangeNotifie | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  <title>Flutter Provider | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
     <script>
@@ -192,7 +192,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/15/Flutter-Provider/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -205,7 +205,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Flutter ValueNotifier / ChangeNotifie
+          Flutter Provider
         </h1>
 
         <div class="post-meta">
@@ -216,7 +216,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2025-05-14 17:31:02 / 修改時間：17:34:01" itemprop="dateCreated datePublished" datetime="2025-05-14T17:31:02+08:00">2025-05-14</time>
+              <time title="創建時間：2025-05-15 17:42:16 / 修改時間：17:45:37" itemprop="dateCreated datePublished" datetime="2025-05-15T17:42:16+08:00">2025-05-15</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,8 +245,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/14/Flutter-ValueNotifier-ChangeNotifie/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2025/05/15/Flutter-Provider/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/15/Flutter-Provider/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -261,20 +261,34 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="ValueNotifier-ChangeNotifier"><a href="#ValueNotifier-ChangeNotifier" class="headerlink" title="ValueNotifier &#x2F; ChangeNotifier"></a>ValueNotifier &#x2F; ChangeNotifier</h1><p>簡單說就是把資料變成可被觀察的感覺</p>
+        <h1 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h1><p>Provider封裝了InheritedWidget的功能，並讓我們能更容易地使用</p>
 <span id="more"></span>
 
 <ul>
-<li>ValueNotifier 範例</li>
+<li>安裝套件</li>
 </ul>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> ValueNotifier&lt;<span class="built_in">int</span>&gt; _counter = ValueNotifier&lt;<span class="built_in">int</span>&gt;(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用這個更改數值</span></span><br><span class="line"><span class="keyword">void</span> _incrementCounter() &#123;</span><br><span class="line">  _counter.value++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Column(</span><br><span class="line">  mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">  children: &lt;Widget&gt;[</span><br><span class="line">    Text(</span><br><span class="line">      MyLocalizations.of(context).example_notifier_content,</span><br><span class="line">      style: <span class="keyword">const</span> TextStyle(fontSize: <span class="number">20</span>, color: Colors.black),</span><br><span class="line">    ),</span><br><span class="line">    SizedBox(height: <span class="number">16</span>),</span><br><span class="line">    <span class="comment">// 監聽數值，當有變化時，builder 會執行</span></span><br><span class="line">    ValueListenableBuilder&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">      valueListenable: _counter,</span><br><span class="line">      builder: (context, value, child) &#123;</span><br><span class="line">        <span class="keyword">return</span> Text(</span><br><span class="line">          <span class="string">&#x27;<span class="subst">$value</span>&#x27;</span>,</span><br><span class="line">          style: <span class="keyword">const</span> TextStyle(</span><br><span class="line">            fontSize: <span class="number">26</span>,</span><br><span class="line">            color: Colors.blue,</span><br><span class="line">            fontWeight: FontWeight.w700,</span><br><span class="line">          ),</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    ),</span><br><span class="line">    SizedBox(height: <span class="number">16</span>),</span><br><span class="line">    TextButton(</span><br><span class="line">      onPressed: _incrementCounter,</span><br><span class="line">      child: Text(<span class="string">&#x27;ValueNotifier Click!&#x27;</span>),</span><br><span class="line">    ),</span><br><span class="line">  ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ flutter pub add provider</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>ChangeNotifier 範例</li>
+<li>Model</li>
 </ul>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CounterModel</span> <span class="keyword">extends</span> <span class="title">ChangeNotifier</span> </span>&#123;</span><br><span class="line">  <span class="built_in">int</span> _counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">int</span> <span class="keyword">get</span> counter =&gt; _counter;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> incrementCounter() &#123;</span><br><span class="line">    _counter++;</span><br><span class="line">    <span class="comment">// 通知所有監聽者</span></span><br><span class="line">    notifyListeners(); </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> CounterModel _counterModel = CounterModel();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用這個更改數值</span></span><br><span class="line"><span class="keyword">void</span> _incrementCounter() &#123;</span><br><span class="line">  _counterModel.incrementCounter();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Column(</span><br><span class="line">  mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">  children: &lt;Widget&gt;[</span><br><span class="line">    Text(</span><br><span class="line">      MyLocalizations.of(context).example_notifier_content,</span><br><span class="line">      style: <span class="keyword">const</span> TextStyle(fontSize: <span class="number">20</span>, color: Colors.black),</span><br><span class="line">    ),</span><br><span class="line">    SizedBox(height: <span class="number">16</span>),</span><br><span class="line">    <span class="comment">// 監聽數值，當有變化時，builder 會執行</span></span><br><span class="line">    AnimatedBuilder(</span><br><span class="line">      animation: _counterModel,</span><br><span class="line">      builder: (BuildContext context, Widget? child) &#123;</span><br><span class="line">        <span class="keyword">return</span> Text(</span><br><span class="line">          <span class="string">&#x27;AnimatedBuilder <span class="subst">$&#123;_counterModel.counter&#125;</span>&#x27;</span>,</span><br><span class="line">          style: <span class="keyword">const</span> TextStyle(</span><br><span class="line">            fontSize: <span class="number">26</span>,</span><br><span class="line">            color: Colors.blue,</span><br><span class="line">            fontWeight: FontWeight.w700,</span><br><span class="line">          ),</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    ),</span><br><span class="line">    <span class="comment">// 監聽數值，當有變化時，builder 會執行</span></span><br><span class="line">    ListenableBuilder(</span><br><span class="line">      listenable: _counterModel,</span><br><span class="line">      builder: (BuildContext context, Widget? child) &#123;</span><br><span class="line">        <span class="keyword">return</span> Text(</span><br><span class="line">          <span class="string">&#x27;ListenableBuilder <span class="subst">$&#123;_counterModel.counter&#125;</span>&#x27;</span>,</span><br><span class="line">          style: <span class="keyword">const</span> TextStyle(</span><br><span class="line">            fontSize: <span class="number">26</span>,</span><br><span class="line">            color: Colors.blue,</span><br><span class="line">            fontWeight: FontWeight.w700,</span><br><span class="line">          ),</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    ),</span><br><span class="line">    SizedBox(height: <span class="number">16</span>),</span><br><span class="line">    TextButton(</span><br><span class="line">      onPressed: _incrementCounter,</span><br><span class="line">      child: Text(<span class="string">&#x27;ChangeNotifier Click!&#x27;</span>),</span><br><span class="line">    ),</span><br><span class="line">  ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>一樣用 Freezed 來實作</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@freezed</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bookmark</span> <span class="title">with</span> <span class="title">_</span>$<span class="title">Bookmark</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> Bookmark(&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="built_in">String</span> title,</span><br><span class="line">    <span class="keyword">required</span> <span class="built_in">String</span> subtitle,</span><br><span class="line">  &#125;) = _Bookmark;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>雖然 <code>AnimatedBuilder</code> 跟 <code>ListenableBuilder</code> 感覺使用上沒有什麼差別，但一般使用時建議使用<code>ListenableBuilder</code> ，有動畫需求時才用<code>AnimatedBuilder</code> 。</p>
+<ul>
+<li>State</li>
+</ul>
+<p>一樣使用 <code>ChangeNotifier</code> 來做狀態管理</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarksState</span> <span class="keyword">extends</span> <span class="title">ChangeNotifier</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;Bookmark&gt; _bookmarks = <span class="built_in">List</span>.empty(growable: <span class="keyword">true</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">List</span>&lt;Bookmark&gt; getBookmarks() &#123;</span><br><span class="line">    <span class="keyword">return</span> _bookmarks;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">void</span> addBookmark(Bookmark bookmark) &#123;</span><br><span class="line">    _bookmarks.add(bookmark);</span><br><span class="line">    notifyListeners();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>View</li>
+</ul>
+<p>實作 UI</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> BookmarkPage(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">// 如果有多個 provider，則可以使用 MultiProvider</span></span><br><span class="line">    <span class="keyword">return</span> ChangeNotifierProvider(</span><br><span class="line">      create: (_) =&gt; BookmarksState(),</span><br><span class="line">      child: Scaffold(</span><br><span class="line">        appBar: AppBar(</span><br><span class="line">          backgroundColor: Colors.blueAccent,</span><br><span class="line">          centerTitle: Platform.isIOS,</span><br><span class="line">          title: Text(MyLocalizations.of(context).example_provider_title),</span><br><span class="line">        ),</span><br><span class="line">        body: CustomScrollView(</span><br><span class="line">          slivers: [</span><br><span class="line">            <span class="keyword">const</span> BookmarkListWidget(),</span><br><span class="line">            SliverToBoxAdapter(</span><br><span class="line">              child: <span class="keyword">const</span> BookmarkAddWidget(),</span><br><span class="line">            ),</span><br><span class="line">          ],</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkListWidget</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> BookmarkListWidget(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">// 當 state 有變化時，會自動 rebuild</span></span><br><span class="line">    <span class="keyword">final</span> bookmarksState = Provider.of&lt;BookmarksState&gt;(context);</span><br><span class="line">    <span class="keyword">return</span> SliverList.separated(</span><br><span class="line">      itemCount: bookmarksState.getBookmarks().length,</span><br><span class="line">        itemBuilder: (context, index) &#123;</span><br><span class="line">          <span class="keyword">final</span> bookmark = bookmarksState.getBookmarks()[index];</span><br><span class="line">          <span class="keyword">return</span> ListTile(</span><br><span class="line">            title: Text(bookmark.title),</span><br><span class="line">            subtitle: Text(bookmark.subtitle),</span><br><span class="line">          );</span><br><span class="line">        &#125;,</span><br><span class="line">        separatorBuilder: (context, index) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">const</span> Divider();</span><br><span class="line">        &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkAddWidget</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> BookmarkAddWidget(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">final</span> bookmarksState = Provider.of&lt;BookmarksState&gt;(context);</span><br><span class="line">    <span class="keyword">final</span> index = bookmarksState.getBookmarks().length;</span><br><span class="line">    <span class="keyword">return</span> ElevatedButton(</span><br><span class="line">      onPressed: () &#123;</span><br><span class="line">        <span class="comment">// 當按下按鈕時，會新增一個 bookmark，觸發狀態變化</span></span><br><span class="line">        bookmarksState.addBookmark(Bookmark(title: <span class="string">&#x27;New Bookmark <span class="subst">$index</span>&#x27;</span>, subtitle: <span class="string">&#x27;Subtitle <span class="subst">$index</span>&#x27;</span>));</span><br><span class="line">      &#125;,</span><br><span class="line">      child: Text(MyLocalizations.of(context).example_provider_add),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>建立 Provider 時，要注意作用範圍有沒有涵蓋到想要取得狀態的 Widget，避免無法取得 Provider；另外有想要做成全域的 Provider 的話，一般都是直接寫在 runApp() 裡面，這樣就可以在整個 App 範圍內都可以取得，如下</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> main() &#123;</span><br><span class="line">  runApp(</span><br><span class="line">    MultiProvider(</span><br><span class="line">      providers: [</span><br><span class="line">        ChangeNotifierProvider(create: (_) =&gt; BookmarksState()),</span><br><span class="line">      ],</span><br><span class="line">      child: <span class="keyword">const</span> MyApp(),</span><br><span class="line">    ),</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><a target="_blank" rel="noopener" href="https://github.com/JumBoJay06/FlutterExample">程式碼</a></p>
 </blockquote>
@@ -293,7 +307,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>文章連結：</strong>
-    <a href="https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/" title="Flutter ValueNotifier &#x2F; ChangeNotifie">https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/</a>
+    <a href="https://jumbojay06.github.io/2025/05/15/Flutter-Provider/" title="Flutter Provider">https://jumbojay06.github.io/2025/05/15/Flutter-Provider/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
@@ -304,7 +318,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/ValueNotifier-ChangeNotifie/" rel="tag"># ValueNotifier / ChangeNotifie</a>
+              <a href="/tags/Provider/" rel="tag"># Provider</a>
           </div>
 
         
@@ -313,13 +327,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/05/14/Flutter-InheritedWidget/" rel="prev" title="Flutter InheritedWidget">
-      <i class="fa fa-chevron-left"></i> Flutter InheritedWidget
+    <a href="/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/" rel="prev" title="Flutter ValueNotifier / ChangeNotifie">
+      <i class="fa fa-chevron-left"></i> Flutter ValueNotifier / ChangeNotifie
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/05/15/Flutter-Provider/" rel="next" title="Flutter Provider">
-      Flutter Provider <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -385,7 +396,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ValueNotifier-ChangeNotifier"><span class="nav-number">1.</span> <span class="nav-text">ValueNotifier &#x2F; ChangeNotifier</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Provider"><span class="nav-number">1.</span> <span class="nav-text">Provider</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -517,9 +528,9 @@
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "https://jumbojay06.github.io/2025/05/14/Flutter-ValueNotifier-ChangeNotifie/";
-    this.page.identifier = "2025/05/14/Flutter-ValueNotifier-ChangeNotifie/";
-    this.page.title = "Flutter ValueNotifier / ChangeNotifie";
+    this.page.url = "https://jumbojay06.github.io/2025/05/15/Flutter-Provider/";
+    this.page.identifier = "2025/05/15/Flutter-Provider/";
+    this.page.title = "Flutter Provider";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
