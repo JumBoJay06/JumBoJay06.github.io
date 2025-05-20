@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="Bloc &#x2F; Cubit跟 Riverpod 比起來，有更加嚴格的驅動模式，也導致 UI 跟 State 交互邏輯會比較清晰，在沒這麼複雜的情境也有 Cubit 可以使用，不用連小弟都要寫完整的 Bloc。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter Bloc &#x2F; Cubit">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/05/20/Flutter-Bloc-Cubit/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="Bloc &#x2F; Cubit跟 Riverpod 比起來，有更加嚴格的驅動模式，也導致 UI 跟 State 交互邏輯會比較清晰，在沒這麼複雜的情境也有 Cubit 可以使用，不用連小弟都要寫完整的 Bloc。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2025-05-20T06:51:06.000Z">
+<meta property="article:modified_time" content="2025-05-20T06:55:15.323Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="Bloc">
+<meta property="article:tag" content="Cubit">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/05/20/Flutter-Bloc-Cubit/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>Flutter Bloc / Cubit | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/20/Flutter-Bloc-Cubit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flutter Bloc / Cubit
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-05-20 14:51:06 / 修改時間：14:55:15" itemprop="dateCreated datePublished" datetime="2025-05-20T14:51:06+08:00">2025-05-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Flutter/" itemprop="url" rel="index"><span itemprop="name">Flutter</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Flutter/%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">狀態管理</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/05/20/Flutter-Bloc-Cubit/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/20/Flutter-Bloc-Cubit/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Bloc-Cubit"><a href="#Bloc-Cubit" class="headerlink" title="Bloc &#x2F; Cubit"></a>Bloc &#x2F; Cubit</h1><p>跟 Riverpod 比起來，有更加嚴格的驅動模式，也導致 UI 跟 State 交互邏輯會比較清晰，在沒這麼複雜的情境也有 Cubit 可以使用，不用連小弟都要寫完整的 Bloc。</p>
+<span id="more"></span>
+<h2 id="安裝"><a href="#安裝" class="headerlink" title="安裝"></a>安裝</h2><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter pub add flutter_bloc</span><br></pre></td></tr></table></figure>
+
+<h2 id="範例"><a href="#範例" class="headerlink" title="範例"></a>範例</h2><p>一樣用 Bookmark 來當作實例，也會搭配 Freezed 使用</p>
+<ul>
+<li><p>Bloc</p>
+<p>  首先建立 Bloc 三要素(State、Event、 Bloc)</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">part</span> of <span class="string">&#x27;bookmark_bloc.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@freezed</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkState</span> <span class="title">with</span> <span class="title">_</span>$<span class="title">BookmarkState</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkState.initial() = Initial;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkState.loading() = Loading;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkState.loaded(Boomarks bookmarks) = Loaded;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkState.error(<span class="built_in">String</span> message) = Error;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">part</span> of <span class="string">&#x27;bookmark_bloc.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@freezed</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkEvent</span> <span class="title">with</span> <span class="title">_</span>$<span class="title">BookmarkEvent</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkEvent.init() = _Init;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkEvent.addBookmark(Bookmark bookmark) = AddBookmark;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">part</span> <span class="string">&#x27;bookmark_event.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">part</span> <span class="string">&#x27;bookmark_state.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">part</span> <span class="string">&#x27;bookmark_bloc.freezed.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkBloc</span> <span class="keyword">extends</span> <span class="title">Bloc</span>&lt;<span class="title">BookmarkEvent</span>, <span class="title">BookmarkState</span>&gt; </span>&#123;</span><br><span class="line">  BookmarkBloc() : <span class="keyword">super</span>(<span class="keyword">const</span> BookmarkState.initial()) &#123;</span><br><span class="line">    <span class="comment">// 註冊事件處理器，使用 freezed 產生的具體事件類型</span></span><br><span class="line">    <span class="keyword">on</span>&lt;_Init&gt;(_onInit); <span class="comment">// _Init 是 BookmarkEvent.init() 的 freezed 產生類別</span></span><br><span class="line">    <span class="keyword">on</span>&lt;AddBookmark&gt;(_onAddBookmark); <span class="comment">// _AddBookmark 是 BookmarkEvent.addBookmark() 的 freezed 產生類別</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bloc 建立時即發送 init 事件以載入初始書籤</span></span><br><span class="line">    add(<span class="keyword">const</span> BookmarkEvent.init());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Future&lt;<span class="keyword">void</span>&gt; _onInit(</span><br><span class="line">      _Init event, <span class="comment">// 接收 freezed 產生的 _Init 事件</span></span><br><span class="line">      Emitter&lt;BookmarkState&gt; emit,</span><br><span class="line">      ) <span class="keyword">async</span> &#123;</span><br><span class="line">    emit(<span class="keyword">const</span> BookmarkState.loading());</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// 模擬延遲</span></span><br><span class="line">      <span class="keyword">await</span> Future.delayed(<span class="keyword">const</span> <span class="built_in">Duration</span>(seconds: <span class="number">1</span>));</span><br><span class="line">      emit(BookmarkState.loaded(Boomarks(list: <span class="built_in">List</span>.empty(growable: <span class="keyword">true</span>))));</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">      emit(BookmarkState.error(<span class="string">&quot;無法載入書籤: <span class="subst">$&#123;e.toString()&#125;</span>&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> _onAddBookmark(</span><br><span class="line">      AddBookmark event, <span class="comment">// 接收 freezed 產生的 _AddBookmark 事件</span></span><br><span class="line">      Emitter&lt;BookmarkState&gt; emit,</span><br><span class="line">      ) &#123;</span><br><span class="line">    <span class="keyword">final</span> currentState = state;</span><br><span class="line">    <span class="comment">// 確保目前狀態是 _LoadedState</span></span><br><span class="line">    <span class="keyword">if</span> (currentState <span class="keyword">is</span> Loaded) &#123;</span><br><span class="line">      <span class="keyword">final</span> newList = <span class="built_in">List</span>&lt;Bookmark&gt;.from(currentState.bookmarks.list)</span><br><span class="line">      <span class="comment">// 從 event.bookmark 獲取要新增的書籤</span></span><br><span class="line">        ..add(event.bookmark);</span><br><span class="line">      emit(BookmarkState.loaded(Boomarks(list: newList)));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 如果書籤還沒載入或發生錯誤，可以選擇忽略、記錄錯誤或發出錯誤狀態</span></span><br><span class="line">      <span class="built_in">print</span>(<span class="string">&quot;無法新增書籤：書籤尚未載入或先前發生錯誤。&quot;</span>);</span><br><span class="line">      <span class="comment">// 例如: emit(BookmarkState.error(&quot;無法新增書籤，請先載入列表。&quot;));</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>  再來，UI 部分</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkBlocPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> BookmarkBlocPage(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">	  <span class="comment">// 如果有多個 provider，則可以使用 MultiBlocProvider</span></span><br><span class="line">    <span class="keyword">return</span> BlocProvider&lt;BookmarkBloc&gt;(</span><br><span class="line">      create: (context) =&gt; BookmarkBloc(),</span><br><span class="line">      child: Scaffold(</span><br><span class="line">        appBar: AppBar(</span><br><span class="line">          backgroundColor: Colors.blueAccent,</span><br><span class="line">          centerTitle: Platform.isIOS,</span><br><span class="line">          title: Text(MyLocalizations.of(context).example_bloc_title),</span><br><span class="line">        ),</span><br><span class="line">        body: CustomScrollView(</span><br><span class="line">          slivers: [</span><br><span class="line">            <span class="keyword">const</span> BookmarkListBlocWidget(),</span><br><span class="line">            SliverToBoxAdapter(child: <span class="keyword">const</span> BookmarkAddBlocWidget()),</span><br><span class="line">          ],</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkListBlocWidget</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> BookmarkListBlocWidget(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">// 使用 BlocBuilder 來監聽 BookmarkBloc 的狀態變化並重建 UI</span></span><br><span class="line">    <span class="keyword">return</span> BlocBuilder&lt;BookmarkBloc, BookmarkState&gt;(</span><br><span class="line">      builder: (context, state) &#123;</span><br><span class="line">        <span class="comment">// 使用 state.when 處理不同狀態</span></span><br><span class="line">        <span class="keyword">return</span> state.<span class="keyword">when</span>(</span><br><span class="line">          initial: () =&gt; <span class="keyword">const</span> SliverToBoxAdapter(</span><br><span class="line">              child: Center(child: Text(<span class="string">&quot;正在初始化...&quot;</span>))),</span><br><span class="line">          loading: () =&gt; <span class="keyword">const</span> SliverToBoxAdapter(</span><br><span class="line">              child: Center(child: CircularProgressIndicator())),</span><br><span class="line">          loaded: (bookmarks) &#123;</span><br><span class="line">            <span class="keyword">if</span> (bookmarks.list.isEmpty) &#123;</span><br><span class="line">              <span class="keyword">return</span> SliverToBoxAdapter(</span><br><span class="line">                child: SizedBox.shrink(),</span><br><span class="line">              );</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> SliverList.separated(</span><br><span class="line">              itemCount: bookmarks.list.length,</span><br><span class="line">              itemBuilder: (context, index) &#123;</span><br><span class="line">                <span class="keyword">final</span> bookmark = bookmarks.list[index];</span><br><span class="line">                <span class="keyword">return</span> ListTile(</span><br><span class="line">                  title: Text(bookmark.title),</span><br><span class="line">                  subtitle: Text(bookmark.subtitle),</span><br><span class="line">                );</span><br><span class="line">              &#125;,</span><br><span class="line">              separatorBuilder: (context, index) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">const</span> Divider();</span><br><span class="line">              &#125;,</span><br><span class="line">            );</span><br><span class="line">          &#125;,</span><br><span class="line">          error: (message) =&gt; SliverToBoxAdapter(</span><br><span class="line">              child: Center(child: Text(<span class="string">&#x27;錯誤: <span class="subst">$message</span>&#x27;</span>))),</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkAddBlocWidget</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> BookmarkAddBlocWidget(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">	  <span class="comment">// 也可以從 context 來監聽 BookmarkBloc 的狀態變化</span></span><br><span class="line">    <span class="keyword">var</span> state = context.watch&lt;BookmarkBloc&gt;().state;</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">bool</span> canAdd = state <span class="keyword">is</span> Loaded;</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">int</span> currentLength = canAdd ? state.bookmarks.list.length : <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ElevatedButton(</span><br><span class="line">      onPressed: canAdd</span><br><span class="line">          ? () &#123;</span><br><span class="line">        <span class="keyword">final</span> index = currentLength;</span><br><span class="line">        <span class="keyword">final</span> newBookmark = Bookmark(</span><br><span class="line">          title: <span class="string">&#x27;New Bookmark <span class="subst">$index</span>&#x27;</span>,</span><br><span class="line">          subtitle: <span class="string">&#x27;Subtitle <span class="subst">$index</span>&#x27;</span>,</span><br><span class="line">        );</span><br><span class="line">        <span class="comment">// 向 Bloc 發送 AddBookmarkEvent 事件</span></span><br><span class="line">        context.read&lt;BookmarkBloc&gt;().add(AddBookmark(newBookmark));</span><br><span class="line">      &#125;</span><br><span class="line">          : <span class="keyword">null</span>,</span><br><span class="line">      child: Text(MyLocalizations.of(context).example_provider_add),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Cubit</p>
+<p>  跟 Bloc 不同的是，Cubit 拿掉 Event 架構，使其輕量化</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// State 部分，Cubit 跟 Bloc 都會是一樣的</span></span><br><span class="line"><span class="meta">@freezed</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkState</span> <span class="title">with</span> <span class="title">_</span>$<span class="title">BookmarkState</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkState.initial() = Initial;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkState.loading() = Loading;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkState.loaded(Boomarks bookmarks) = Loaded;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">factory</span> BookmarkState.error(<span class="built_in">String</span> message) = Error;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 可以當作原本的 Bloc，只是沒有 Event 當作驅動</span></span><br><span class="line"><span class="keyword">part</span> <span class="string">&#x27;bookmark_state.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">part</span> <span class="string">&#x27;bookmark_cubit.freezed.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkCubit</span> <span class="keyword">extends</span> <span class="title">Cubit</span>&lt;<span class="title">BookmarkState</span>&gt; </span>&#123;</span><br><span class="line">  BookmarkCubit() : <span class="keyword">super</span>(<span class="keyword">const</span> BookmarkState.initial()) &#123;</span><br><span class="line">    <span class="comment">// 對應於 Bloc 中的 BookmarkEvent.init()</span></span><br><span class="line">    <span class="comment">// Cubit 建立時即載入初始書籤</span></span><br><span class="line">    _loadInitialBookmarks();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 這個私有方法處理初始載入，類似 Bloc 中處理 InitEvent 的邏輯</span></span><br><span class="line">  Future&lt;<span class="keyword">void</span>&gt; _loadInitialBookmarks() <span class="keyword">async</span> &#123;</span><br><span class="line">    emit(<span class="keyword">const</span> BookmarkState.loading());</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// 模擬 Riverpod provider 或 Bloc 中的延遲</span></span><br><span class="line">      <span class="keyword">await</span> Future.delayed(<span class="keyword">const</span> <span class="built_in">Duration</span>(seconds: <span class="number">1</span>));</span><br><span class="line">      <span class="comment">// 初始為空列表</span></span><br><span class="line">      emit(BookmarkState.loaded(Boomarks(list: <span class="built_in">List</span>.empty(growable: <span class="keyword">true</span>))));</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">      emit(BookmarkState.error(<span class="string">&quot;無法載入書籤: <span class="subst">$&#123;e.toString()&#125;</span>&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 這個公開方法對應於 Bloc 中的 BookmarkEvent.addBookmark()</span></span><br><span class="line">  <span class="comment">// UI 層會直接調用此方法</span></span><br><span class="line">  <span class="keyword">void</span> addBookmark(Bookmark bookmarkToAdd) &#123;</span><br><span class="line">    <span class="keyword">final</span> currentState = state;</span><br><span class="line">    <span class="comment">// 確保目前狀態是 Loaded 才能添加</span></span><br><span class="line">    <span class="comment">// 這裡的 Loaded 是 freezed 為 BookmarkState.loaded() 產生的類別</span></span><br><span class="line">    <span class="keyword">if</span> (currentState <span class="keyword">is</span> Loaded) &#123;</span><br><span class="line">      <span class="comment">// 從目前狀態取得書籤列表，並加入新的書籤</span></span><br><span class="line">      <span class="keyword">final</span> newList = <span class="built_in">List</span>&lt;Bookmark&gt;.from(currentState.bookmarks.list)</span><br><span class="line">        ..add(bookmarkToAdd);</span><br><span class="line">      <span class="comment">// 發出新的 loaded 狀態</span></span><br><span class="line">      emit(BookmarkState.loaded(Boomarks(list: newList)));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 如果書籤還沒載入或發生錯誤，可以選擇忽略、記錄錯誤或發出錯誤狀態</span></span><br><span class="line">      <span class="built_in">print</span>(<span class="string">&quot;無法新增書籤：書籤尚未載入或先前發生錯誤。&quot;</span>);</span><br><span class="line">      <span class="comment">// 例如: emit(BookmarkState.error(&quot;無法新增書籤，請先載入列表。&quot;));</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  再來，UI 部分就大同小異了</p>
+  <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkCubitPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> BookmarkCubitPage(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">	  <span class="comment">// 也可以從 context 來監聽 BookmarkBloc 的狀態變化</span></span><br><span class="line">    <span class="keyword">return</span> BlocProvider(</span><br><span class="line">      <span class="comment">// 建立並提供 BookmarkCubit</span></span><br><span class="line">      create: (_) =&gt; BookmarkCubit(),</span><br><span class="line">      child: Scaffold(</span><br><span class="line">        appBar: AppBar(</span><br><span class="line">          backgroundColor: Colors.blueAccent,</span><br><span class="line">          centerTitle: Platform.isIOS,</span><br><span class="line">          title: Text(MyLocalizations.of(context).example_cubit_title),</span><br><span class="line">        ),</span><br><span class="line">        body: <span class="keyword">const</span> CustomScrollView(</span><br><span class="line">          slivers: [</span><br><span class="line">            BookmarkListCubitWidget(),</span><br><span class="line">            SliverToBoxAdapter(child: BookmarkAddCubitWidget()),</span><br><span class="line">          ],</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkListCubitWidget</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> BookmarkListCubitWidget(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">// 使用 BlocBuilder 來監聽 BookmarkCubit 的狀態變化並重建 UI</span></span><br><span class="line">    <span class="keyword">return</span> BlocBuilder&lt;BookmarkCubit, BookmarkState&gt;(</span><br><span class="line">      builder: (context, state) &#123;</span><br><span class="line">        <span class="comment">// 使用 state.when 來處理不同的狀態</span></span><br><span class="line">        <span class="keyword">return</span> state.<span class="keyword">when</span>(</span><br><span class="line">          initial: () =&gt; <span class="keyword">const</span> SliverToBoxAdapter(</span><br><span class="line">              child: Center(child: Text(<span class="string">&quot;正在初始化...&quot;</span>))),</span><br><span class="line">          loading: () =&gt; <span class="keyword">const</span> SliverToBoxAdapter(</span><br><span class="line">              child: Center(child: CircularProgressIndicator())),</span><br><span class="line">          loaded: (bookmarks) &#123;</span><br><span class="line">            <span class="keyword">if</span> (bookmarks.list.isEmpty) &#123;</span><br><span class="line">              <span class="keyword">return</span> SliverToBoxAdapter(</span><br><span class="line">                child: SizedBox.shrink(),</span><br><span class="line">              );</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> SliverList.separated(</span><br><span class="line">              itemCount: bookmarks.list.length,</span><br><span class="line">              itemBuilder: (context, index) &#123;</span><br><span class="line">                <span class="keyword">final</span> bookmark = bookmarks.list[index];</span><br><span class="line">                <span class="keyword">return</span> ListTile(</span><br><span class="line">                  title: Text(bookmark.title),</span><br><span class="line">                  subtitle: Text(bookmark.subtitle),</span><br><span class="line">                );</span><br><span class="line">              &#125;,</span><br><span class="line">              separatorBuilder: (context, index) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">const</span> Divider();</span><br><span class="line">              &#125;,</span><br><span class="line">            );</span><br><span class="line">          &#125;,</span><br><span class="line">          error: (message) =&gt; SliverToBoxAdapter(</span><br><span class="line">              child: Center(child: Text(<span class="string">&#x27;錯誤: <span class="subst">$message</span>&#x27;</span>))),</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookmarkAddCubitWidget</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> BookmarkAddCubitWidget(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">// 也可以從 context 來監聽 BookmarkCubit 的狀態變化</span></span><br><span class="line">    <span class="keyword">var</span> state = context.watch&lt;BookmarkCubit&gt;().state;</span><br><span class="line">    <span class="comment">// 只有在 &#x27;loaded&#x27; 狀態下才能新增書籤</span></span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">bool</span> canAdd = state <span class="keyword">is</span> Loaded;</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">int</span> currentLength = canAdd ? state.bookmarks.list.length : <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ElevatedButton(</span><br><span class="line">      onPressed: canAdd</span><br><span class="line">          ? () &#123;</span><br><span class="line">        <span class="keyword">final</span> index = currentLength;</span><br><span class="line">        <span class="keyword">final</span> newBookmark = Bookmark(</span><br><span class="line">          title: <span class="string">&#x27;New Bookmark <span class="subst">$index</span>&#x27;</span>,</span><br><span class="line">          subtitle: <span class="string">&#x27;Subtitle <span class="subst">$index</span>&#x27;</span>,</span><br><span class="line">        );</span><br><span class="line">        <span class="comment">// 呼叫 Cubit 的 addBookmark 方法</span></span><br><span class="line">        context.read&lt;BookmarkCubit&gt;().addBookmark(newBookmark);</span><br><span class="line">      &#125;</span><br><span class="line">          : <span class="keyword">null</span>, <span class="comment">// 如果不是 loaded 狀態，則禁用按鈕</span></span><br><span class="line">      child: Text(MyLocalizations.of(context).example_provider_add),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/JumBoJay06/FlutterExample">程式碼</a></p>
+</blockquote>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/05/20/Flutter-Bloc-Cubit/" title="Flutter Bloc &#x2F; Cubit">https://jumbojay06.github.io/2025/05/20/Flutter-Bloc-Cubit/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Bloc/" rel="tag"># Bloc</a>
+              <a href="/tags/Cubit/" rel="tag"># Cubit</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/16/Flutter-Freezed/" rel="prev" title="Flutter Freezed">
+      <i class="fa fa-chevron-left"></i> Flutter Freezed
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Bloc-Cubit"><span class="nav-number">1.</span> <span class="nav-text">Bloc &#x2F; Cubit</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D"><span class="nav-number">1.1.</span> <span class="nav-text">安裝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AF%84%E4%BE%8B"><span class="nav-number">1.2.</span> <span class="nav-text">範例</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/05/20/Flutter-Bloc-Cubit/";
+    this.page.identifier = "2025/05/20/Flutter-Bloc-Cubit/";
+    this.page.title = "Flutter Bloc / Cubit";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
