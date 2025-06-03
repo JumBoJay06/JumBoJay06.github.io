@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="Quarkus API 開發：從理論到實踐HTTP 協定基礎HTTP (HyperText Transfer Protocol) 是全球資訊網的數據通訊基礎。理解其核心概念對於開發任何 Web 應用程式都至關重要。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quarkus API 開發：從理論到實踐">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/06/03/Quarkus-API-%E9%96%8B%E7%99%BC%EF%BC%9A%E5%BE%9E%E7%90%86%E8%AB%96%E5%88%B0%E5%AF%A6%E8%B8%90/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="Quarkus API 開發：從理論到實踐HTTP 協定基礎HTTP (HyperText Transfer Protocol) 是全球資訊網的數據通訊基礎。理解其核心概念對於開發任何 Web 應用程式都至關重要。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2025-06-03T09:03:03.000Z">
+<meta property="article:modified_time" content="2025-06-03T09:05:47.641Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="Quarkus">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/06/03/Quarkus-API-%E9%96%8B%E7%99%BC%EF%BC%9A%E5%BE%9E%E7%90%86%E8%AB%96%E5%88%B0%E5%AF%A6%E8%B8%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>Quarkus API 開發：從理論到實踐 | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/06/03/Quarkus-API-%E9%96%8B%E7%99%BC%EF%BC%9A%E5%BE%9E%E7%90%86%E8%AB%96%E5%88%B0%E5%AF%A6%E8%B8%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Quarkus API 開發：從理論到實踐
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-06-03 17:03:03 / 修改時間：17:05:47" itemprop="dateCreated datePublished" datetime="2025-06-03T17:03:03+08:00">2025-06-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/%E5%BE%8C%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">後端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/%E5%BE%8C%E7%AB%AF/Quarkus/" itemprop="url" rel="index"><span itemprop="name">Quarkus</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/06/03/Quarkus-API-%E9%96%8B%E7%99%BC%EF%BC%9A%E5%BE%9E%E7%90%86%E8%AB%96%E5%88%B0%E5%AF%A6%E8%B8%90/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/06/03/Quarkus-API-開發：從理論到實踐/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Quarkus-API-開發：從理論到實踐"><a href="#Quarkus-API-開發：從理論到實踐" class="headerlink" title="Quarkus API 開發：從理論到實踐"></a>Quarkus API 開發：從理論到實踐</h1><h2 id="HTTP-協定基礎"><a href="#HTTP-協定基礎" class="headerlink" title="HTTP 協定基礎"></a>HTTP 協定基礎</h2><p>HTTP (HyperText Transfer Protocol) 是全球資訊網的數據通訊基礎。理解其核心概念對於開發任何 Web 應用程式都至關重要。</p>
+<span id="more"></span>
+<ul>
+<li><strong>Method (方法)</strong>：定義了對資源執行的操作。常見的方法有：<ul>
+<li><code>GET</code>：請求指定的資源。通常用於讀取資料。</li>
+<li><code>POST</code>：提交資料到指定的資源，通常導致狀態改變或副作用（例如，建立新資源）。</li>
+<li><code>PUT</code>：用請求中的酬載取代目標資源的所有目前表示。通常用於更新完整資源。</li>
+<li><code>DELETE</code>：刪除指定的資源。</li>
+<li><code>PATCH</code>：對資源套用部分修改。</li>
+<li><code>HEAD</code>：類似 GET，但回應中不包含主體 (body)。用於獲取資源的元數據。</li>
+<li><code>OPTIONS</code>：描述目標資源的通訊選項。</li>
+</ul>
+</li>
+<li><strong>Header (標頭)</strong>：HTTP 標頭允許客戶端和伺服器傳遞請求或回應的附加資訊。例如：<ul>
+<li><code>Content-Type</code>：指示資源的媒體類型（例如 <code>application/json</code>）。</li>
+<li><code>Authorization</code>：包含驗證客戶端身份的憑證。</li>
+<li><code>Accept</code>：告知伺服器客戶端可以理解的內容類型。</li>
+<li><code>User-Agent</code>：包含發出請求的用戶代理（例如瀏覽器、工具）的資訊。</li>
+</ul>
+</li>
+<li><strong>Status Code (狀態碼)</strong>：HTTP 回應狀態碼指示特定 HTTP 請求是否已成功完成。狀態碼分為五類：<ul>
+<li><strong>1xx (資訊性回應)</strong>：表示請求已被接收，繼續處理。</li>
+<li><strong>2xx (成功回應)</strong>：表示請求已成功被伺服器接收、理解、並接受。<ul>
+<li><code>200 OK</code>：請求成功。</li>
+<li><code>201 Created</code>：請求成功並且創建了新的資源。</li>
+<li><code>204 No Content</code>：請求成功，但沒有內容返回。</li>
+</ul>
+</li>
+<li><strong>3xx (重定向)</strong>：表示需要進一步操作以完成請求。</li>
+<li><strong>4xx (客戶端錯誤)</strong>：表示請求包含錯誤語法或無法完成。<ul>
+<li><code>400 Bad Request</code>：伺服器無法理解請求。</li>
+<li><code>401 Unauthorized</code>：請求需要用戶驗證。</li>
+<li><code>403 Forbidden</code>：伺服器理解請求，但拒絕授權。</li>
+<li><code>404 Not Found</code>：伺服器找不到請求的資源。</li>
+</ul>
+</li>
+<li><strong>5xx (伺服器錯誤)</strong>：表示伺服器在處理有效請求時發生錯誤。<ul>
+<li><code>500 Internal Server Error</code>：伺服器遇到一個意外情況，使其無法完成請求。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>REST (Representational State Transfer) 設計原則</strong>：<ul>
+<li><strong>客戶端-伺服器 (Client-Server)</strong>：清晰分離關注點。</li>
+<li><strong>無狀態 (Stateless)</strong>：來自客戶端的每個請求都必須包含伺服器理解該請求所需的所有資訊。伺服器不應儲存任何關於客戶端會話的上下文。</li>
+<li><strong>可快取 (Cacheable)</strong>：客戶端可以快取回應。伺服器必須隱含或明確地標記回應是否可快取。</li>
+<li><strong>統一介面 (Uniform Interface)</strong>：這是 REST 架構風格的基礎，包含以下子約束：<ul>
+<li>資源標識 (Identification of resources)：通過 URI 標識資源。</li>
+<li>通過表示操縱資源 (Manipulation of resources through representations)：客戶端擁有資源的表示，並可以修改伺服器上的資源。</li>
+<li>自描述訊息 (Self-descriptive messages)：每個訊息都包含足夠的資訊來描述如何處理該訊息。</li>
+<li>超媒體作為應用程式狀態的引擎 (HATEOAS - Hypermedia as the Engine of Application State)：客戶端應該能夠通過伺服器提供的超媒體連結來導航應用程式。</li>
+</ul>
+</li>
+<li><strong>分層系統 (Layered System)</strong>：客戶端通常無法判斷它是直接連接到終端伺服器，還是連接到路徑上的中介。</li>
+<li><strong>依需求編碼 (Code on Demand - 可選)</strong>：伺服器可以通過傳輸可執行程式碼（例如 JavaScript）來臨時擴展或自訂客戶端的功能。</li>
+</ul>
+</li>
+</ul>
+<h2 id="JSON-基本概念與序列化-反序列化"><a href="#JSON-基本概念與序列化-反序列化" class="headerlink" title="JSON 基本概念與序列化&#x2F;反序列化"></a>JSON 基本概念與序列化&#x2F;反序列化</h2><p>JSON (JavaScript Object Notation) 是一種輕量級的資料交換格式，易於人閱讀和編寫，也易於機器解析和生成。</p>
+<ul>
+<li><strong>基本結構</strong>：<ul>
+<li><strong>物件 (Object)</strong>：無序的「名稱&#x2F;值」對集合（例如 <code>&#123;&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30&#125;</code>）。名稱是字串，值可以是字串、數字、布林值、陣列、物件或 <code>null</code>。</li>
+<li><strong>陣列 (Array)</strong>：值的有序列表（例如 <code>[&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]</code>）。</li>
+</ul>
+</li>
+<li><strong>資料類型</strong>：<ul>
+<li>字串 (String)：用雙引號括起來的 Unicode 字元序列。</li>
+<li>數字 (Number)：整數或浮點數。</li>
+<li>布林值 (Boolean)：<code>true</code> 或 <code>false</code>。</li>
+<li><code>null</code>：表示空值。</li>
+</ul>
+</li>
+<li><strong>序列化 (Serialization)</strong>：將程式語言中的物件（例如 Java 物件）轉換為 JSON 字串的過程。</li>
+<li><strong>反序列化 (Deserialization)</strong>：將 JSON 字串轉換回程式語言中的物件的過程。<ul>
+<li>在 Java 中，常用的函式庫有 Jackson、Gson 等。Quarkus 預設使用 Jackson。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Java-開發環境"><a href="#Java-開發環境" class="headerlink" title="Java 開發環境"></a>Java 開發環境</h2><ul>
+<li><strong>Maven</strong>：一個強大的專案管理和理解工具。基於專案物件模型 (POM) 的概念，Maven 可以管理專案的建置、報告和文件。<ul>
+<li><code>pom.xml</code>：專案的核心設定檔，定義了專案依賴、插件、建置配置等。</li>
+<li>依賴管理：自動下載和管理專案所需的函式庫。</li>
+<li>建置生命週期：定義了專案建置的標準階段（例如 <code>compile</code>, <code>test</code>, <code>package</code>, <code>install</code>, <code>deploy</code>）。</li>
+</ul>
+</li>
+<li>Gradle：一個彈性極佳且高效能的建置自動化工具。基於 Groovy 或 Kotlin 的特定領域語言 (DSL) 著稱，提供比傳統 XML 配置更簡潔且更強大的建置腳本能力。<ul>
+<li><strong>build.gradle &#x2F; build.gradle.kts</strong>：專案的核心建置腳本檔，使用 Groovy (build.gradle) 或 Kotlin (build.gradle.kts) 定義專案的任務、依賴、插件和建置邏輯。</li>
+<li><strong>依賴管理</strong>：提供強大且靈活的依賴管理功能，能與 Maven 倉庫無縫整合，並支援動態版本和版本範圍。</li>
+<li><strong>任務 (Tasks)</strong>：Gradle 的核心概念，建置過程由一系列任務組成，開發者可以自訂或使用插件提供的任務來執行編譯、測試、打包等操作。</li>
+<li><strong>漸進式建置 (Incremental Build)</strong>：Gradle 會追蹤任務的輸入和輸出，只重新建置已變更的部分，大幅提升建置效率。</li>
+<li><strong>建置快取 (Build Cache)</strong>：可以重用先前建置的輸出，進一步加快建置速度。</li>
+<li><strong>Gradle Wrapper</strong>：允許在沒有預先安裝 Gradle 的環境中執行建置，確保建置環境的一致性。</li>
+<li><strong>Maven</strong> 跟 <strong>Gradle</strong> 擇一使用**。**</li>
+</ul>
+</li>
+<li><strong>IntelliJ IDEA</strong>：一個功能強大且流行的 Java 整合開發環境 (IDE)。它提供了程式碼編輯、調試、版本控制整合、Maven 支援等眾多功能，可以顯著提高開發效率。</li>
+</ul>
+<h2 id="Quarkus-專案建立與基本設定"><a href="#Quarkus-專案建立與基本設定" class="headerlink" title="Quarkus 專案建立與基本設定"></a>Quarkus 專案建立與基本設定</h2><p>Quarkus 是一個為 GraalVM 和 HotSpot 量身打造的 Kubernetes 原生 Java 框架。它提供了極快的啟動時間和極低的記憶體佔用。</p>
+<ul>
+<li><p><strong>建立專案</strong>：</p>
+<ul>
+<li><p>可以使用 Quarkus 官方網站的產生器 (code.quarkus.io)。</p>
+</li>
+<li><p>或使用 Maven 命令：</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mvn io.quarkus.platform:quarkus-maven-plugin:3.x.x:create \</span><br><span class="line">    -DprojectGroupId=org.example \</span><br><span class="line">    -DprojectArtifactId=my-quarkus-app \</span><br><span class="line">    -DclassName=<span class="string">&quot;org.example.GreetingResource&quot;</span> \</span><br><span class="line">    -Dpath=<span class="string">&quot;/hello&quot;</span></span><br></pre></td></tr></table></figure>
+<p>  (請將 <code>3.x.x</code> 替換為最新的 Quarkus 版本)</p>
+</li>
+</ul>
+</li>
+<li><p><strong>基本設定 (<code>application.properties</code>)</strong>：位於 <code>src/main/resources</code> 目錄下。</p>
+<ul>
+<li><code>quarkus.http.port=8080</code>：設定 HTTP 服務埠號。</li>
+<li><code>quarkus.application.name=my-app</code>：設定應用程式名稱。</li>
+<li><code>quarkus.application.version=1.0.0</code>：設定應用程式版本。</li>
+<li>可以針對不同的環境（dev, test, prod）設定不同的配置。</li>
+</ul>
+</li>
+</ul>
+<h2 id="RESTful-API-設計（GET-POST-PUT-DELETE）"><a href="#RESTful-API-設計（GET-POST-PUT-DELETE）" class="headerlink" title="RESTful API 設計（GET&#x2F;POST&#x2F;PUT&#x2F;DELETE）"></a>RESTful API 設計（GET&#x2F;POST&#x2F;PUT&#x2F;DELETE）</h2><p>使用 JAX-RS (Java API for RESTful Web Services) 註釋來定義 API 端點。</p>
+<ul>
+<li><code>@Path(&quot;/api/resource&quot;)</code>：定義資源的基礎路徑。</li>
+<li><code>@GET</code>, <code>@POST</code>, <code>@PUT</code>, <code>@DELETE</code>：對應 HTTP 方法。</li>
+<li><code>@Produces(MediaType.APPLICATION_JSON)</code>：指定回應的內容類型為 JSON。</li>
+<li><code>@Consumes(MediaType.APPLICATION_JSON)</code>：指定請求的內容類型為 JSON。</li>
+<li><code>@PathParam(&quot;id&quot;)</code>：從路徑中獲取參數。</li>
+<li><code>@QueryParam(&quot;name&quot;)</code>：從查詢字串中獲取參數。</li>
+<li><code>Response</code> 物件：用於構建詳細的 HTTP 回應，包括狀態碼、標頭和實體。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/06/03/Quarkus-API-%E9%96%8B%E7%99%BC%EF%BC%9A%E5%BE%9E%E7%90%86%E8%AB%96%E5%88%B0%E5%AF%A6%E8%B8%90/" title="Quarkus API 開發：從理論到實踐">https://jumbojay06.github.io/2025/06/03/Quarkus-API-開發：從理論到實踐/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Quarkus/" rel="tag"># Quarkus</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/23/Flutter-GetX/" rel="prev" title="Flutter GetX">
+      <i class="fa fa-chevron-left"></i> Flutter GetX
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Quarkus-API-%E9%96%8B%E7%99%BC%EF%BC%9A%E5%BE%9E%E7%90%86%E8%AB%96%E5%88%B0%E5%AF%A6%E8%B8%90"><span class="nav-number">1.</span> <span class="nav-text">Quarkus API 開發：從理論到實踐</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-%E5%8D%94%E5%AE%9A%E5%9F%BA%E7%A4%8E"><span class="nav-number">1.1.</span> <span class="nav-text">HTTP 協定基礎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E8%88%87%E5%BA%8F%E5%88%97%E5%8C%96-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">1.2.</span> <span class="nav-text">JSON 基本概念與序列化&#x2F;反序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-%E9%96%8B%E7%99%BC%E7%92%B0%E5%A2%83"><span class="nav-number">1.3.</span> <span class="nav-text">Java 開發環境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quarkus-%E5%B0%88%E6%A1%88%E5%BB%BA%E7%AB%8B%E8%88%87%E5%9F%BA%E6%9C%AC%E8%A8%AD%E5%AE%9A"><span class="nav-number">1.4.</span> <span class="nav-text">Quarkus 專案建立與基本設定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESTful-API-%E8%A8%AD%E8%A8%88%EF%BC%88GET-POST-PUT-DELETE%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">RESTful API 設計（GET&#x2F;POST&#x2F;PUT&#x2F;DELETE）</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/06/03/Quarkus-API-%E9%96%8B%E7%99%BC%EF%BC%9A%E5%BE%9E%E7%90%86%E8%AB%96%E5%88%B0%E5%AF%A6%E8%B8%90/";
+    this.page.identifier = "2025/06/03/Quarkus-API-開發：從理論到實踐/";
+    this.page.title = "Quarkus API 開發：從理論到實踐";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
