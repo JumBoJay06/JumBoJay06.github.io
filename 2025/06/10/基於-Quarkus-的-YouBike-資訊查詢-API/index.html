@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="基於 Quarkus 的 YouBike 資訊查詢 APIQuarkus 入門學習範例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基於 Quarkus 的 YouBike 資訊查詢 API">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/06/10/%E5%9F%BA%E6%96%BC-Quarkus-%E7%9A%84-YouBike-%E8%B3%87%E8%A8%8A%E6%9F%A5%E8%A9%A2-API/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="基於 Quarkus 的 YouBike 資訊查詢 APIQuarkus 入門學習範例">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2025-06-10T08:59:15.000Z">
+<meta property="article:modified_time" content="2025-06-10T09:26:05.134Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="Quarkus">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/06/10/%E5%9F%BA%E6%96%BC-Quarkus-%E7%9A%84-YouBike-%E8%B3%87%E8%A8%8A%E6%9F%A5%E8%A9%A2-API/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>基於 Quarkus 的 YouBike 資訊查詢 API | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/06/10/%E5%9F%BA%E6%96%BC-Quarkus-%E7%9A%84-YouBike-%E8%B3%87%E8%A8%8A%E6%9F%A5%E8%A9%A2-API/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基於 Quarkus 的 YouBike 資訊查詢 API
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-06-10 16:59:15 / 修改時間：17:26:05" itemprop="dateCreated datePublished" datetime="2025-06-10T16:59:15+08:00">2025-06-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/%E5%BE%8C%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">後端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/%E5%BE%8C%E7%AB%AF/Quarkus/" itemprop="url" rel="index"><span itemprop="name">Quarkus</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/06/10/%E5%9F%BA%E6%96%BC-Quarkus-%E7%9A%84-YouBike-%E8%B3%87%E8%A8%8A%E6%9F%A5%E8%A9%A2-API/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/06/10/基於-Quarkus-的-YouBike-資訊查詢-API/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="基於-Quarkus-的-YouBike-資訊查詢-API"><a href="#基於-Quarkus-的-YouBike-資訊查詢-API" class="headerlink" title="基於 Quarkus 的 YouBike 資訊查詢 API"></a>基於 Quarkus 的 YouBike 資訊查詢 API</h1><p>Quarkus 入門學習範例</p>
+<span id="more"></span>
+
+<h2 id="建立專案"><a href="#建立專案" class="headerlink" title="建立專案"></a>建立專案</h2><ul>
+<li>可以使用 Quarkus 官方網站的產生器 (<a target="_blank" rel="noopener" href="http://code.quarkus.io/">code.quarkus.io</a>)。</li>
+<li>或者用 IDE 的 Plugin 來建置(e.g, Intellij 的 quarkus)</li>
+<li>此範例會用 <strong>Maven</strong> 來專案管理</li>
+</ul>
+<h2 id="設定檔"><a href="#設定檔" class="headerlink" title="設定檔"></a>設定檔</h2><p>有 yaml 或是 properties 的檔案格式，預設是用 properties。</p>
+<p>若想改用 yaml 要新增依賴</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-config-yaml<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>此專案以 yaml 當範例</li>
+</ul>
+<details>
+
+<summary>application.yaml</summary>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Quarkus 框架的主要設定</span></span><br><span class="line"><span class="attr">quarkus:</span></span><br><span class="line">    <span class="comment"># HTTP 伺服器相關設定</span></span><br><span class="line">    <span class="attr">http:</span></span><br><span class="line">    <span class="comment"># 設定應用程式監聽的 HTTP 連接埠</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line">    <span class="comment"># 應用程式基本資訊設定</span></span><br><span class="line">    <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># 應用程式名稱</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">youbike-api-java</span></span><br><span class="line">    <span class="comment"># 應用程式版本</span></span><br><span class="line">    <span class="attr">version:</span> <span class="number">1.0</span><span class="number">.0</span></span><br><span class="line">    <span class="comment"># REST 客戶端設定</span></span><br><span class="line">    <span class="attr">rest-client:</span></span><br><span class="line">    <span class="comment"># &#x27;you-bike-api&#x27; 是客戶端介面的設定 ID (對應 @RegisterRestClient 的 configKey)</span></span><br><span class="line">    <span class="attr">you-bike-api:</span></span><br><span class="line">        <span class="comment"># API 的目標 URL</span></span><br><span class="line">        <span class="attr">url:</span> <span class="string">&quot;https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json&quot;</span></span><br><span class="line">        <span class="comment"># 設定此 REST 客戶端的 CDI Bean 範圍為 Singleton (單例)</span></span><br><span class="line">        <span class="attr">scope:</span> <span class="string">javax.inject.Singleton</span></span><br><span class="line">        <span class="comment"># 連線逾時時間 (單位：毫秒)</span></span><br><span class="line">        <span class="attr">connect-timeout:</span> <span class="number">5000</span></span><br><span class="line">        <span class="comment"># 讀取逾時時間 (單位：毫秒)</span></span><br><span class="line">        <span class="attr">read-timeout:</span> <span class="number">10000</span></span><br><span class="line">    <span class="comment"># 日誌記錄相關設定</span></span><br><span class="line">    <span class="attr">log:</span></span><br><span class="line">    <span class="comment"># 全域預設的日誌記錄層級</span></span><br><span class="line">    <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">    <span class="comment"># 針對特定類別或套件設定日誌層級</span></span><br><span class="line">    <span class="attr">category:</span></span><br><span class="line">        <span class="comment"># 將 &#x27;org.jay&#x27; 套件下的日誌層級設定為 DEBUG</span></span><br><span class="line">        <span class="attr">&quot;org.jay&quot;:</span></span><br><span class="line">        <span class="attr">level:</span> <span class="string">DEBUG</span></span><br><span class="line">    <span class="comment"># 控制台日誌輸出設定</span></span><br><span class="line">    <span class="attr">console:</span></span><br><span class="line">        <span class="comment"># 設定日誌輸出的格式</span></span><br><span class="line">        <span class="comment"># %d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;: 日期與時間</span></span><br><span class="line">        <span class="comment"># %-5p: 日誌層級 (例如 INFO, DEBUG)</span></span><br><span class="line">        <span class="comment"># [%c&#123;1.&#125;]: 類別名稱 (簡寫)</span></span><br><span class="line">        <span class="comment"># (%t): 執行緒名稱</span></span><br><span class="line">        <span class="comment"># %s: 日誌訊息</span></span><br><span class="line">        <span class="comment"># %e: 例外堆疊追蹤</span></span><br><span class="line">        <span class="comment"># %n: 換行符</span></span><br><span class="line">        <span class="attr">format:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125; %-5p [%c&#123;1.&#125;] (%t) %s%e%n&quot;</span></span><br></pre></td></tr></table></figure>
+</details>
+
+<h2 id="POM-xml"><a href="#POM-xml" class="headerlink" title="POM.xml"></a>POM.xml</h2><p>定義專案的基礎結構、依賴管理和建置方式。</p>
+<h3 id="此範例的設置"><a href="#此範例的設置" class="headerlink" title="此範例的設置"></a>此範例的設置</h3><ul>
+<li><strong>Quarkus 版本</strong>: <code>3.23.0</code>。</li>
+<li><strong>Java 版本</strong>: <code>21</code>。</li>
+<li><strong>核心依賴</strong>:<ul>
+<li><code>quarkus-rest</code>: 提供建立 JAX-RS (Java API for RESTful Web Services) 端點的核心功能。</li>
+<li><code>quarkus-rest-jackson</code>: 提供使用 Jackson 函式庫進行 Java 物件與 JSON 之間自動轉換的功能。</li>
+<li><code>quarkus-rest-client-jackson</code>: 一個強大的擴充功能，可以輕易地建立類型安全的 REST API 客戶端來呼叫外部服務，同樣整合了 Jackson。</li>
+<li><code>quarkus-config-yaml</code>: 讓專案能夠讀取 <code>.yaml</code> 格式的設定檔。</li>
+</ul>
+</li>
+<li><strong>測試依賴</strong>:<ul>
+<li><code>quarkus-junit5</code> &amp; <code>quarkus-junit5-mockito</code>: 提供 JUnit 5 的測試環境，並整合 Mockito 以便進行單元測試的 Mock（模擬）操作。</li>
+<li><code>rest-assured</code>: 一個便於撰寫 REST API 測試的函式庫，語法流暢易讀。</li>
+</ul>
+</li>
+<li><strong>建置與打包</strong>:<ul>
+<li><code>quarkus-maven-plugin</code>: Quarkus 的核心 Maven 插件，負責編譯、打包以及轉換為原生執行檔等任務。</li>
+<li><code>native</code> Profile: 專案設定了一個名為 <code>native</code> 的 Maven Profile，當啟用時 (<code>Pnative</code>)，會將專案建置成一個啟動速度極快、記憶體佔用極低的原生執行檔。</li>
+</ul>
+</li>
+</ul>
+<h3 id="完整檔案"><a href="#完整檔案" class="headerlink" title="完整檔案"></a>完整檔案</h3><details>
+
+<summary>pom.xml</summary>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.jay<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-training<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">compiler-plugin.version</span>&gt;</span>3.14.0<span class="tag">&lt;/<span class="name">compiler-plugin.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.release</span>&gt;</span>21<span class="tag">&lt;/<span class="name">maven.compiler.release</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.reporting.outputEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.reporting.outputEncoding</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quarkus.platform.artifact-id</span>&gt;</span>quarkus-bom<span class="tag">&lt;/<span class="name">quarkus.platform.artifact-id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quarkus.platform.group-id</span>&gt;</span>io.quarkus.platform<span class="tag">&lt;/<span class="name">quarkus.platform.group-id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quarkus.platform.version</span>&gt;</span>3.23.0<span class="tag">&lt;/<span class="name">quarkus.platform.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">skipITs</span>&gt;</span>true<span class="tag">&lt;/<span class="name">skipITs</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">surefire-plugin.version</span>&gt;</span>3.5.2<span class="tag">&lt;/<span class="name">surefire-plugin.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>$&#123;quarkus.platform.group-id&#125;<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>$&#123;quarkus.platform.artifact-id&#125;<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;quarkus.platform.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-arc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-rest<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-rest-jackson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-rest-client-jackson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-config-yaml<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- Testing Dependencies --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-junit5<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-junit5-mockito<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.rest-assured<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>rest-assured<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sourceDirectory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">sourceDirectory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">testSourceDirectory</span>&gt;</span>src/test/java<span class="tag">&lt;/<span class="name">testSourceDirectory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>$&#123;quarkus.platform.group-id&#125;<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;quarkus.platform.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">extensions</span>&gt;</span>true<span class="tag">&lt;/<span class="name">extensions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>build<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>generate-code<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>generate-code-tests<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;compiler-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">parameters</span>&gt;</span>true<span class="tag">&lt;/<span class="name">parameters</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-surefire-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;surefire-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">systemPropertyVariables</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">java.util.logging.manager</span>&gt;</span>org.jboss.logmanager.LogManager<span class="tag">&lt;/<span class="name">java.util.logging.manager</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">maven.home</span>&gt;</span>$&#123;maven.home&#125;<span class="tag">&lt;/<span class="name">maven.home</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">systemPropertyVariables</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;surefire-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>integration-test<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>verify<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">systemPropertyVariables</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">native.image.path</span>&gt;</span>$&#123;project.build.directory&#125;/$&#123;project.build.finalName&#125;-runner<span class="tag">&lt;/<span class="name">native.image.path</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">java.util.logging.manager</span>&gt;</span>org.jboss.logmanager.LogManager<span class="tag">&lt;/<span class="name">java.util.logging.manager</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">maven.home</span>&gt;</span>$&#123;maven.home&#125;<span class="tag">&lt;/<span class="name">maven.home</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">systemPropertyVariables</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>native<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>native<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">skipITs</span>&gt;</span>false<span class="tag">&lt;/<span class="name">skipITs</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">quarkus.native.enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">quarkus.native.enabled</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h2 id="程式碼結構與詳細解析"><a href="#程式碼結構與詳細解析" class="headerlink" title="程式碼結構與詳細解析"></a>程式碼結構與詳細解析</h2><p>專案遵循了標準的分層架構：<code>Resource</code> (資源層)、<code>Service</code> (服務層)、<code>Client</code> (客戶端層) 和 <code>Model</code> (模型層)。</p>
+<h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><p>這是一個 Java <code>record</code>，用來映射從 YouBike API 獲取的每一筆站點資料。</p>
+<ul>
+<li><strong><code>record</code></strong>: Java 16+ 的語法糖，可以極簡化地建立不可變的資料傳輸物件 (DTO)，自動產生建構子、<code>equals()</code>、<code>hashCode()</code> 和 <code>toString()</code> 方法。</li>
+<li><strong><code>@JsonProperty</code></strong>: 來自 Jackson 函式庫，作用是將 JSON 中的鍵 (key) 映射到 Java record 的欄位上。例如，將 JSON 的 <code>&quot;sno&quot;</code> 映射到 <code>stationNo</code> 欄位。</li>
+<li><strong><code>@JsonIgnoreProperties(ignoreUnknown = true)</code></strong>: 一個非常有用的註解。如果遠端 API 回傳的 JSON 中包含了 <code>YouBikeStation</code> record 未定義的欄位，Jackson 會預設拋出錯誤。此註解讓 Jackson 忽略這些未知的欄位，增強了程式的健壯性。</li>
+</ul>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.jay.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.JsonIgnoreProperties;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.JsonProperty;</span><br><span class="line"></span><br><span class="line"><span class="meta">@JsonIgnoreProperties(ignoreUnknown = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">record</span> <span class="title class_">YouBikeStation</span><span class="params">(</span></span><br><span class="line"><span class="params">        @JsonProperty(&quot;sno&quot;)</span> <span class="comment">// 站點代號</span></span><br><span class="line">        String stationNo,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;sna&quot;)</span> <span class="comment">// 站點名稱(中文)</span></span><br><span class="line">        String stationName,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;tot&quot;)</span> <span class="comment">// 站點總停車格數</span></span><br><span class="line">        <span class="type">int</span> totalSpaces,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;sbi&quot;)</span> <span class="comment">// 目前可借車輛數</span></span><br><span class="line">        <span class="type">int</span> availableBikes,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;sarea&quot;)</span> <span class="comment">// 站點區域(中文)</span></span><br><span class="line">        String area,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;mday&quot;)</span> <span class="comment">// 資料更新時間 (格式範例: 20231120150514)</span></span><br><span class="line">        String updateTime,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;lat&quot;)</span> <span class="comment">// 緯度</span></span><br><span class="line">        <span class="type">double</span> latitude,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;lng&quot;)</span> <span class="comment">// 經度</span></span><br><span class="line">        <span class="type">double</span> longitude,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;ar&quot;)</span> <span class="comment">// 地址(中文)</span></span><br><span class="line">        String address,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;bemp&quot;)</span> <span class="comment">// 目前空位數</span></span><br><span class="line">        <span class="type">int</span> availableSpaces,</span><br><span class="line"></span><br><span class="line">        <span class="meta">@JsonProperty(&quot;act&quot;)</span> <span class="comment">// 全站禁用狀態 (0:禁用, 1:啟用)</span></span><br><span class="line">        String active</span><br><span class="line">) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h3 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h3><p>這個檔案完美展示了 MicroProfile REST Client 的優雅之處。</p>
+<ul>
+<li><strong><code>interface</code></strong>: 開發者只需定義一個介面，Quarkus 會在編譯期間自動為其產生實作。</li>
+<li><strong><code>@RegisterRestClient(configKey = &quot;you-bike-api&quot;)</code></strong>: 核心註解。它告訴 Quarkus 這是一個 REST Client，並且其相關設定（如 URL）可以在 <code>application.yaml</code> 中以 <code>you-bike-api</code> 為鍵找到。</li>
+<li><strong><code>@GET</code></strong>: 指定呼叫此方法時會發送一個 HTTP GET 請求到設定的 URL。</li>
+<li><strong><code>List&lt;YouBikeStation&gt; getYouBikeList()</code></strong>: 定義了方法的返回類型。Quarkus 和 Jackson 會自動將收到的 JSON 陣列反序列化成 <code>YouBikeStation</code> 的列表。</li>
+</ul>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.jay.client;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.GET;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.Produces;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.core.MediaType;</span><br><span class="line"><span class="keyword">import</span> org.eclipse.microprofile.rest.client.inject.RegisterRestClient;</span><br><span class="line"><span class="keyword">import</span> org.jay.model.YouBikeStation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RegisterRestClient(configKey = &quot;you-bike-api&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">YouBikeApiClient</span> &#123;</span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Produces(MediaType.APPLICATION_JSON)</span></span><br><span class="line">    List&lt;YouBikeStation&gt; <span class="title function_">getYouBikeList</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>服務層封裝了主要的業務邏輯，將資料獲取與處理的細節和 API 層分離。</p>
+<ul>
+<li><strong><code>@ApplicationScoped</code></strong>: 一個 CDI (Contexts and Dependency Injection) 註解，表示這個 Service 在整個應用程式的生命週期中只會有一個實例（單例）。</li>
+<li><strong><code>@Inject @RestClient YouBikeApiClient youBikeApiClient</code></strong>: CDI 的依賴注入。Quarkus 會將前面定義並自動實作的 <code>YouBikeApiClient</code> 注入到這個欄位中。</li>
+<li><strong><code>fetchAllStationsFromExternalApi()</code></strong>: 這是一個私有方法，負責實際呼叫 <code>youBikeApiClient</code> 來獲取外部資料。它也包含了日誌記錄和基本的異常處理（如果發生錯誤，則返回一個空列表）。</li>
+<li><strong><code>getAllStations()</code> 和 <code>getStationById()</code></strong>: 提供給 <code>Resource</code> 層呼叫的公開方法。<code>getStationById</code> 使用 Java Stream API 來過濾所有站點，找出符合指定 ID 的站點。</li>
+</ul>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.jay.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> jakarta.enterprise.context.ApplicationScoped;</span><br><span class="line"><span class="keyword">import</span> jakarta.inject.Inject;</span><br><span class="line"><span class="keyword">import</span> org.eclipse.microprofile.rest.client.inject.RestClient;</span><br><span class="line"><span class="keyword">import</span> org.jay.client.YouBikeApiClient;</span><br><span class="line"><span class="keyword">import</span> org.jay.model.YouBikeStation;</span><br><span class="line"><span class="keyword">import</span> org.eclipse.microprofile.config.inject.ConfigProperty;</span><br><span class="line"><span class="keyword">import</span> org.jboss.logging.Logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"></span><br><span class="line"><span class="meta">@ApplicationScoped</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">YouBikeService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOG</span> <span class="operator">=</span> Logger.getLogger(YouBikeService.class.getName());</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    <span class="meta">@RestClient</span></span><br><span class="line">    YouBikeApiClient youBikeApiClient;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ConfigProperty(name = &quot;quarkus.rest-client.you-bike-api.url&quot;)</span></span><br><span class="line">    String apiClientUrl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> List&lt;YouBikeStation&gt; <span class="title function_">fetchAllStationsFromExternalApi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            LOG.infof(<span class="string">&quot;Fetching YouBike data from URL: %s&quot;</span>, apiClientUrl);</span><br><span class="line">            <span class="keyword">return</span> youBikeApiClient.getYouBikeList();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            LOG.error(<span class="string">&quot;Exception while fetching YouBike data&quot;</span>, e);</span><br><span class="line">            <span class="keyword">return</span> Collections.emptyList();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> List&lt;YouBikeStation&gt; <span class="title function_">getAllStations</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> fetchAllStationsFromExternalApi();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Optional&lt;YouBikeStation&gt; <span class="title function_">getStationById</span><span class="params">(String stationId)</span> &#123;</span><br><span class="line">        List&lt;YouBikeStation&gt; stations = fetchAllStationsFromExternalApi();</span><br><span class="line">        <span class="keyword">return</span> stations.stream()</span><br><span class="line">                .filter(station -&gt; station.stationNo() != <span class="literal">null</span> &amp;&amp; station.stationNo().equals(stationId))</span><br><span class="line">                .findFirst();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h3 id="Resource"><a href="#Resource" class="headerlink" title="Resource"></a>Resource</h3><p>這是直接對外的 API 端點，負責接收 HTTP 請求並回傳 HTTP 回應。</p>
+<ul>
+<li><strong><code>@Path(&quot;/api/youbike&quot;)</code></strong>: 定義了這個類別中所有 API 的基礎路徑。</li>
+<li><strong><code>@Inject YouBikeService youBikeService</code></strong>: 注入服務層的實例，讓 Resource 層可以呼叫其業務邏輯方法。</li>
+<li><strong>getAllYouBikeStations()</strong>:<ul>
+<li>路徑為 <code>@Path(&quot;/all&quot;)</code>，完整路徑是 <code>/api/youbike/all</code>。</li>
+<li>呼叫 <code>youBikeService.getAllStations()</code> 獲取資料。</li>
+<li>如果列表為空，回傳 HTTP <code>404 Not Found</code> 狀態碼和錯誤訊息；否則回傳 <code>200 OK</code> 和站點列表。</li>
+</ul>
+</li>
+<li><strong>getYouBikeStationById()</strong>:<ul>
+<li>路徑為 <code>@Path(&quot;/station/&#123;id&#125;&quot;)</code>，其中 <code>&#123;id&#125;</code> 是動態路徑參數。</li>
+<li><code>@PathParam(&quot;id&quot;)</code>: 將 URL 中的 <code>&#123;id&#125;</code> 值綁定到 <code>stationId</code> 方法參數上。</li>
+<li><strong>輸入驗證</strong>: 檢查 <code>stationId</code> 是否為空或空白，如果是，則回傳 <code>400 Bad Request</code>，防止無效查詢。</li>
+<li><strong>優雅處理</strong>: 使用 <code>Optional</code> 來處理查詢結果。如果 <code>youBikeService</code> 回傳的 <code>Optional</code> 有值，則回傳 <code>200 OK</code>；如果為空，則回傳 <code>404 Not Found</code>。</li>
+</ul>
+</li>
+</ul>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.jay.resource;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> jakarta.inject.Inject;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.GET;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.Path;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.PathParam;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.Produces;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.core.MediaType;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.core.Response;</span><br><span class="line"><span class="keyword">import</span> org.jay.model.YouBikeStation;</span><br><span class="line"><span class="keyword">import</span> org.jay.service.YouBikeService;</span><br><span class="line"><span class="keyword">import</span> org.jboss.logging.Logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Path(&quot;/api/youbike&quot;)</span></span><br><span class="line"><span class="meta">@Produces(MediaType.APPLICATION_JSON)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">YouBikeResource</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOG</span> <span class="operator">=</span> Logger.getLogger(YouBikeResource.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    YouBikeService youBikeService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Path(&quot;/all&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Response <span class="title function_">getAllYouBikeStations</span><span class="params">()</span> &#123;</span><br><span class="line">        LOG.info(<span class="string">&quot;Received request for /api/youbike/all&quot;</span>);</span><br><span class="line">        List&lt;YouBikeStation&gt; stations = youBikeService.getAllStations();</span><br><span class="line">        <span class="keyword">if</span> (stations.isEmpty()) &#123;</span><br><span class="line">            LOG.warn(<span class="string">&quot;No YouBike stations data found to return.&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)</span><br><span class="line">                    .entity(<span class="string">&quot;&#123;\&quot;message\&quot;: \&quot;No YouBike stations data available.\&quot;&#125;&quot;</span>)</span><br><span class="line">                    .build();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Response.ok(stations).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Path(&quot;/station/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Response <span class="title function_">getYouBikeStationById</span><span class="params">(<span class="meta">@PathParam(&quot;id&quot;)</span> String stationId)</span> &#123;</span><br><span class="line">        LOG.infof(<span class="string">&quot;Received request for /api/youbike/station/%s&quot;</span>, stationId);</span><br><span class="line">        <span class="keyword">if</span> (stationId == <span class="literal">null</span> || stationId.trim().isEmpty()) &#123;</span><br><span class="line">            LOG.warn(<span class="string">&quot;Received empty station ID.&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> Response.status(Response.Status.BAD_REQUEST)</span><br><span class="line">                    .entity(<span class="string">&quot;&#123;\&quot;error\&quot;: \&quot;Station ID cannot be empty.\&quot;&#125;&quot;</span>)</span><br><span class="line">                    .build();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Optional&lt;YouBikeStation&gt; stationOpt = youBikeService.getStationById(stationId);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> stationOpt.map(station -&gt; &#123;</span><br><span class="line">            LOG.infof(<span class="string">&quot;Station found for ID %s: %s&quot;</span>, stationId, station.stationName());</span><br><span class="line">            <span class="keyword">return</span> Response.ok(station).build();</span><br><span class="line">        &#125;).orElseGet(() -&gt; &#123;</span><br><span class="line">            LOG.warnf(<span class="string">&quot;Station with ID %s not found.&quot;</span>, stationId);</span><br><span class="line">            <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)</span><br><span class="line">                    .entity(<span class="string">&quot;&#123;\&quot;message\&quot;: \&quot;Station with ID &quot;</span> + stationId + <span class="string">&quot; not found.\&quot;&#125;&quot;</span>)</span><br><span class="line">                    .build();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h3 id="測試"><a href="#測試" class="headerlink" title="測試"></a>測試</h3><p>測試是確保程式碼品質的關鍵。</p>
+<ul>
+<li><strong><code>@QuarkusTest</code></strong>: 啟動一個輕量級的 Quarkus 執行環境來進行測試，讓測試的環境與實際運行環境非常接近。</li>
+<li><strong><code>@InjectMock YouBikeService youBikeService</code></strong>: <strong>這是測試的精髓</strong>。它不會注入真正的 <code>YouBikeService</code>（那樣會發出真實的網路請求），而是注入一個 Mockito 的<strong>模擬物件</strong>。這讓測試可以獨立於外部 API，變得快速且穩定。</li>
+<li><strong>測試案例</strong>:<ul>
+<li><code>test..._Success</code>: 模擬 <code>youBikeService</code> 成功回傳資料，並使用 <code>RestAssured</code> 驗證 API 是否回傳 <code>200 OK</code> 且內容正確。</li>
+<li><code>test..._NotFound</code>: 模擬 <code>youBikeService</code> 回傳空資料或 <code>Optional.empty()</code>，驗證 API 是否回傳 <code>404 Not Found</code>。</li>
+<li><code>test..._BadRequest</code>: 直接測試 API 的輸入驗證邏輯，傳入一個空白 ID，驗證是否回傳 <code>400 Bad Request</code>。</li>
+</ul>
+</li>
+</ul>
+<h4 id="請求流程追蹤-以-GET-api-youbike-station-500101001-為例"><a href="#請求流程追蹤-以-GET-api-youbike-station-500101001-為例" class="headerlink" title="請求流程追蹤 (以 GET /api/youbike/station/500101001 為例)"></a>請求流程追蹤 (以 <code>GET /api/youbike/station/500101001</code> 為例)</h4><ol>
+<li>使用者發出 HTTP GET 請求。</li>
+<li>Quarkus 接收請求，根據路徑 <code>@Path</code> 路由到 <code>YouBikeResource</code> 的 <code>getYouBikeStationById</code> 方法。</li>
+<li><code>@PathParam</code> 將 “500101001” 注入 <code>stationId</code> 變數。</li>
+<li><code>YouBikeResource</code> 呼叫已注入的 <code>youBikeService.getStationById(&quot;500101001&quot;)</code>。</li>
+<li><code>YouBikeService</code> 呼叫 <code>youBikeApiClient.getYouBikeList()</code>。</li>
+<li>Quarkus 的 REST Client 根據 <code>application.yaml</code> 的 URL，向 <code>https://tcgbusfs.blob.core.windows.net/...</code> 發送一個真正的 HTTP GET 請求。</li>
+<li>收到遠端的 JSON 回應後，Jackson 自動將其轉換為 <code>List&lt;YouBikeStation&gt;</code>。</li>
+<li><code>YouBikeService</code> 使用 Stream 過濾這個 List，找到 <code>stationNo</code> 為 “500101001” 的物件，並將其包裝在 <code>Optional</code> 中回傳。</li>
+<li><code>YouBikeResource</code> 收到 <code>Optional</code>，因為它有值，所以進入 <code>.map()</code> 邏輯，將 <code>YouBikeStation</code> 物件再次透過 Jackson 序列化成 JSON 字串。</li>
+<li><code>YouBikeResource</code> 建構一個 <code>200 OK</code> 的 <code>Response</code> 物件並回傳給使用者。</li>
+</ol>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.jay.resource;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.quarkus.test.InjectMock;</span><br><span class="line"><span class="keyword">import</span> io.quarkus.test.junit.QuarkusTest;</span><br><span class="line"><span class="keyword">import</span> io.restassured.http.ContentType;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.BeforeEach;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.mockito.Mockito;</span><br><span class="line"><span class="keyword">import</span> org.jay.service.YouBikeService;</span><br><span class="line"><span class="keyword">import</span> org.jay.model.YouBikeStation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> io.restassured.RestAssured.given;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.hamcrest.CoreMatchers.is;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.hamcrest.Matchers.hasSize;</span><br><span class="line"></span><br><span class="line"><span class="meta">@QuarkusTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">YouBikeResourceTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@InjectMock</span></span><br><span class="line">    YouBikeService youBikeService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> YouBikeStation station1;</span><br><span class="line">    <span class="keyword">private</span> YouBikeStation station2;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@BeforeEach</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">setUp</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 準備測試用的假資料</span></span><br><span class="line">        station1 = <span class="keyword">new</span> <span class="title class_">YouBikeStation</span>(<span class="string">&quot;500101001&quot;</span>, <span class="string">&quot;捷運市府站(3號出口)&quot;</span>, <span class="number">30</span>, <span class="number">10</span>, <span class="string">&quot;信義區&quot;</span>,</span><br><span class="line">                <span class="string">&quot;20250606174000&quot;</span>, <span class="number">25.040857</span>, <span class="number">121.567904</span>, <span class="string">&quot;忠孝東路/松仁路(東南側)&quot;</span>, <span class="number">20</span>, <span class="string">&quot;1&quot;</span>);</span><br><span class="line">        station2 = <span class="keyword">new</span> <span class="title class_">YouBikeStation</span>(<span class="string">&quot;500101002&quot;</span>, <span class="string">&quot;捷運國父紀念館站(2號出口)&quot;</span>, <span class="number">40</span>, <span class="number">5</span>, <span class="string">&quot;信義區&quot;</span>,</span><br><span class="line">                <span class="string">&quot;20250606174000&quot;</span>, <span class="number">25.041254</span>, <span class="number">121.55742</span>, <span class="string">&quot;忠孝東路四段/光復南路口&quot;</span>, <span class="number">35</span>, <span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testGetAllYouBikeStations_Success</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// Arrange: 當呼叫 youBikeService.getAllStations() 時，回傳準備好的假資料</span></span><br><span class="line">        Mockito.<span class="keyword">when</span>(youBikeService.getAllStations()).thenReturn(List.of(station1, station2));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act &amp; Assert</span></span><br><span class="line">        given()</span><br><span class="line">                .<span class="keyword">when</span>().get(<span class="string">&quot;/api/youbike/all&quot;</span>)</span><br><span class="line">                .then()</span><br><span class="line">                .statusCode(<span class="number">200</span>)</span><br><span class="line">                .contentType(ContentType.JSON)</span><br><span class="line">                .body(<span class="string">&quot;$&quot;</span>, hasSize(<span class="number">2</span>)) <span class="comment">// 驗證回傳的陣列大小為 2</span></span><br><span class="line">                .body(<span class="string">&quot;[0].sno&quot;</span>, is(<span class="string">&quot;500101001&quot;</span>))</span><br><span class="line">                .body(<span class="string">&quot;[0].sna&quot;</span>, is(<span class="string">&quot;捷運市府站(3號出口)&quot;</span>))</span><br><span class="line">                .body(<span class="string">&quot;[1].sno&quot;</span>, is(<span class="string">&quot;500101002&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testGetAllYouBikeStations_NotFound</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// Arrange: 當呼叫 youBikeService.getAllStations() 時，回傳空集合</span></span><br><span class="line">        Mockito.<span class="keyword">when</span>(youBikeService.getAllStations()).thenReturn(Collections.emptyList());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act &amp; Assert</span></span><br><span class="line">        given()</span><br><span class="line">                .<span class="keyword">when</span>().get(<span class="string">&quot;/api/youbike/all&quot;</span>)</span><br><span class="line">                .then()</span><br><span class="line">                .statusCode(<span class="number">404</span>) <span class="comment">// 根據您的實作，應回傳 404</span></span><br><span class="line">                .body(<span class="string">&quot;message&quot;</span>, is(<span class="string">&quot;No YouBike stations data available.&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testGetYouBikeStationById_Success</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// Arrange: 當呼叫 youBikeService.getStationById() 且 ID 為 &quot;500101001&quot; 時，回傳 station1</span></span><br><span class="line">        Mockito.<span class="keyword">when</span>(youBikeService.getStationById(<span class="string">&quot;500101001&quot;</span>)).thenReturn(Optional.of(station1));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act &amp; Assert</span></span><br><span class="line">        given()</span><br><span class="line">                .pathParam(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;500101001&quot;</span>)</span><br><span class="line">                .<span class="keyword">when</span>().get(<span class="string">&quot;/api/youbike/station/&#123;id&#125;&quot;</span>)</span><br><span class="line">                .then()</span><br><span class="line">                .statusCode(<span class="number">200</span>)</span><br><span class="line">                .contentType(ContentType.JSON)</span><br><span class="line">                .body(<span class="string">&quot;sno&quot;</span>, is(<span class="string">&quot;500101001&quot;</span>))</span><br><span class="line">                .body(<span class="string">&quot;sna&quot;</span>, is(<span class="string">&quot;捷運市府站(3號出口)&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testGetYouBikeStationById_NotFound</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// Arrange: 當呼叫 youBikeService.getStationById() 且 ID 為 &quot;99999&quot; 時，回傳空的 Optional</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">nonExistentId</span> <span class="operator">=</span> <span class="string">&quot;99999&quot;</span>;</span><br><span class="line">        Mockito.<span class="keyword">when</span>(youBikeService.getStationById(nonExistentId)).thenReturn(Optional.empty());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act &amp; Assert</span></span><br><span class="line">        given()</span><br><span class="line">                .pathParam(<span class="string">&quot;id&quot;</span>, nonExistentId)</span><br><span class="line">                .<span class="keyword">when</span>().get(<span class="string">&quot;/api/youbike/station/&#123;id&#125;&quot;</span>)</span><br><span class="line">                .then()</span><br><span class="line">                .statusCode(<span class="number">404</span>)</span><br><span class="line">                .body(<span class="string">&quot;message&quot;</span>, is(<span class="string">&quot;Station with ID &quot;</span> + nonExistentId + <span class="string">&quot; not found.&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testGetYouBikeStationById_BadRequest</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// Arrange: 準備一個空白的 ID</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">blankId</span> <span class="operator">=</span> <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Act &amp; Assert</span></span><br><span class="line">        given()</span><br><span class="line">                .pathParam(<span class="string">&quot;id&quot;</span>, blankId)</span><br><span class="line">                .<span class="keyword">when</span>().get(<span class="string">&quot;/api/youbike/station/&#123;id&#125;&quot;</span>)</span><br><span class="line">                .then()</span><br><span class="line">                .statusCode(<span class="number">400</span>) <span class="comment">// 根據您的實作，應回傳 400</span></span><br><span class="line">                .body(<span class="string">&quot;error&quot;</span>, is(<span class="string">&quot;Station ID cannot be empty.&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/06/10/%E5%9F%BA%E6%96%BC-Quarkus-%E7%9A%84-YouBike-%E8%B3%87%E8%A8%8A%E6%9F%A5%E8%A9%A2-API/" title="基於 Quarkus 的 YouBike 資訊查詢 API">https://jumbojay06.github.io/2025/06/10/基於-Quarkus-的-YouBike-資訊查詢-API/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Quarkus/" rel="tag"># Quarkus</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/03/Quarkus-API-%E9%96%8B%E7%99%BC%EF%BC%9A%E5%BE%9E%E7%90%86%E8%AB%96%E5%88%B0%E5%AF%A6%E8%B8%90/" rel="prev" title="Quarkus API 開發：從理論到實踐">
+      <i class="fa fa-chevron-left"></i> Quarkus API 開發：從理論到實踐
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%96%BC-Quarkus-%E7%9A%84-YouBike-%E8%B3%87%E8%A8%8A%E6%9F%A5%E8%A9%A2-API"><span class="nav-number">1.</span> <span class="nav-text">基於 Quarkus 的 YouBike 資訊查詢 API</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%B0%88%E6%A1%88"><span class="nav-number">1.1.</span> <span class="nav-text">建立專案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A%E6%AA%94"><span class="nav-number">1.2.</span> <span class="nav-text">設定檔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#POM-xml"><span class="nav-number">1.3.</span> <span class="nav-text">POM.xml</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A4%E7%AF%84%E4%BE%8B%E7%9A%84%E8%A8%AD%E7%BD%AE"><span class="nav-number">1.3.1.</span> <span class="nav-text">此範例的設置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E6%AA%94%E6%A1%88"><span class="nav-number">1.3.2.</span> <span class="nav-text">完整檔案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BC%8F%E7%A2%BC%E7%B5%90%E6%A7%8B%E8%88%87%E8%A9%B3%E7%B4%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">1.4.</span> <span class="nav-text">程式碼結構與詳細解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Model"><span class="nav-number">1.4.1.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Client"><span class="nav-number">1.4.2.</span> <span class="nav-text">Client</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service"><span class="nav-number">1.4.3.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Resource"><span class="nav-number">1.4.4.</span> <span class="nav-text">Resource</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%AC%E8%A9%A6"><span class="nav-number">1.4.5.</span> <span class="nav-text">測試</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AB%8B%E6%B1%82%E6%B5%81%E7%A8%8B%E8%BF%BD%E8%B9%A4-%E4%BB%A5-GET-api-youbike-station-500101001-%E7%82%BA%E4%BE%8B"><span class="nav-number">1.4.5.1.</span> <span class="nav-text">請求流程追蹤 (以 GET &#x2F;api&#x2F;youbike&#x2F;station&#x2F;500101001 為例)</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/06/10/%E5%9F%BA%E6%96%BC-Quarkus-%E7%9A%84-YouBike-%E8%B3%87%E8%A8%8A%E6%9F%A5%E8%A9%A2-API/";
+    this.page.identifier = "2025/06/10/基於-Quarkus-的-YouBike-資訊查詢-API/";
+    this.page.title = "基於 Quarkus 的 YouBike 資訊查詢 API";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
