@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="MongoDB 儲存與 Redis 快取之實作Quarkus 入門學習範例，我們一樣用 YouBike 資訊查詢來延伸。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB 儲存與 Redis 快取之實作">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/06/16/MongoDB-%E5%84%B2%E5%AD%98%E8%88%87-Redis-%E5%BF%AB%E5%8F%96%E4%B9%8B%E5%AF%A6%E4%BD%9C/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="MongoDB 儲存與 Redis 快取之實作Quarkus 入門學習範例，我們一樣用 YouBike 資訊查詢來延伸。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2025-06-16T02:27:37.000Z">
+<meta property="article:modified_time" content="2025-06-16T02:29:08.491Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="Quarkus">
+<meta property="article:tag" content="MongoDB">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/06/16/MongoDB-%E5%84%B2%E5%AD%98%E8%88%87-Redis-%E5%BF%AB%E5%8F%96%E4%B9%8B%E5%AF%A6%E4%BD%9C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>MongoDB 儲存與 Redis 快取之實作 | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/06/16/MongoDB-%E5%84%B2%E5%AD%98%E8%88%87-Redis-%E5%BF%AB%E5%8F%96%E4%B9%8B%E5%AF%A6%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MongoDB 儲存與 Redis 快取之實作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-06-16 10:27:37 / 修改時間：10:29:08" itemprop="dateCreated datePublished" datetime="2025-06-16T10:27:37+08:00">2025-06-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/%E5%BE%8C%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">後端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/%E5%BE%8C%E7%AB%AF/Quarkus/" itemprop="url" rel="index"><span itemprop="name">Quarkus</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/%E5%BE%8C%E7%AB%AF/Quarkus/MongoDB/" itemprop="url" rel="index"><span itemprop="name">MongoDB</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/%E5%BE%8C%E7%AB%AF/Quarkus/MongoDB/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/06/16/MongoDB-%E5%84%B2%E5%AD%98%E8%88%87-Redis-%E5%BF%AB%E5%8F%96%E4%B9%8B%E5%AF%A6%E4%BD%9C/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/06/16/MongoDB-儲存與-Redis-快取之實作/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="MongoDB-儲存與-Redis-快取之實作"><a href="#MongoDB-儲存與-Redis-快取之實作" class="headerlink" title="MongoDB 儲存與 Redis 快取之實作"></a>MongoDB 儲存與 Redis 快取之實作</h1><p>Quarkus 入門學習範例，我們一樣用 YouBike 資訊查詢來延伸。</p>
+<span id="more"></span>
+<h2 id="設定檔"><a href="#設定檔" class="headerlink" title="設定檔"></a>設定檔</h2><p>新增 MongoDB 與 Redis 設定</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># MongoDB 資料庫設定</span></span><br><span class="line"><span class="attr">mongodb:</span></span><br><span class="line">    <span class="comment"># 資料庫連接字串</span></span><br><span class="line">    <span class="attr">connection-string:</span> <span class="string">&quot;mongodb://localhost:27017&quot;</span></span><br><span class="line">    <span class="comment"># 資料庫名稱</span></span><br><span class="line">    <span class="attr">database:</span> <span class="string">&quot;youbike_db&quot;</span></span><br><span class="line"><span class="comment"># Redis 設定</span></span><br><span class="line"><span class="attr">redis:</span></span><br><span class="line">    <span class="comment"># Redis 伺服器的主機名稱</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">&quot;redis://localhost:6379&quot;</span></span><br></pre></td></tr></table></figure>
+<details>
+
+<summary>完整檔案</summary>
+    
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Quarkus 框架的主要設定</span></span><br><span class="line"><span class="attr">quarkus:</span></span><br><span class="line">  <span class="comment"># HTTP 伺服器相關設定</span></span><br><span class="line">  <span class="attr">http:</span></span><br><span class="line">    <span class="comment"># 設定應用程式監聽的 HTTP 連接埠</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line">  <span class="comment"># 應用程式基本資訊設定</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># 應用程式名稱</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">youbike-api-java</span></span><br><span class="line">    <span class="comment"># 應用程式版本</span></span><br><span class="line">    <span class="attr">version:</span> <span class="number">1.0</span><span class="number">.0</span></span><br><span class="line">  <span class="comment"># REST 客戶端設定</span></span><br><span class="line">  <span class="attr">rest-client:</span></span><br><span class="line">    <span class="comment"># &#x27;you-bike-api&#x27; 是客戶端介面的設定 ID (對應 @RegisterRestClient 的 configKey)</span></span><br><span class="line">    <span class="attr">you-bike-api:</span></span><br><span class="line">      <span class="comment"># API 的目標 URL</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">&quot;https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json&quot;</span></span><br><span class="line">      <span class="comment"># 設定此 REST 客戶端的 CDI Bean 範圍為 Singleton (單例)</span></span><br><span class="line">      <span class="attr">scope:</span> <span class="string">javax.inject.Singleton</span></span><br><span class="line">      <span class="comment"># 連線逾時時間 (單位：毫秒)</span></span><br><span class="line">      <span class="attr">connect-timeout:</span> <span class="number">5000</span></span><br><span class="line">      <span class="comment"># 讀取逾時時間 (單位：毫秒)</span></span><br><span class="line">      <span class="attr">read-timeout:</span> <span class="number">10000</span></span><br><span class="line">  <span class="comment"># MongoDB 資料庫設定</span></span><br><span class="line">  <span class="attr">mongodb:</span></span><br><span class="line">      <span class="comment"># 資料庫連接字串</span></span><br><span class="line">      <span class="attr">connection-string:</span> <span class="string">&quot;mongodb://localhost:27017&quot;</span></span><br><span class="line">      <span class="comment"># 資料庫名稱</span></span><br><span class="line">      <span class="attr">database:</span> <span class="string">&quot;youbike_db&quot;</span></span><br><span class="line">  <span class="comment"># Redis 設定</span></span><br><span class="line">  <span class="attr">redis:</span></span><br><span class="line">      <span class="comment"># Redis 伺服器的主機名稱</span></span><br><span class="line">      <span class="attr">host:</span> <span class="string">&quot;redis://localhost:6379&quot;</span></span><br><span class="line">  <span class="comment"># 日誌記錄相關設定</span></span><br><span class="line">  <span class="attr">log:</span></span><br><span class="line">    <span class="comment"># 全域預設的日誌記錄層級</span></span><br><span class="line">    <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">    <span class="comment"># 針對特定類別或套件設定日誌層級</span></span><br><span class="line">    <span class="attr">category:</span></span><br><span class="line">      <span class="comment"># 將 &#x27;org.jay&#x27; 套件下的日誌層級設定為 DEBUG</span></span><br><span class="line">      <span class="attr">&quot;org.jay&quot;:</span></span><br><span class="line">        <span class="attr">level:</span> <span class="string">DEBUG</span></span><br><span class="line">    <span class="comment"># 控制台日誌輸出設定</span></span><br><span class="line">    <span class="attr">console:</span></span><br><span class="line">      <span class="comment"># 設定日誌輸出的格式</span></span><br><span class="line">      <span class="comment"># %d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125;: 日期與時間</span></span><br><span class="line">      <span class="comment"># %-5p: 日誌層級 (例如 INFO, DEBUG)</span></span><br><span class="line">      <span class="comment"># [%c&#123;1.&#125;]: 類別名稱 (簡寫)</span></span><br><span class="line">      <span class="comment"># (%t): 執行緒名稱</span></span><br><span class="line">      <span class="comment"># %s: 日誌訊息</span></span><br><span class="line">      <span class="comment"># %e: 例外堆疊追蹤</span></span><br><span class="line">      <span class="comment"># %n: 換行符</span></span><br><span class="line">      <span class="attr">format:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss,SSS&#125; %-5p [%c&#123;1.&#125;] (%t) %s%e%n&quot;</span></span><br></pre></td></tr></table></figure>
+</details>
+
+<h2 id="POM-xml"><a href="#POM-xml" class="headerlink" title="POM.xml"></a>POM.xml</h2><p>新增 MongoDB、Redis、Lombok、MapStruct 依賴</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- MongoDB Client --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-mongodb-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-mongodb-panache<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Redis Client --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-redis-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Lombok --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.18.38<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- MapStruct --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mapstruct<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapstruct<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 在 build/plugins section 中，確保 maven-compiler-plugin 設定了 annotationProcessors --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.11.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">annotationProcessorPaths</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">path</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.18.38<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">path</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">path</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mapstruct<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapstruct-processor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">path</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">annotationProcessorPaths</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 版號請自行使用最新版本 --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.jay<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-training<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">compiler-plugin.version</span>&gt;</span>3.14.0<span class="tag">&lt;/<span class="name">compiler-plugin.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.release</span>&gt;</span>21<span class="tag">&lt;/<span class="name">maven.compiler.release</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.reporting.outputEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.reporting.outputEncoding</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quarkus.platform.artifact-id</span>&gt;</span>quarkus-bom<span class="tag">&lt;/<span class="name">quarkus.platform.artifact-id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quarkus.platform.group-id</span>&gt;</span>io.quarkus.platform<span class="tag">&lt;/<span class="name">quarkus.platform.group-id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quarkus.platform.version</span>&gt;</span>3.23.0<span class="tag">&lt;/<span class="name">quarkus.platform.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">skipITs</span>&gt;</span>true<span class="tag">&lt;/<span class="name">skipITs</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">surefire-plugin.version</span>&gt;</span>3.5.2<span class="tag">&lt;/<span class="name">surefire-plugin.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>$&#123;quarkus.platform.group-id&#125;<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>$&#123;quarkus.platform.artifact-id&#125;<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;quarkus.platform.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-arc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-rest<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-rest-jackson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-rest-client-jackson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-config-yaml<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- MongoDB Client --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-mongodb-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-mongodb-panache<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- Redis Client --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-redis-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- Lombok --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.18.38<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- MapStruct --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mapstruct<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapstruct<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- Testing Dependencies --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-junit5<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.quarkus<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-junit5-mockito<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.rest-assured<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>rest-assured<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sourceDirectory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">sourceDirectory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">testSourceDirectory</span>&gt;</span>src/test/java<span class="tag">&lt;/<span class="name">testSourceDirectory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>$&#123;quarkus.platform.group-id&#125;<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>quarkus-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;quarkus.platform.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">extensions</span>&gt;</span>true<span class="tag">&lt;/<span class="name">extensions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>build<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>generate-code<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>generate-code-tests<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;compiler-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">parameters</span>&gt;</span>true<span class="tag">&lt;/<span class="name">parameters</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">annotationProcessorPaths</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">path</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.18.38<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">path</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">path</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mapstruct<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapstruct-processor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">path</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">annotationProcessorPaths</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-surefire-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;surefire-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">systemPropertyVariables</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">java.util.logging.manager</span>&gt;</span>org.jboss.logmanager.LogManager<span class="tag">&lt;/<span class="name">java.util.logging.manager</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">maven.home</span>&gt;</span>$&#123;maven.home&#125;<span class="tag">&lt;/<span class="name">maven.home</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">systemPropertyVariables</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;surefire-plugin.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>integration-test<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>verify<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">systemPropertyVariables</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">native.image.path</span>&gt;</span>$&#123;project.build.directory&#125;/$&#123;project.build.finalName&#125;-runner<span class="tag">&lt;/<span class="name">native.image.path</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">java.util.logging.manager</span>&gt;</span>org.jboss.logmanager.LogManager<span class="tag">&lt;/<span class="name">java.util.logging.manager</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">maven.home</span>&gt;</span>$&#123;maven.home&#125;<span class="tag">&lt;/<span class="name">maven.home</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">systemPropertyVariables</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>native<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>native<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">skipITs</span>&gt;</span>false<span class="tag">&lt;/<span class="name">skipITs</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">quarkus.native.enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">quarkus.native.enabled</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</details>
+
+<h2 id="程式碼結構與詳細解析"><a href="#程式碼結構與詳細解析" class="headerlink" title="程式碼結構與詳細解析"></a>程式碼結構與詳細解析</h2><h3 id="YouBikeApiClient"><a href="#YouBikeApiClient" class="headerlink" title="YouBikeApiClient"></a>YouBikeApiClient</h3><p>這部分不用調整，沿用程式碼。</p>
+<h3 id="YouBikeStationEntity"><a href="#YouBikeStationEntity" class="headerlink" title="YouBikeStationEntity"></a>YouBikeStationEntity</h3><ul>
+<li>將原本的 Model 改用 Lombok(<code>@Data</code>) 來實作 <code>getters</code>, <code>setters</code>, <code>toString</code>, <code>equals</code>, 和 <code>hashCode</code> 方法。</li>
+<li><code>@MongoEntity</code> 是 Panache 的注解，用來將這個 Java 類別與 MongoDB 的一個集合（collection）對應起來。</li>
+<li>繼承 <code>PanacheMongoEntityBase</code> 來簡化 DB 操作。v</li>
+</ul>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.JsonIgnoreProperties;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.JsonProperty;</span><br><span class="line"><span class="keyword">import</span> io.quarkus.mongodb.panache.PanacheMongoEntityBase;</span><br><span class="line"><span class="keyword">import</span> io.quarkus.mongodb.panache.common.MongoEntity;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.EqualsAndHashCode;</span><br><span class="line"><span class="keyword">import</span> org.bson.codecs.pojo.annotations.BsonId;    </span><br><span class="line">    </span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@EqualsAndHashCode(callSuper = true)</span></span><br><span class="line"><span class="meta">@MongoEntity(collection = &quot;youbike_stations&quot;)</span> <span class="comment">// 指定 MongoDB collection 名稱</span></span><br><span class="line"><span class="meta">@JsonIgnoreProperties(ignoreUnknown = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">YouBikeStationEntity</span> <span class="keyword">extends</span> <span class="title class_">PanacheMongoEntityBase</span> &#123;</span><br><span class="line">    <span class="meta">@BsonId</span></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;sno&quot;)</span> <span class="comment">// 站點代號</span></span><br><span class="line">    String stationNo;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;sna&quot;)</span> <span class="comment">// 站點名稱(中文)</span></span><br><span class="line">    String stationName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;snaen&quot;)</span> <span class="comment">// 站點名稱(英文)</span></span><br><span class="line">    String stationNameEn;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;total&quot;)</span> <span class="comment">// 站點總停車格數</span></span><br><span class="line">    <span class="type">int</span> totalSpaces;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;available_rent_bikes&quot;)</span> <span class="comment">// 目前可借車輛數</span></span><br><span class="line">    <span class="type">int</span> availableBikes;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;sarea&quot;)</span> <span class="comment">// 站點區域(中文)</span></span><br><span class="line">    String area;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;sareaen&quot;)</span> <span class="comment">// 站點區域(英文)</span></span><br><span class="line">    String areaEn;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;updateTime&quot;)</span> <span class="comment">// 資料更新時間 (格式範例: 20231120150514)</span></span><br><span class="line">    String updateTime;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;latitude&quot;)</span> <span class="comment">// 緯度</span></span><br><span class="line">    <span class="type">double</span> latitude;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;longitude&quot;)</span> <span class="comment">// 經度</span></span><br><span class="line">    <span class="type">double</span> longitude;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;ar&quot;)</span> <span class="comment">// 地址(中文)</span></span><br><span class="line">    String address;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;aren&quot;)</span> <span class="comment">// 地址(英文)</span></span><br><span class="line">    String addressEn;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;available_return_bikes&quot;)</span> <span class="comment">// 目前空位數</span></span><br><span class="line">    <span class="type">int</span> availableSpaces;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JsonProperty(&quot;act&quot;)</span> <span class="comment">// 全站禁用狀態 (0:禁用; 1:啟用)</span></span><br><span class="line">    String active;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h3 id="YouBikeStationDTO"><a href="#YouBikeStationDTO" class="headerlink" title="YouBikeStationDTO"></a>YouBikeStationDTO</h3><p>給客戶端的欄位，只給客戶端所需要的資料</p>
+<ul>
+<li>一樣用 Lombok(<code>@Data</code>) 來實作 <code>getters</code>, <code>setters</code>, <code>toString</code>, <code>equals</code>, 和 <code>hashCode</code> 方法。</li>
+</ul>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">YouBikeStationDTO</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String stationNo;</span><br><span class="line">    <span class="keyword">private</span> String stationName;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> totalSpaces;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> availableBikes;</span><br><span class="line">    <span class="keyword">private</span> String area;</span><br><span class="line">    <span class="keyword">private</span> String updateTime;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> latitude;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> longitude;</span><br><span class="line">    <span class="keyword">private</span> String address;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> availableSpaces;</span><br><span class="line">    <span class="keyword">private</span> String active;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h3 id="YouBikeStationMapper"><a href="#YouBikeStationMapper" class="headerlink" title="YouBikeStationMapper"></a>YouBikeStationMapper</h3><p>在 <code>Entity</code> 和 <code>DTO</code> 之間轉換欄位是一件繁瑣且容易出錯的工作，透過 <code>YouBikeStationMapper</code> 自動化轉換。</p>
+<ul>
+<li><code>componentModel = &quot;cdi&quot;</code> 讓這個 Mapper 可以被 Quarkus 的依賴注入框架管理。</li>
+</ul>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jakarta.enterprise.context.ApplicationScoped;</span><br><span class="line"><span class="keyword">import</span> org.jay.dto.YouBikeStationDTO;</span><br><span class="line"><span class="keyword">import</span> org.jay.entity.YouBikeStationEntity;</span><br><span class="line"><span class="keyword">import</span> org.mapstruct.Mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@ApplicationScoped</span> <span class="comment">// 讓 MapStruct 產生的實作可以被 CDI 注入</span></span><br><span class="line"><span class="meta">@Mapper(componentModel = &quot;cdi&quot;)</span> <span class="comment">// 讓 Quarkus 可以注入這個 Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">YouBikeStationMapper</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 將 Entity 轉換為 DTO</span></span><br><span class="line">    YouBikeStationDTO <span class="title function_">toDto</span><span class="params">(YouBikeStationEntity entity)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 將 Entity 列表轉換為 DTO 列表</span></span><br><span class="line">    List&lt;YouBikeStationDTO&gt; <span class="title function_">toDtoList</span><span class="params">(List&lt;YouBikeStationEntity&gt; entities)</span>;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+</details>
+    
+    
+<h3 id="YouBikeService"><a href="#YouBikeService" class="headerlink" title="YouBikeService"></a>YouBikeService</h3><p>整個專案最核心的業務邏輯</p>
+<ul>
+<li>Panache 透過 Active Record 模式為 Entity 類別直接賦予了資料庫操作的能力。</li>
+</ul>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> io.quarkus.redis.datasource.RedisDataSource;</span><br><span class="line"><span class="keyword">import</span> io.quarkus.redis.datasource.value.ValueCommands;</span><br><span class="line"><span class="keyword">import</span> jakarta.enterprise.context.ApplicationScoped;</span><br><span class="line"><span class="keyword">import</span> jakarta.inject.Inject;</span><br><span class="line"><span class="keyword">import</span> org.eclipse.microprofile.rest.client.inject.RestClient;</span><br><span class="line"><span class="keyword">import</span> org.jay.client.YouBikeApiClient;</span><br><span class="line"><span class="keyword">import</span> org.eclipse.microprofile.config.inject.ConfigProperty;</span><br><span class="line"><span class="keyword">import</span> org.jay.dto.YouBikeStationDTO;</span><br><span class="line"><span class="keyword">import</span> org.jay.entity.YouBikeStationEntity;</span><br><span class="line"><span class="keyword">import</span> org.jay.mapper.YouBikeStationMapper;</span><br><span class="line"><span class="keyword">import</span> org.jboss.logging.Logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"></span><br><span class="line"><span class="meta">@ApplicationScoped</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">YouBikeService</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOG</span> <span class="operator">=</span> Logger.getLogger(YouBikeService.class.getName());</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">CACHE_KEY_PREFIX</span> <span class="operator">=</span> <span class="string">&quot;station:&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">CACHE_TTL_SECONDS</span> <span class="operator">=</span> <span class="number">3600</span>; <span class="comment">// 快取 1 小時</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    <span class="meta">@RestClient</span></span><br><span class="line">    YouBikeApiClient youBikeApiClient;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    YouBikeStationMapper stationMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    RedisDataSource redisDataSource;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ConfigProperty(name = &quot;quarkus.rest-client.you-bike-api.url&quot;)</span></span><br><span class="line">    String apiClientUrl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查詢所有站點，從 MongoDB 讀取</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;YouBikeStationDTO&gt; <span class="title function_">getAllStationsFromDb</span><span class="params">()</span> &#123;</span><br><span class="line">        List&lt;YouBikeStationEntity&gt; entities = YouBikeStationEntity.listAll();</span><br><span class="line">        <span class="keyword">return</span> stationMapper.toDtoList(entities);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查詢指定 ID 的站點，實作 Cache-Aside 模式</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Optional&lt;YouBikeStationDTO&gt; <span class="title function_">getStationById</span><span class="params">(String stationId)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">cacheKey</span> <span class="operator">=</span> CACHE_KEY_PREFIX + stationId;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1. 從 Redis 快取查詢</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ValueCommands&lt;String, YouBikeStationEntity&gt; stationCache = redisDataSource.value(YouBikeStationEntity.class);</span><br><span class="line">            <span class="type">YouBikeStationEntity</span> <span class="variable">cachedStation</span> <span class="operator">=</span> stationCache.get(cacheKey);</span><br><span class="line">            <span class="keyword">if</span> (cachedStation != <span class="literal">null</span>) &#123;</span><br><span class="line">                LOG.infof(<span class="string">&quot;Cache HIT for station ID: %s&quot;</span>, stationId);</span><br><span class="line">                <span class="keyword">return</span> Optional.of(stationMapper.toDto(cachedStation));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            LOG.errorf(e, <span class="string">&quot;Error accessing Redis cache for key: %s&quot;</span>, cacheKey);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        LOG.infof(<span class="string">&quot;Cache MISS for station ID: %s. Fetching from DB.&quot;</span>, stationId);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 快取未命中，從 MongoDB 查詢</span></span><br><span class="line">        <span class="type">YouBikeStationEntity</span> <span class="variable">stationFromDb</span> <span class="operator">=</span> YouBikeStationEntity.findById(stationId);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (stationFromDb != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 3. 將從 DB 查到的資料寫入快取，並設定 TTL</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                ValueCommands&lt;String, YouBikeStationEntity&gt; stationCache = redisDataSource.value(YouBikeStationEntity.class);</span><br><span class="line">                stationCache.setex(cacheKey, CACHE_TTL_SECONDS, stationFromDb);</span><br><span class="line">                LOG.infof(<span class="string">&quot;Station ID %s data stored in cache.&quot;</span>, stationId);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                LOG.errorf(e, <span class="string">&quot;Error writing to Redis cache for key: %s&quot;</span>, cacheKey);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> Optional.of(stationMapper.toDto(stationFromDb));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        LOG.warnf(<span class="string">&quot;Station ID %s not found in DB.&quot;</span>, stationId);</span><br><span class="line">        <span class="keyword">return</span> Optional.empty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 從外部 API 匯入資料到 MongoDB</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">importStations</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            LOG.infof(<span class="string">&quot;Fetching YouBike data from URL: %s&quot;</span>, apiClientUrl);</span><br><span class="line">            List&lt;YouBikeStationEntity&gt; youBikeList = youBikeApiClient.getYouBikeList();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 使用 Panache 的 persist 方法儲存資料</span></span><br><span class="line">            YouBikeStationEntity.persistOrUpdate(youBikeList);</span><br><span class="line"></span><br><span class="line">            LOG.infof(<span class="string">&quot;Successfully imported %d stations into MongoDB.&quot;</span>, youBikeList.size());</span><br><span class="line">            <span class="keyword">return</span> youBikeList.size();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            LOG.error(<span class="string">&quot;Exception during data import&quot;</span>, e);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+</details>
+    
+    
+<h3 id="YouBikeResource"><a href="#YouBikeResource" class="headerlink" title="YouBikeResource"></a>YouBikeResource</h3><p>負責定義 API 的路徑和接收請求。</p>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jakarta.inject.Inject;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.*;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.core.MediaType;</span><br><span class="line"><span class="keyword">import</span> jakarta.ws.rs.core.Response;</span><br><span class="line"><span class="keyword">import</span> org.jay.dto.YouBikeStationDTO;</span><br><span class="line"><span class="keyword">import</span> org.jay.service.YouBikeService;</span><br><span class="line"><span class="keyword">import</span> org.jboss.logging.Logger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Path(&quot;/api/youbike&quot;)</span></span><br><span class="line"><span class="meta">@Produces(MediaType.APPLICATION_JSON)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">YouBikeResource</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOG</span> <span class="operator">=</span> Logger.getLogger(YouBikeResource.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    YouBikeService youBikeService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@POST</span></span><br><span class="line">    <span class="meta">@Path(&quot;/import&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Response <span class="title function_">importData</span><span class="params">()</span> &#123;</span><br><span class="line">        LOG.info(<span class="string">&quot;Received request to import YouBike data.&quot;</span>);</span><br><span class="line">        <span class="type">long</span> <span class="variable">count</span> <span class="operator">=</span> youBikeService.importStations();</span><br><span class="line">        <span class="keyword">if</span> (count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.ok(<span class="string">&quot;&#123;\&quot;message\&quot;: \&quot;Successfully imported &quot;</span> + count + <span class="string">&quot; stations.\&quot;&#125;&quot;</span>).build();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(Response.Status.INTERNAL_SERVER_ERROR)</span><br><span class="line">                    .entity(<span class="string">&quot;&#123;\&quot;error\&quot;: \&quot;Failed to import station data.\&quot;&#125;&quot;</span>)</span><br><span class="line">                    .build();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Path(&quot;/all&quot;)</span> <span class="comment">// 此端點現在從資料庫讀取</span></span><br><span class="line">    <span class="keyword">public</span> Response <span class="title function_">getAllYouBikeStationsFromDb</span><span class="params">()</span> &#123;</span><br><span class="line">        List&lt;YouBikeStationDTO&gt; stations = youBikeService.getAllStationsFromDb();</span><br><span class="line">        <span class="keyword">if</span> (stations.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)</span><br><span class="line">                    .entity(<span class="string">&quot;&#123;\&quot;message\&quot;: \&quot;No YouBike stations data in the database. Please run POST /api/youbike/import first.\&quot;&#125;&quot;</span>)</span><br><span class="line">                    .build();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Response.ok(stations).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Path(&quot;/station/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Response <span class="title function_">getYouBikeStationById</span><span class="params">(<span class="meta">@PathParam(&quot;id&quot;)</span> String stationId)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (stationId == <span class="literal">null</span> || stationId.trim().isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(Response.Status.BAD_REQUEST)</span><br><span class="line">                    .entity(<span class="string">&quot;&#123;\&quot;error\&quot;: \&quot;Station ID cannot be empty.\&quot;&#125;&quot;</span>)</span><br><span class="line">                    .build();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Optional&lt;YouBikeStationDTO&gt; stationOpt = youBikeService.getStationById(stationId);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> stationOpt.map(Response::ok)</span><br><span class="line">                .orElse(Response.status(Response.Status.NOT_FOUND)</span><br><span class="line">                        .entity(<span class="string">&quot;&#123;\&quot;message\&quot;: \&quot;Station with ID &quot;</span> + stationId + <span class="string">&quot; not found.\&quot;&#125;&quot;</span>)).build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</details>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/06/16/MongoDB-%E5%84%B2%E5%AD%98%E8%88%87-Redis-%E5%BF%AB%E5%8F%96%E4%B9%8B%E5%AF%A6%E4%BD%9C/" title="MongoDB 儲存與 Redis 快取之實作">https://jumbojay06.github.io/2025/06/16/MongoDB-儲存與-Redis-快取之實作/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Quarkus/" rel="tag"># Quarkus</a>
+              <a href="/tags/MongoDB/" rel="tag"># MongoDB</a>
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/13/MongoDB-%E5%84%B2%E5%AD%98%E8%88%87-Redis-%E5%BF%AB%E5%8F%96/" rel="prev" title="MongoDB 儲存與 Redis 快取">
+      <i class="fa fa-chevron-left"></i> MongoDB 儲存與 Redis 快取
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MongoDB-%E5%84%B2%E5%AD%98%E8%88%87-Redis-%E5%BF%AB%E5%8F%96%E4%B9%8B%E5%AF%A6%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">MongoDB 儲存與 Redis 快取之實作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A%E6%AA%94"><span class="nav-number">1.1.</span> <span class="nav-text">設定檔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#POM-xml"><span class="nav-number">1.2.</span> <span class="nav-text">POM.xml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BC%8F%E7%A2%BC%E7%B5%90%E6%A7%8B%E8%88%87%E8%A9%B3%E7%B4%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">1.3.</span> <span class="nav-text">程式碼結構與詳細解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#YouBikeApiClient"><span class="nav-number">1.3.1.</span> <span class="nav-text">YouBikeApiClient</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YouBikeStationEntity"><span class="nav-number">1.3.2.</span> <span class="nav-text">YouBikeStationEntity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YouBikeStationDTO"><span class="nav-number">1.3.3.</span> <span class="nav-text">YouBikeStationDTO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YouBikeStationMapper"><span class="nav-number">1.3.4.</span> <span class="nav-text">YouBikeStationMapper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YouBikeService"><span class="nav-number">1.3.5.</span> <span class="nav-text">YouBikeService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YouBikeResource"><span class="nav-number">1.3.6.</span> <span class="nav-text">YouBikeResource</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/06/16/MongoDB-%E5%84%B2%E5%AD%98%E8%88%87-Redis-%E5%BF%AB%E5%8F%96%E4%B9%8B%E5%AF%A6%E4%BD%9C/";
+    this.page.identifier = "2025/06/16/MongoDB-儲存與-Redis-快取之實作/";
+    this.page.title = "MongoDB 儲存與 Redis 快取之實作";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
