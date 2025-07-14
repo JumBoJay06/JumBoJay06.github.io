@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="用 React Native 和 Expo 打造你的第一個多頁待辦事項 App剛接觸一個新的框架或技術時，親手打造一個應用程式是最快的學習方式。今天，我將帶大家一步步使用 React Native 從零開始，建立一個功能完整、包含多個頁面的 Todo List 應用程式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 React Native 和 Expo 打造你的第一個多頁待辦事項 App">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/07/14/%E7%94%A8-React-Native-%E5%92%8C-Expo-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="用 React Native 和 Expo 打造你的第一個多頁待辦事項 App剛接觸一個新的框架或技術時，親手打造一個應用程式是最快的學習方式。今天，我將帶大家一步步使用 React Native 從零開始，建立一個功能完整、包含多個頁面的 Todo List 應用程式。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2025-07-14T09:54:16.000Z">
+<meta property="article:modified_time" content="2025-07-14T09:57:17.976Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="React Native">
+<meta property="article:tag" content="Expo">
+<meta property="article:tag" content="Context">
+<meta property="article:tag" content="async-storage">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/07/14/%E7%94%A8-React-Native-%E5%92%8C-Expo-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>用 React Native 和 Expo 打造你的第一個多頁待辦事項 App | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/07/14/%E7%94%A8-React-Native-%E5%92%8C-Expo-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用 React Native 和 Expo 打造你的第一個多頁待辦事項 App
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-07-14 17:54:16 / 修改時間：17:57:17" itemprop="dateCreated datePublished" datetime="2025-07-14T17:54:16+08:00">2025-07-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/" itemprop="url" rel="index"><span itemprop="name">React Native</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/Expo/" itemprop="url" rel="index"><span itemprop="name">Expo</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/Expo/Context/" itemprop="url" rel="index"><span itemprop="name">Context</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/Expo/Context/async-storage/" itemprop="url" rel="index"><span itemprop="name">async-storage</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/07/14/%E7%94%A8-React-Native-%E5%92%8C-Expo-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/07/14/用-React-Native-和-Expo-打造你的第一個多頁待辦事項-App/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="用-React-Native-和-Expo-打造你的第一個多頁待辦事項-App"><a href="#用-React-Native-和-Expo-打造你的第一個多頁待辦事項-App" class="headerlink" title="用 React Native 和 Expo 打造你的第一個多頁待辦事項 App"></a>用 React Native 和 Expo 打造你的第一個多頁待辦事項 App</h1><p>剛接觸一個新的框架或技術時，親手打造一個應用程式是最快的學習方式。今天，我將帶大家一步步使用 React Native 從零開始，建立一個功能完整、包含多個頁面的 Todo List 應用程式。</p>
+<span id="more"></span>
+<p>完成後，你的 App 將會有兩個頁面：一個是待辦事項的清單頁，你可以在這裡新增、刪除、標記完成；另一個是詳細內容頁，點擊清單中的任何一項就可以進入編輯。</p>
+<p>這是我們的最終目標：</p>
+<ul>
+<li>清單頁 (List): 顯示所有待辦事項，並可新增。</li>
+<li>詳細頁 (Detail): 顯示單一事項的詳細內容，並可編輯。</li>
+</ul>
+<p>讓我們開始吧！</p>
+<h2 id="🎯-學習重點"><a href="#🎯-學習重點" class="headerlink" title="🎯 學習重點"></a>🎯 學習重點</h2><p>在我們深入探索程式碼之前，首要任務是設定好我們的開發環境，並了解專案需要哪些「武器」（也就是所謂的依賴套件）。這是一個從無到有啟動專案的完整流程。</p>
+<h3 id="安裝-Node-js-與-npm"><a href="#安裝-Node-js-與-npm" class="headerlink" title="安裝 Node.js 與 npm"></a>安裝 Node.js 與 npm</h3><p>npm (Node Package Manager) 是 JavaScript 世界的標準套件管理工具，我們將用它來安裝和管理專案所需的所有函式庫。npm 會跟著 Node.js 一起安裝。</p>
+<ul>
+<li>前往 Node.js 官網：<a target="_blank" rel="noopener" href="https://nodejs.org/">https://nodejs.org/</a></li>
+<li>下載並安裝：建議下載「LTS」（Long-Term Support，長期支援）版本，它的穩定性最高。安裝過程非常簡單，一直按下一步即可。</li>
+</ul>
+<p>安裝完成後，打開你的終端機（Terminal）並執行以下指令，確認是否安裝成功。如果能看到版本號，就代表成功了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+<h3 id="安裝-Expo-CLI"><a href="#安裝-Expo-CLI" class="headerlink" title="安裝 Expo CLI"></a>安裝 Expo CLI</h3><p>Expo CLI 是 Expo 的命令列工具，讓我們可以快速建立和啟動 React Native 專案。<br>在終端機中執行以下指令來進行全域安裝：<br><code>npm install expo-cli</code></p>
+<h3 id="建立一個新的-Expo-專案"><a href="#建立一個新的-Expo-專案" class="headerlink" title="建立一個新的 Expo 專案"></a>建立一個新的 Expo 專案</h3><p>建立我們 Todo List App 的專案。<br><code>npx create-expo-app --template</code><br>Expo 會引導你選擇一個模板，你可以選擇 blank (TypeScript) 模板開始一個乾淨的專案，再來輸入專案名稱，這樣專案就會建立起來了</p>
+<h3 id="安裝專案所需依賴"><a href="#安裝專案所需依賴" class="headerlink" title="安裝專案所需依賴"></a>安裝專案所需依賴</h3><p>一個新的 Expo 專案只包含了最基本的套件，我們一定會需要額外的套件，你可以用 npm 指令來安裝：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install @expo/vector-icons @react-native-async-storage/async-storage @react-navigation/native @react-navigation/native-stack nanoid react-native-paper react-native-safe-area-context react-native-screens</span><br><span class="line">(可以串多個套件)</span><br><span class="line">或者更新 package.json 後，執行 npm intall</span><br></pre></td></tr></table></figure>
+<h3 id="專案依賴"><a href="#專案依賴" class="headerlink" title="專案依賴"></a>專案依賴</h3><p><code>package.json</code> 檔案是我們專案的「身分證」，它記錄了專案的名稱、版本、腳本指令，以及最重要的——專案的依賴套件。<br>打開 <code>package.json</code>，我們來看看 <code>dependencies</code> 區塊：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;@expo/vector-icons&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^14.1.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;@react-native-async-storage/async-storage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^2.2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;@react-navigation/native&quot;</span><span class="punctuation">:</span> <span class="string">&quot;*&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;@react-navigation/native-stack&quot;</span><span class="punctuation">:</span> <span class="string">&quot;*&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;expo&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^53.0.15&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;expo-status-bar&quot;</span><span class="punctuation">:</span> <span class="string">&quot;~2.2.3&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;nanoid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^5.1.5&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;react&quot;</span><span class="punctuation">:</span> <span class="string">&quot;19.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;react-native&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.79.4&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;react-native-paper&quot;</span><span class="punctuation">:</span> <span class="string">&quot;4.9.2&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;react-native-safe-area-context&quot;</span><span class="punctuation">:</span> <span class="string">&quot;5.4.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;react-native-screens&quot;</span><span class="punctuation">:</span> <span class="string">&quot;~4.11.1&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+<p>這些套件是我們 App 能順利運作的基石：</p>
+<ul>
+<li><code>react</code> &amp; <code>react-native</code>: React Native 的核心。</li>
+<li><code>expo</code>: Expo 框架的核心套件。</li>
+<li><code>@react-navigation/native</code> &amp; <code>@react-navigation/native-stack</code>: 用來處理頁面導航和跳轉。</li>
+<li><code>@react-native-async-storage/async-storage</code>: 提供一個簡單的、非同步的、持久化的 Key-Value 儲存系統，我們用它來儲存待辦事項，讓使用者下次打開 App 時資料還在。</li>
+<li><code>nanoid</code>: 一個小巧的函式庫，用來產生獨一無二的 ID，非常適合用來當作每一筆待辦事項的 id。</li>
+<li><code>@expo/vector-icons</code>: Expo 內建的圖示庫，我們用它來顯示新增和刪除的圖示。</li>
+<li><code>react-native-screens</code> &amp; <code>react-native-safe-area-context</code>: react-navigation 的底層依賴，用來處理原生導航元件和螢幕的安全區域（例如避開 iPhone 的「瀏海」）。</li>
+</ul>
+<h3 id="依賴總結"><a href="#依賴總結" class="headerlink" title="依賴總結"></a>依賴總結</h3><p>在這次的實作中，我們將會掌握以下幾個 React Native 開發的關鍵技能：</p>
+<ol>
+<li>Expo 環境建置：我們將使用 Expo 這個強大的工具鏈，讓你不需要原生開發經驗也能輕鬆開始。</li>
+<li>React 元件化：學習如何使用 JSX 語法，以及 State 和 Props 的概念來建立可重複使用的 UI 元件。</li>
+<li>常用核心元件：熟悉 Text、TextInput、View、FlatList 等基本元件的使用。</li>
+<li>頁面導航 (Navigation)：使用 react-navigation 套件來建立多頁面應用，並在頁面之間切換。</li>
+<li>狀態管理與傳遞：學習如何透過 React Context API 集中管理 App 的狀態，並在不同頁面間傳遞資料。</li>
+</ol>
+<h2 id="📂-專案結構概覽"><a href="#📂-專案結構概覽" class="headerlink" title="📂 專案結構概覽"></a>📂 專案結構概覽</h2><p>在開始寫程式碼之前，先來看看我們專案的結構：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/</span><br><span class="line">├── App.tsx               # 應用程式進入點與導航設定</span><br><span class="line">├── components/</span><br><span class="line">│   └── TodoItem.tsx      # 單一待辦事項的 UI 元件</span><br><span class="line">├── context/</span><br><span class="line">│   └── TodoContext.tsx   # 全域狀態管理 (State Management)</span><br><span class="line">├── screens/</span><br><span class="line">│   ├── TodoListScreen.tsx # 待辦清單頁</span><br><span class="line">│   └── DetailScreen.tsx   # 待辦詳細內容頁</span><br><span class="line">├── styles/</span><br><span class="line">│   └── commonStyles.tsx  # 共用樣式</span><br><span class="line">└── package.json          # 專案依賴與腳本設定</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>screens/</code>：放置我們應用程式中的主要頁面。</li>
+<li><code>components/</code>：放置可在不同頁面中重複使用的 UI 元件。</li>
+<li><code>context/</code>：用來處理跨元件的狀態共享問題。</li>
+<li><code>styles/</code>：放置共用的樣式設定。</li>
+</ul>
+<h2 id="一、用-Context-API-進行全域狀態管理"><a href="#一、用-Context-API-進行全域狀態管理" class="headerlink" title="一、用 Context API 進行全域狀態管理"></a>一、用 Context API 進行全域狀態管理</h2><p>當我們的 App 有多個頁面需要共享或修改同一份資料時（例如我們的待辦事項列表），把這份資料放在一個所有頁面都能存取的地方就非常重要。這就是「全域狀態管理」的概念。我們將使用 React 內建的 Context API 來實現。<br>讓我們來看看 <code>context/TodoContext.tsx</code> 檔案：</p>
+<ol>
+<li>建立 Context:<br>我們使用 <code>createContext</code> 創建了兩個 Context：</li>
+</ol>
+<ul>
+<li><code>TodoContext</code>：用來存放我們的 <code>todos</code> 陣列資料。</li>
+<li><code>TodoDispatchContext</code>：用來傳遞可以修改資料的 <code>dispatch</code> 函式。</li>
+</ul>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">TodoContext</span> = createContext&lt;<span class="title class_">Todo</span>[]&gt;([]);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">TodoDispatchContext</span> = createContext&lt;<span class="title class_">Dispatch</span>&lt;<span class="title class_">TodoAction</span>&gt; | <span class="literal">null</span>&gt;(<span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>定義 Reducer:<br><code>todosReducer</code> 是一個純函式，它接收目前的 <code>todos</code> 狀態和一個 <code>action</code> 物件，然後根據 <code>action</code> 的類型回傳一個 新的 狀態。這確保了狀態的變更是可預測的。<br>我們定義了幾種操作 (<code>action</code>)：<ul>
+<li><code>ADD_TODO</code>: 新增一筆待辦事項。</li>
+<li><code>UPDATE_TODO</code>: 更新已存在的事項內容。</li>
+<li><code>DELETE_TODO</code>: 刪除一筆事項。</li>
+<li><code>TOGGLE_TODO</code>: 切換事項的完成狀態。</li>
+</ul>
+</li>
+<li>提供 Context (Provider):<br><code>TodoProvider</code> 是一個元件，它的作用是包裹住我們的整個 App。它內部使用 <code>useReducer</code> 來管理 <code>todos</code> 的狀態，並透過 <code>useEffect</code> 將 <code>todos</code> 陣列的任何變更都即時儲存到手機的 <code>AsyncStorage</code> 中，這樣即使關閉 App，資料也不會消失。</li>
+</ol>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">TodoProvider</span>(<span class="params">&#123; children &#125;: <span class="title class_">TodoProviderProps</span></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [todos, dispatch] = <span class="title function_">useReducer</span>(todosReducer, []);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ... 讀取和儲存到 AsyncStorage 的邏輯 ...</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">TodoContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;todos&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">TodoDispatchContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;dispatch&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">TodoDispatchContext.Provider</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">TodoContext.Provider</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">App</span>.<span class="property">tsx</span></span><br><span class="line"><span class="comment">// 放到整個畫面的最外層</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">TodoProvider</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">NavigationContainer</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        // ....</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">NavigationContainer</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">TodoProvider</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>自訂 Hooks:<br>為了讓其他元件可以方便地取得 <code>todos</code> 資料和 <code>dispatch</code> 函式，我們建立了兩個自訂的 Hook：<code>useTodos</code> 和 <code>useTodosDispatch</code>。</li>
+</ol>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createContext, useContext, useReducer, useEffect, <span class="title class_">Dispatch</span>, <span class="title class_">ReactNode</span>&#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">AsyncStorage</span> <span class="keyword">from</span> <span class="string">&#x27;@react-native-async-storage/async-storage&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; nanoid &#125; <span class="keyword">from</span> <span class="string">&#x27;nanoid/non-secure&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 型別定義</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Todo</span> &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">text</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">isComplete</span>: <span class="built_in">boolean</span>;</span><br><span class="line">  <span class="attr">content</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">TodoAction</span> =</span><br><span class="line">  | &#123; <span class="attr">type</span>: <span class="keyword">typeof</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">SET_TODOS</span>; <span class="attr">payload</span>: <span class="title class_">Todo</span>[] &#125;</span><br><span class="line">  | &#123; <span class="attr">type</span>: <span class="keyword">typeof</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">ADD_TODO</span>; <span class="attr">payload</span>: <span class="built_in">string</span> &#125;</span><br><span class="line">  | &#123; <span class="attr">type</span>: <span class="keyword">typeof</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">UPDATE_TODO</span>; <span class="attr">payload</span>: &#123; <span class="attr">id</span>: <span class="built_in">string</span>; <span class="attr">text</span>: <span class="built_in">string</span>; <span class="attr">content</span>: <span class="built_in">string</span> &#125; &#125;</span><br><span class="line">  | &#123; <span class="attr">type</span>: <span class="keyword">typeof</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">DELETE_TODO</span>; <span class="attr">payload</span>: &#123; <span class="attr">id</span>: <span class="built_in">string</span> &#125; &#125;</span><br><span class="line">  | &#123; <span class="attr">type</span>: <span class="keyword">typeof</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">TOGGLE_TODO</span>; <span class="attr">payload</span>: &#123; <span class="attr">id</span>: <span class="built_in">string</span> &#125; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">ACTION_TYPES</span> = <span class="title class_">Object</span>.<span class="title function_">freeze</span>(&#123;</span><br><span class="line">  <span class="attr">SET_TODOS</span>: <span class="string">&#x27;SET_TODOS&#x27;</span>,</span><br><span class="line">  <span class="attr">ADD_TODO</span>: <span class="string">&#x27;ADD_TODO&#x27;</span>,</span><br><span class="line">  <span class="attr">UPDATE_TODO</span>: <span class="string">&#x27;UPDATE_TODO&#x27;</span>,</span><br><span class="line">  <span class="attr">DELETE_TODO</span>: <span class="string">&#x27;DELETE_TODO&#x27;</span>,</span><br><span class="line">  <span class="attr">TOGGLE_TODO</span>: <span class="string">&#x27;TOGGLE_TODO&#x27;</span>,</span><br><span class="line">&#125; <span class="keyword">as</span> <span class="keyword">const</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">TodoContext</span> = createContext&lt;<span class="title class_">Todo</span>[]&gt;([]);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">TodoDispatchContext</span> = createContext&lt;<span class="title class_">Dispatch</span>&lt;<span class="title class_">TodoAction</span>&gt; | <span class="literal">null</span>&gt;(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">TODOS_STORAGE_KEY</span> = <span class="string">&#x27;todos_storage_key&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">todosReducer</span>(<span class="params"><span class="attr">todos</span>: <span class="title class_">Todo</span>[], <span class="attr">action</span>: <span class="title class_">TodoAction</span></span>): <span class="title class_">Todo</span>[] &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.<span class="property">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">SET_TODOS</span>: &#123;</span><br><span class="line">      <span class="keyword">return</span> action.<span class="property">payload</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">ADD_TODO</span>: &#123;</span><br><span class="line">      <span class="keyword">if</span> (action.<span class="property">payload</span>.<span class="title function_">trim</span>().<span class="property">length</span> === <span class="number">0</span>) <span class="keyword">return</span> todos;</span><br><span class="line">      <span class="keyword">const</span> <span class="attr">newTodo</span>: <span class="title class_">Todo</span> = &#123;</span><br><span class="line">        <span class="attr">id</span>: <span class="title function_">nanoid</span>(),</span><br><span class="line">        <span class="attr">text</span>: action.<span class="property">payload</span>,</span><br><span class="line">        <span class="attr">isComplete</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">content</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">      &#125;;</span><br><span class="line">      <span class="keyword">return</span> [...todos, newTodo];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">UPDATE_TODO</span>: &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; id, text, content &#125; = action.<span class="property">payload</span>;</span><br><span class="line">      <span class="keyword">return</span> todos.<span class="title function_">map</span>(<span class="function">(<span class="params">t</span>) =&gt;</span></span><br><span class="line">        t.<span class="property">id</span> === id ? &#123; ...t, text, content &#125; : t</span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">DELETE_TODO</span>: &#123;</span><br><span class="line">      <span class="keyword">return</span> todos.<span class="title function_">filter</span>(<span class="function">(<span class="params">t</span>) =&gt;</span> t.<span class="property">id</span> !== action.<span class="property">payload</span>.<span class="property">id</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> <span class="variable constant_">ACTION_TYPES</span>.<span class="property">TOGGLE_TODO</span>: &#123;</span><br><span class="line">      <span class="keyword">return</span> todos.<span class="title function_">map</span>(<span class="function">(<span class="params">t</span>) =&gt;</span></span><br><span class="line">        t.<span class="property">id</span> === action.<span class="property">payload</span>.<span class="property">id</span> ? &#123; ...t, <span class="attr">isComplete</span>: !t.<span class="property">isComplete</span> &#125; : t</span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="attr">default</span>: &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="title class_">Error</span>(<span class="string">&#x27;未知的 action: &#x27;</span> + (action <span class="keyword">as</span> <span class="built_in">any</span>).<span class="property">type</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">TodoProviderProps</span> &#123;</span><br><span class="line">  <span class="attr">children</span>: <span class="title class_">ReactNode</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">TodoProvider</span>(<span class="params">&#123; children &#125;: <span class="title class_">TodoProviderProps</span></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [todos, dispatch] = <span class="title function_">useReducer</span>(todosReducer, []);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">loadTodos</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> storedTodos = <span class="keyword">await</span> <span class="title class_">AsyncStorage</span>.<span class="title function_">getItem</span>(<span class="variable constant_">TODOS_STORAGE_KEY</span>);</span><br><span class="line">        <span class="keyword">if</span> (storedTodos !== <span class="literal">null</span>) &#123;</span><br><span class="line">          <span class="title function_">dispatch</span>(&#123; <span class="attr">type</span>: <span class="variable constant_">ACTION_TYPES</span>.<span class="property">SET_TODOS</span>, <span class="attr">payload</span>: <span class="title class_">JSON</span>.<span class="title function_">parse</span>(storedTodos) &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;讀取待辦事項失敗&#x27;</span>, e);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">loadTodos</span>();</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">saveTodos</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">await</span> <span class="title class_">AsyncStorage</span>.<span class="title function_">setItem</span>(<span class="variable constant_">TODOS_STORAGE_KEY</span>, <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(todos));</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;儲存待辦事項失敗&#x27;</span>, e);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">saveTodos</span>();</span><br><span class="line">  &#125;, [todos]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">TodoContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;todos&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">TodoDispatchContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;dispatch&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">TodoDispatchContext.Provider</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">TodoContext.Provider</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">useTodos</span>(<span class="params"></span>): <span class="title class_">Todo</span>[] &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">useContext</span>(<span class="title class_">TodoContext</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">useTodosDispatch</span>(<span class="params"></span>): <span class="title class_">Dispatch</span>&lt;<span class="title class_">TodoAction</span>&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> context = <span class="title function_">useContext</span>(<span class="title class_">TodoDispatchContext</span>);</span><br><span class="line">  <span class="keyword">if</span> (context === <span class="literal">undefined</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;useTodosDispatch 必須在 TodoProvider 內使用&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> context;</span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+</details>
+    
+<h2 id="二、建立-UI-元件"><a href="#二、建立-UI-元件" class="headerlink" title="二、建立 UI 元件"></a>二、建立 UI 元件</h2><h3 id="待辦清單頁-screens-TodoListScreen-tsx"><a href="#待辦清單頁-screens-TodoListScreen-tsx" class="headerlink" title="待辦清單頁 (screens/TodoListScreen.tsx)"></a>待辦清單頁 (<code>screens/TodoListScreen.tsx</code>)</h3><ol>
+<li>取得狀態與操作函式: 我們使用剛才建立的自訂 Hook，輕鬆地從全域狀態中取得 <code>todos</code> 清單和 <code>dispatch</code> 函式。</li>
+</ol>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todos = <span class="title function_">useTodos</span>();</span><br><span class="line"><span class="keyword">const</span> dispatch = <span class="title function_">useTodosDispatch</span>();</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>渲染清單: 我們使用 React Native 提供的 <code>FlatList</code> 元件來顯示待辦事項。<code>FlatList</code> 非常適合長列表，因为它只會渲染螢幕上可見的項目，效能很好。<ul>
+<li><code>data</code>: 指定要渲染的資料來源，也就是我們的 <code>todos</code> 陣列。</li>
+<li><code>renderItem</code>: 這個屬性接收一個函式，告訴 <code>FlatList</code> 每一項應該長什麼樣子。我們在這裡使用 <code>TodoItem</code> 這個獨立元件。</li>
+<li><code>keyExtractor</code>: 告訴 <code>FlatList</code> 如何為每個項目產生唯一的 <code>key</code>。</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">FlatList</span></span></span><br><span class="line"><span class="tag">    <span class="attr">data</span>=<span class="string">&#123;todos&#125;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">renderItem</span>=<span class="string">&#123;renderItem&#125;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">keyExtractor</span>=<span class="string">&#123;(item)</span> =&gt;</span> item.id&#125;</span><br><span class="line">    contentContainerStyle=&#123;&#123; paddingBottom: 20 &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>處理使用者操作<ul>
+<li>新增: 當使用者在 <code>TextInput</code> 中輸入文字並按下新增按鈕時，我們會呼叫 <code>dispatch</code>，並傳入一個 <code>&#123; type: ACTION_TYPES.ADD_TODO, payload: newTodo &#125;</code>的 <code>action</code>。</li>
+<li>刪除&#x2F;切換狀態: 這些操作被放在了 <code>TodoItem</code> 元件中，但邏輯是相同的：呼叫 <code>dispatch</code> 並傳入對應的 <code>action</code>。</li>
+<li>導航: 當使用者點擊一個 <code>TodoItem</code> 時，我們使用 <code>navigation.navigate</code> 函式跳轉到詳細頁，並把該項目的 <code>id</code> 作為參數傳過去。</li>
+</ul>
+</li>
+</ol>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">View</span>, <span class="title class_">Text</span>, <span class="title class_">TextInput</span>, <span class="title class_">FlatList</span>, <span class="title class_">StyleSheet</span>, <span class="title class_">TouchableOpacity</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">MaterialIcons</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@expo/vector-icons&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">NativeStackScreenProps</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@react-navigation/native-stack&#x27;</span>;</span><br><span class="line"><span class="comment">// 引入自訂 Hook</span></span><br><span class="line"><span class="keyword">import</span> &#123; useTodos, useTodosDispatch, <span class="variable constant_">ACTION_TYPES</span>, <span class="title class_">Todo</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../context/TodoContext&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TodoItem</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../components/TodoItem&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; commonStyles &#125; <span class="keyword">from</span> <span class="string">&#x27;../styles/commonStyles&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="variable constant_">SCREEN_NAMES</span>, <span class="title class_">RootStackParamList</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../App&#x27;</span>; <span class="comment">// 引入常量</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Keyboard</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Props</span> = <span class="title class_">NativeStackScreenProps</span>&lt;<span class="title class_">RootStackParamList</span>, <span class="keyword">typeof</span> <span class="variable constant_">SCREEN_NAMES</span>.<span class="property">TODO_LIST</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">TodoListScreen</span>(<span class="params">&#123; navigation &#125;: <span class="title class_">Props</span></span>) &#123;</span><br><span class="line">  <span class="comment">// 從 Context 取得狀態和 dispatch 函式</span></span><br><span class="line">  <span class="keyword">const</span> todos = <span class="title function_">useTodos</span>();</span><br><span class="line">  <span class="keyword">const</span> dispatch = <span class="title function_">useTodosDispatch</span>();</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 狀態：用於儲存新增待辦事項的文字和輸入框狀態</span></span><br><span class="line">  <span class="keyword">const</span> [newTodo, setNewTodo] = <span class="title function_">useState</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> [isInputTodo, setIsInputTodo] = <span class="title function_">useState</span>(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleAddTodo</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (isInputTodo === <span class="literal">false</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span>; <span class="comment">// 如果輸入框沒有內容，則不執行新增操作</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 關閉鍵盤</span></span><br><span class="line">    <span class="title class_">Keyboard</span>.<span class="title function_">dismiss</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 派發一個 &#x27;ADD_TODO&#x27; 的 action</span></span><br><span class="line">    <span class="title function_">dispatch</span>(&#123; <span class="attr">type</span>: <span class="variable constant_">ACTION_TYPES</span>.<span class="property">ADD_TODO</span>, <span class="attr">payload</span>: newTodo &#125;);</span><br><span class="line">    <span class="title function_">handleInputChange</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 更新輸入框的狀態</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleInputChange</span> = (<span class="params"><span class="attr">text</span>: <span class="built_in">string</span></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setNewTodo</span>(text);</span><br><span class="line">    <span class="title function_">setIsInputTodo</span>(text.<span class="title function_">trim</span>().<span class="property">length</span> &gt; <span class="number">0</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 渲染每個待辦事項的項目</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">renderItem</span> = (<span class="params">&#123; item &#125;: &#123; item: Todo &#125;</span>) =&gt; (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">TodoItem</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">item</span>=<span class="string">&#123;item&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      // <span class="attr">派發</span> &#x27;<span class="attr">TOGGLE_TODO</span>&#x27; <span class="attr">action</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onToggle</span>=<span class="string">&#123;()</span> =&gt;</span> dispatch(&#123; type: ACTION_TYPES.TOGGLE_TODO, payload: &#123; id: item.id &#125; &#125;)&#125;</span></span><br><span class="line"><span class="language-xml">      // 派發 &#x27;DELETE_TODO&#x27; action</span></span><br><span class="line"><span class="language-xml">      onDelete=&#123;() =&gt; dispatch &amp;&amp; dispatch(&#123; type: ACTION_TYPES.DELETE_TODO, payload: &#123; id: item.id &#125; &#125;)&#125;</span></span><br><span class="line"><span class="language-xml">      // 導航到詳細頁面</span></span><br><span class="line"><span class="language-xml">      onNavigate=&#123;() =&gt; navigation.navigate(SCREEN_NAMES.DETAIL, &#123; todoId: item.id &#125;)&#125;</span></span><br><span class="line"><span class="language-xml">    /&gt;</span></span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="comment">// 使用 View 包裹整個頁面，並套用通用樣式</span></span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;commonStyles.pageContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;/* 使用 View 包裹輸入框和新增按鈕 */&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;styles.inputContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">TextInput</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">style</span>=<span class="string">&#123;styles.textInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">placeholder</span>=<span class="string">&quot;新增待辦事項...&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">value</span>=<span class="string">&#123;newTodo&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">onChangeText</span>=<span class="string">&#123;handleInputChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">TouchableOpacity</span> <span class="attr">onPress</span>=<span class="string">&#123;handleAddTodo&#125;</span> <span class="attr">style</span>=<span class="string">&#123;styles.addContainer&#125;</span> &gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">MaterialIcons</span> <span class="attr">name</span>=<span class="string">&quot;add-circle&quot;</span> <span class="attr">size</span>=<span class="string">&#123;36&#125;</span> <span class="attr">color</span>=<span class="string">&#123;isInputTodo</span> === <span class="string">true</span> ? &#x27;#<span class="attr">007cdb</span>&#x27; <span class="attr">:</span> &#x27;<span class="attr">gray</span>&#x27;&#125; /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">TouchableOpacity</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;todos.length &gt; 0 ? </span></span><br><span class="line"><span class="language-xml">      // 使用 FlatList 渲染待辦事項列表 </span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">FlatList</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">data</span>=<span class="string">&#123;todos&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">renderItem</span>=<span class="string">&#123;renderItem&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">keyExtractor</span>=<span class="string">&#123;(item)</span> =&gt;</span> item.id&#125;</span></span><br><span class="line"><span class="language-xml">        contentContainerStyle=&#123;&#123; paddingBottom: 20 &#125;&#125;</span></span><br><span class="line"><span class="language-xml">      /&gt; :</span></span><br><span class="line"><span class="language-xml">      // 如果沒有待辦事項，顯示提示文字</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;styles.emptyContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Text</span> <span class="attr">style</span>=<span class="string">&#123;styles.emptyText&#125;</span>&gt;</span>沒有待辦事項<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#125;</span></span><br><span class="line"><span class="language-xml">      </span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> styles = <span class="title class_">StyleSheet</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">  <span class="attr">inputContainer</span>: &#123;</span><br><span class="line">    <span class="attr">flexDirection</span>: <span class="string">&#x27;row&#x27;</span>,</span><br><span class="line">    <span class="attr">marginBottom</span>: <span class="number">16</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">textInput</span>: &#123;</span><br><span class="line">    <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">borderColor</span>: <span class="string">&#x27;gray&#x27;</span>,</span><br><span class="line">    <span class="attr">borderWidth</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">marginRight</span>: <span class="number">8</span>,</span><br><span class="line">    <span class="attr">paddingHorizontal</span>: <span class="number">8</span>,</span><br><span class="line">    <span class="attr">borderRadius</span>: <span class="number">4</span>,</span><br><span class="line">    <span class="attr">backgroundColor</span>: <span class="string">&#x27;#fff&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">addContainer</span>: &#123;</span><br><span class="line">    <span class="attr">padding</span>: <span class="number">4</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">emptyContainer</span>: &#123;</span><br><span class="line">    <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">justifyContent</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">    <span class="attr">alignItems</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">    <span class="attr">padding</span>: <span class="number">16</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">emptyText</span>: &#123;</span><br><span class="line">    <span class="attr">marginTop</span>: <span class="number">16</span>,</span><br><span class="line">    <span class="attr">fontSize</span>: <span class="number">16</span>,</span><br><span class="line">    <span class="attr">color</span>: <span class="string">&#x27;gray&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h3 id="可重複使用的項目元件-components-TodoItem-tsx"><a href="#可重複使用的項目元件-components-TodoItem-tsx" class="headerlink" title="可重複使用的項目元件 (components/TodoItem.tsx)"></a>可重複使用的項目元件 (<code>components/TodoItem.tsx</code>)</h3><p>這個元件負責顯示單一筆待辦事項。</p>
+<p>它接收 <code>item</code> (事項資料) 和幾個函式 (<code>onToggle</code>, <code>onDelete</code>, <code>onNavigate</code>) 作為 <code>props</code>。這種設計讓 <code>TodoItem</code> 元件本身非常單純，它只負責顯示 UI 和把使用者的操作傳遞出去，而不需要知道背後的複雜邏輯。</p>
+<p>我們也使用了條件式樣式，如果 i<code>tem.isComplete</code> 為 <code>true</code>，就顯示一個打勾的圖示，並在文字上加上刪除線。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Text</span> <span class="attr">style</span>=<span class="string">&#123;[styles.todoText,</span> <span class="attr">item.isComplete</span> &amp;&amp; <span class="attr">styles.completedText</span>]&#125;&gt;</span></span><br><span class="line">    &#123;item.text&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">View</span>, <span class="title class_">Text</span>, <span class="title class_">TouchableOpacity</span>, <span class="title class_">StyleSheet</span>, <span class="title class_">GestureResponderEvent</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">MaterialIcons</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@expo/vector-icons&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; commonStyles &#125; <span class="keyword">from</span> <span class="string">&#x27;../styles/commonStyles&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Todo</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../context/TodoContext&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TodoItemProps</span> = &#123;</span><br><span class="line">    <span class="attr">item</span>: <span class="title class_">Todo</span>;</span><br><span class="line">    <span class="attr">onToggle</span>: <span class="function">(<span class="params"><span class="attr">event</span>: <span class="title class_">GestureResponderEvent</span></span>) =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">    <span class="attr">onDelete</span>: <span class="function">(<span class="params"><span class="attr">event</span>: <span class="title class_">GestureResponderEvent</span></span>) =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">    <span class="attr">onNavigate</span>: <span class="function">(<span class="params"><span class="attr">event</span>: <span class="title class_">GestureResponderEvent</span></span>) =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">TodoItem</span>(<span class="params">&#123; item, onToggle, onDelete, onNavigate &#125;: <span class="title class_">TodoItemProps</span></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">TouchableOpacity</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">onPress</span>=<span class="string">&#123;onNavigate&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">style</span>=<span class="string">&#123;[</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">styles.todoItemContainer</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">item.isComplete</span> &amp;&amp; <span class="attr">styles.completedContainer</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">commonStyles.card</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            ]&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">TouchableOpacity</span> <span class="attr">onPress</span>=<span class="string">&#123;onToggle&#125;</span> <span class="attr">style</span>=<span class="string">&#123;styles.checkContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">MaterialIcons</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">name</span>=<span class="string">&#123;item.isComplete</span> ? &#x27;<span class="attr">check-box</span>&#x27; <span class="attr">:</span> &#x27;<span class="attr">check-box-outline-blank</span>&#x27;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">size</span>=<span class="string">&#123;24&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">color</span>=<span class="string">&#123;item.isComplete</span> ? &#x27;<span class="attr">gray</span>&#x27; <span class="attr">:</span> &#x27;#<span class="attr">007cdb</span>&#x27;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                /&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">TouchableOpacity</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;styles.textContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Text</span> <span class="attr">style</span>=<span class="string">&#123;[styles.todoText,</span> <span class="attr">item.isComplete</span> &amp;&amp; <span class="attr">styles.completedText</span>]&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">                    &#123;item.text&#125;</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                &#123;item.content ? (</span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">Text</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                        <span class="attr">style</span>=<span class="string">&#123;[styles.todoContent,</span> <span class="attr">item.isComplete</span> &amp;&amp; <span class="attr">styles.completedContent</span>]&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                        <span class="attr">numberOfLines</span>=<span class="string">&#123;1&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    &gt;</span></span></span><br><span class="line"><span class="language-xml">                        &#123;item.content&#125;</span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                ) : null&#125;</span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">TouchableOpacity</span> <span class="attr">onPress</span>=<span class="string">&#123;onDelete&#125;</span> <span class="attr">style</span>=<span class="string">&#123;styles.deleteButton&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">MaterialIcons</span> <span class="attr">name</span>=<span class="string">&quot;delete&quot;</span> <span class="attr">size</span>=<span class="string">&#123;24&#125;</span> <span class="attr">color</span>=<span class="string">&quot;#cc0000&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">TouchableOpacity</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">TouchableOpacity</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> styles = <span class="title class_">StyleSheet</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">    <span class="attr">todoItemContainer</span>: &#123;</span><br><span class="line">        <span class="attr">flexDirection</span>: <span class="string">&#x27;row&#x27;</span>,</span><br><span class="line">        <span class="attr">alignItems</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">12</span>,</span><br><span class="line">        <span class="attr">marginBottom</span>: <span class="number">12</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">completedContainer</span>: &#123;</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;#e9e9e9&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">checkContainer</span>: &#123;</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">4</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">textContainer</span>: &#123;</span><br><span class="line">        <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">marginLeft</span>: <span class="number">12</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">todoText</span>: &#123;</span><br><span class="line">        <span class="attr">fontSize</span>: <span class="number">16</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">completedText</span>: &#123;</span><br><span class="line">        <span class="attr">textDecorationLine</span>: <span class="string">&#x27;line-through&#x27;</span>,</span><br><span class="line">        <span class="attr">color</span>: <span class="string">&#x27;gray&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">todoContent</span>: &#123;</span><br><span class="line">        <span class="attr">fontSize</span>: <span class="number">12</span>,</span><br><span class="line">        <span class="attr">color</span>: <span class="string">&#x27;gray&#x27;</span>,</span><br><span class="line">        <span class="attr">marginTop</span>: <span class="number">4</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">completedContent</span>: &#123;</span><br><span class="line">        <span class="attr">textDecorationLine</span>: <span class="string">&#x27;line-through&#x27;</span>,</span><br><span class="line">        <span class="attr">color</span>: <span class="string">&#x27;gray&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">deleteButton</span>: &#123;</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">4</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</details>        
+        
+<h3 id="詳細內容頁-screens-DetailScreen-tsx"><a href="#詳細內容頁-screens-DetailScreen-tsx" class="headerlink" title="詳細內容頁 (screens/DetailScreen.tsx)"></a>詳細內容頁 (<code>screens/DetailScreen.tsx</code>)</h3><p>當使用者從清單頁點擊某個項目時，就會來到這個頁面。</p>
+<ol>
+<li>取得參數: 我們可以從 <code>route.params</code> 中取得從上一個頁面傳過來的 <code>todoId</code>。</li>
+<li>尋找資料: 使用 <code>todoId</code> 從 <code>useTodos()</code> 取得的全域 <code>todos</code> 陣列中，找到我們需要編輯的那筆資料。</li>
+<li>更新標頭: 我們使用 <code>useLayoutEffect</code> 這個 Hook，它會在畫面佈局計算完成後同步執行。我們在這裡動態地設定了頁面標頭，加入一個「儲存」按鈕。</li>
+<li>儲存變更: 當使用者點擊「儲存」按鈕時，我們會 <code>dispatch</code> 一個 <code>UPDATE_TODO</code> 的 <code>action</code>，將修改後的文字和內容傳遞給 <code>reducer</code>，然後使用 <code>navigation.goBack()</code> 返回上一頁。</li>
+</ol>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState, useLayoutEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">View</span>, <span class="title class_">TextInput</span>, <span class="title class_">StyleSheet</span>, <span class="title class_">Alert</span>, <span class="title class_">Text</span>, <span class="title class_">TouchableOpacity</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">NativeStackScreenProps</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@react-navigation/native-stack&#x27;</span>;</span><br><span class="line"><span class="comment">// 引入自訂 Hook</span></span><br><span class="line"><span class="keyword">import</span> &#123; useTodos, useTodosDispatch, <span class="variable constant_">ACTION_TYPES</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../context/TodoContext&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; commonStyles &#125; <span class="keyword">from</span> <span class="string">&#x27;../styles/commonStyles&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="variable constant_">SCREEN_NAMES</span>, <span class="title class_">RootStackParamList</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../App&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Props</span> = <span class="title class_">NativeStackScreenProps</span>&lt;<span class="title class_">RootStackParamList</span>,  <span class="keyword">typeof</span> <span class="variable constant_">SCREEN_NAMES</span>.<span class="property">DETAIL</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">DetailScreen</span>(<span class="params">&#123; route, navigation &#125;: <span class="title class_">Props</span></span>) &#123;</span><br><span class="line">    <span class="comment">// 從路由參數中取得 todoId</span></span><br><span class="line">    <span class="keyword">const</span> &#123; todoId &#125; = route.<span class="property">params</span>;</span><br><span class="line">    <span class="comment">// 使用自訂 Hook 取得 todos 狀態和 dispatch 函式</span></span><br><span class="line">    <span class="keyword">const</span> todos = <span class="title function_">useTodos</span>();</span><br><span class="line">    <span class="keyword">const</span> dispatch = <span class="title function_">useTodosDispatch</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根據 todoId 找到對應的 todo</span></span><br><span class="line">    <span class="keyword">const</span> todo = todos ? todos.<span class="title function_">find</span>(<span class="function"><span class="params">t</span> =&gt;</span> t.<span class="property">id</span> === todoId) : <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果找不到 todo，則設定預設值為空字串</span></span><br><span class="line">    <span class="keyword">const</span> [text, setText] = <span class="title function_">useState</span>(todo ? todo.<span class="property">text</span> : <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> [content, setContent] = <span class="title function_">useState</span>(todo ? todo.<span class="property">content</span> : <span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">useLayoutEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 處理找不到 todo 的情況</span></span><br><span class="line">        <span class="keyword">if</span> (!todo) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 動態設定標頭標題和右側按鈕</span></span><br><span class="line">        navigation.<span class="title function_">setOptions</span>(&#123;</span><br><span class="line">            <span class="attr">title</span>: <span class="string">&#x27;待辦詳情&#x27;</span>, <span class="comment">// 當標題為空時顯示提示</span></span><br><span class="line">            <span class="attr">headerRight</span>: <span class="function">() =&gt;</span> (</span><br><span class="line">                <span class="language-xml"><span class="tag">&lt;<span class="name">TouchableOpacity</span> <span class="attr">onPress</span>=<span class="string">&#123;handleSave&#125;</span> <span class="attr">style</span>=<span class="string">&#123;styles.saveContainer&#125;</span> &gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">Text</span> <span class="attr">style</span>=<span class="string">&#123;styles.saveText&#125;</span>&gt;</span>儲存<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">TouchableOpacity</span>&gt;</span></span></span><br><span class="line">            ),</span><br><span class="line">            <span class="attr">headerTintColor</span>: <span class="string">&#x27;#fff&#x27;</span>, <span class="comment">// 設定標題顏色</span></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;, [navigation, text, content, todo]); <span class="comment">// 當依賴項改變時重新執行</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleSave</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (text.<span class="title function_">trim</span>().<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="title class_">Alert</span>.<span class="title function_">alert</span>(<span class="string">&quot;錯誤&quot;</span>, <span class="string">&quot;標題不能為空！&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 派發 &#x27;UPDATE_TODO&#x27; action</span></span><br><span class="line">        <span class="keyword">if</span> (!dispatch) <span class="keyword">return</span>;</span><br><span class="line">        <span class="title function_">dispatch</span>(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="variable constant_">ACTION_TYPES</span>.<span class="property">UPDATE_TODO</span>,</span><br><span class="line">            <span class="attr">payload</span>: &#123; <span class="attr">id</span>: todoId, text, content &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        navigation.<span class="title function_">goBack</span>();</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果 todo 不存在，顯示提示</span></span><br><span class="line">    <span class="keyword">if</span> (!todo) &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="language-xml"><span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;commonStyles.pageContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Text</span>&gt;</span>找不到該事項<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;commonStyles.pageContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">TextInput</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">style</span>=<span class="string">&#123;[styles.input,</span> <span class="attr">styles.titleInput</span>]&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">value</span>=<span class="string">&#123;text&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">onChangeText</span>=<span class="string">&#123;setText&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">placeholder</span>=<span class="string">&quot;標題&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            /&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">TextInput</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">style</span>=<span class="string">&#123;[styles.input,</span> <span class="attr">styles.contentInput</span>]&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">value</span>=<span class="string">&#123;content&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">onChangeText</span>=<span class="string">&#123;setContent&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">placeholder</span>=<span class="string">&quot;詳細內容...&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">multiline</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> styles = <span class="title class_">StyleSheet</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">    <span class="attr">input</span>: &#123;</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;#fff&#x27;</span>,</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">12</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="number">8</span>,</span><br><span class="line">        <span class="attr">fontSize</span>: <span class="number">16</span>,</span><br><span class="line">        <span class="attr">marginBottom</span>: <span class="number">16</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">titleInput</span>: &#123;</span><br><span class="line">        <span class="attr">fontWeight</span>: <span class="string">&#x27;bold&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">contentInput</span>: &#123;</span><br><span class="line">        <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">textAlignVertical</span>: <span class="string">&#x27;top&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">saveContainer</span>: &#123;</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;#fff&#x27;</span>,</span><br><span class="line">        <span class="attr">paddingVertical</span>: <span class="number">10</span>,</span><br><span class="line">        <span class="attr">paddingHorizontal</span>: <span class="number">20</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="number">8</span>,</span><br><span class="line">        <span class="attr">alignItems</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">        <span class="attr">justifyContent</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">saveText</span>: &#123;</span><br><span class="line">        <span class="attr">color</span>: <span class="string">&#x27;#007cdb&#x27;</span>,</span><br><span class="line">        <span class="attr">fontWeight</span>: <span class="string">&#x27;bold&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</details>        
+
+<h3 id="統一樣式-styles-commonStyles-tsx"><a href="#統一樣式-styles-commonStyles-tsx" class="headerlink" title="統一樣式 (styles&#x2F;commonStyles.tsx)"></a>統一樣式 (styles&#x2F;commonStyles.tsx)</h3><p>為了讓我們的 App 看起來更一致，我們把一些共用的樣式，例如卡片陰影效果，抽出來放到 <code>styles/commonStyles.tsx</code> 中。這樣可以方便地在多個元件中重複使用。</p>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">StyleSheet</span>, <span class="title class_">Platform</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> commonStyles = <span class="title class_">StyleSheet</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">  <span class="attr">pageContainer</span>: &#123;</span><br><span class="line">    <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">padding</span>: <span class="number">16</span>,</span><br><span class="line">    <span class="attr">backgroundColor</span>: <span class="string">&#x27;#f0f0f0&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">card</span>: &#123;</span><br><span class="line">    <span class="attr">backgroundColor</span>: <span class="string">&#x27;#fff&#x27;</span>,</span><br><span class="line">    <span class="attr">borderRadius</span>: <span class="number">8</span>,</span><br><span class="line">    ...<span class="title class_">Platform</span>.<span class="title function_">select</span>(&#123;</span><br><span class="line">      <span class="attr">ios</span>: &#123;</span><br><span class="line">        <span class="attr">shadowColor</span>: <span class="string">&#x27;#000&#x27;</span>,</span><br><span class="line">        <span class="attr">shadowOffset</span>: &#123; <span class="attr">width</span>: <span class="number">0</span>, <span class="attr">height</span>: <span class="number">1</span> &#125;,</span><br><span class="line">        <span class="attr">shadowOpacity</span>: <span class="number">0.22</span>,</span><br><span class="line">        <span class="attr">shadowRadius</span>: <span class="number">2.22</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">android</span>: &#123;</span><br><span class="line">        <span class="attr">elevation</span>: <span class="number">3</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;),</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</details>
+    
+<h3 id="導航設定-App-tsx"><a href="#導航設定-App-tsx" class="headerlink" title="導航設定 (App.tsx)"></a>導航設定 (<code>App.tsx</code>)</h3><p>現在我們的 App 不再只有一個頁面了。<code>react-navigation</code> 是 React Native 社群中最受歡迎的導航解決方案。<br>這是我們設定整個 App 導航結構的地方:</p>
+<ul>
+<li><code>NavigationContainer</code>: 這是所有導航器的根容器，必須包裹在整個 App 的最外層。</li>
+<li><code>createNativeStackNavigator</code>: 我們使用它來建立一個 Stack (堆疊) 形式的導航器。你可以想像成一疊卡片，新的頁面會被推到這疊卡片的頂部，返回時則是把最上面的卡片移走。</li>
+<li><code>Stack.Screen</code>: 我們用它來定義每一個頁面。<code>name</code> 屬性是這個頁面的唯一識別名稱，<code>component</code> 是這個頁面對應的元件。我們也透過 <code>options</code> 屬性來客製化頁面的標頭，例如設定標題文字。</li>
+</ul>
+<details>
+
+<summary>完整檔案</summary>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">NavigationContainer</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@react-navigation/native&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; createNativeStackNavigator &#125; <span class="keyword">from</span> <span class="string">&#x27;@react-navigation/native-stack&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Todo</span>, <span class="title class_">TodoProvider</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./context/TodoContext&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TodoListScreen</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./screens/TodoListScreen&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">DetailScreen</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./screens/DetailScreen&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Platform</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">RootStackParamList</span> = &#123;</span><br><span class="line">  <span class="title class_">TodoList</span>: <span class="title class_">Todo</span>[];</span><br><span class="line">  <span class="title class_">Detail</span>: &#123; <span class="attr">todoId</span>: <span class="built_in">string</span> &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Stack</span> = createNativeStackNavigator&lt;<span class="title class_">RootStackParamList</span>&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">SCREEN_NAMES</span> = <span class="title class_">Object</span>.<span class="title function_">freeze</span>(&#123;</span><br><span class="line">  <span class="attr">TODO_LIST</span>: <span class="string">&#x27;TodoList&#x27;</span>,</span><br><span class="line">  <span class="attr">DETAIL</span>: <span class="string">&#x27;Detail&#x27;</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">TodoProvider</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">NavigationContainer</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Stack.Navigator</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">id</span>=<span class="string">&#123;undefined&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">screenOptions</span>=<span class="string">&#123;&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">headerStyle:</span> &#123; <span class="attr">backgroundColor:</span> &#x27;#<span class="attr">007cdb</span>&#x27; &#125;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">headerTintColor:</span> &#x27;#<span class="attr">000</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">headerTitleStyle:</span> &#123; <span class="attr">fontWeight:</span> &#x27;<span class="attr">bold</span>&#x27;, <span class="attr">color:</span> &#x27;#<span class="attr">fff</span>&#x27; &#125;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">...Platform.select</span>(&#123;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">ios:</span> &#123;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">headerTitleAlign:</span> &#x27;<span class="attr">center</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  &#125;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">android:</span> &#123;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">headerTitleAlign:</span> &#x27;<span class="attr">left</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  &#125;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                &#125;),</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Stack.Screen</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">name</span>=<span class="string">&#123;SCREEN_NAMES.TODO_LIST&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">component</span>=<span class="string">&#123;TodoListScreen&#125;</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">options</span>=<span class="string">&#123;&#123;</span> <span class="attr">title:</span> &#x27;<span class="attr">我的待辦清單</span>&#x27; &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          /&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">Stack.Screen</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">name</span>=<span class="string">&#123;SCREEN_NAMES.DETAIL&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">component</span>=<span class="string">&#123;DetailScreen&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">Stack.Navigator</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">NavigationContainer</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">TodoProvider</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</details>
+    
+<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>恭喜你！你已經完成了整個 Todo List App 的學習。<br>我們回顧一下學到的重點：</p>
+<ul>
+<li>元件化: 將 UI 切割成可管理的、可重複使用的小塊。</li>
+<li>狀態管理: 使用 React Context 和 Reducer 來管理跨頁面的共享資料。</li>
+<li>導航: 使用 React Navigation 在不同頁面之間跳轉並傳遞參數。</li>
+<li>持久化儲存: 使用 AsyncStorage 讓你的資料可以被保存下來。</li>
+</ul>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/JumBoJay06/todolist">程式碼</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/07/14/%E7%94%A8-React-Native-%E5%92%8C-Expo-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/" title="用 React Native 和 Expo 打造你的第一個多頁待辦事項 App">https://jumbojay06.github.io/2025/07/14/用-React-Native-和-Expo-打造你的第一個多頁待辦事項-App/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React-Native/" rel="tag"># React Native</a>
+              <a href="/tags/Expo/" rel="tag"># Expo</a>
+              <a href="/tags/Context/" rel="tag"># Context</a>
+              <a href="/tags/async-storage/" rel="tag"># async-storage</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/07/04/Kafka-%E8%A8%8A%E6%81%AF%E7%B3%BB%E7%B5%B1%E3%80%81%E6%95%B4%E5%90%88%E5%A4%9A%E7%A8%AE%E8%B3%87%E6%96%99%E4%BE%86%E6%BA%90%E4%B9%8B%E5%AF%A6%E4%BD%9C/" rel="prev" title="Kafka 訊息系統、整合多種資料來源之實作">
+      <i class="fa fa-chevron-left"></i> Kafka 訊息系統、整合多種資料來源之實作
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8-React-Native-%E5%92%8C-Expo-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App"><span class="nav-number">1.</span> <span class="nav-text">用 React Native 和 Expo 打造你的第一個多頁待辦事項 App</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%8E%AF-%E5%AD%B8%E7%BF%92%E9%87%8D%E9%BB%9E"><span class="nav-number">1.1.</span> <span class="nav-text">🎯 學習重點</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D-Node-js-%E8%88%87-npm"><span class="nav-number">1.1.1.</span> <span class="nav-text">安裝 Node.js 與 npm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D-Expo-CLI"><span class="nav-number">1.1.2.</span> <span class="nav-text">安裝 Expo CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E4%B8%80%E5%80%8B%E6%96%B0%E7%9A%84-Expo-%E5%B0%88%E6%A1%88"><span class="nav-number">1.1.3.</span> <span class="nav-text">建立一個新的 Expo 專案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D%E5%B0%88%E6%A1%88%E6%89%80%E9%9C%80%E4%BE%9D%E8%B3%B4"><span class="nav-number">1.1.4.</span> <span class="nav-text">安裝專案所需依賴</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%88%E6%A1%88%E4%BE%9D%E8%B3%B4"><span class="nav-number">1.1.5.</span> <span class="nav-text">專案依賴</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B3%B4%E7%B8%BD%E7%B5%90"><span class="nav-number">1.1.6.</span> <span class="nav-text">依賴總結</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%93%82-%E5%B0%88%E6%A1%88%E7%B5%90%E6%A7%8B%E6%A6%82%E8%A6%BD"><span class="nav-number">1.2.</span> <span class="nav-text">📂 專案結構概覽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%94%A8-Context-API-%E9%80%B2%E8%A1%8C%E5%85%A8%E5%9F%9F%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">一、用 Context API 進行全域狀態管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%BB%BA%E7%AB%8B-UI-%E5%85%83%E4%BB%B6"><span class="nav-number">1.4.</span> <span class="nav-text">二、建立 UI 元件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%85%E8%BE%A6%E6%B8%85%E5%96%AE%E9%A0%81-screens-TodoListScreen-tsx"><span class="nav-number">1.4.1.</span> <span class="nav-text">待辦清單頁 (screens&#x2F;TodoListScreen.tsx)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E9%87%8D%E8%A4%87%E4%BD%BF%E7%94%A8%E7%9A%84%E9%A0%85%E7%9B%AE%E5%85%83%E4%BB%B6-components-TodoItem-tsx"><span class="nav-number">1.4.2.</span> <span class="nav-text">可重複使用的項目元件 (components&#x2F;TodoItem.tsx)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A9%B3%E7%B4%B0%E5%85%A7%E5%AE%B9%E9%A0%81-screens-DetailScreen-tsx"><span class="nav-number">1.4.3.</span> <span class="nav-text">詳細內容頁 (screens&#x2F;DetailScreen.tsx)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B5%B1%E4%B8%80%E6%A8%A3%E5%BC%8F-styles-commonStyles-tsx"><span class="nav-number">1.4.4.</span> <span class="nav-text">統一樣式 (styles&#x2F;commonStyles.tsx)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8E%E8%88%AA%E8%A8%AD%E5%AE%9A-App-tsx"><span class="nav-number">1.4.5.</span> <span class="nav-text">導航設定 (App.tsx)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B8%BD%E7%B5%90"><span class="nav-number">1.5.</span> <span class="nav-text">總結</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/07/14/%E7%94%A8-React-Native-%E5%92%8C-Expo-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/";
+    this.page.identifier = "2025/07/14/用-React-Native-和-Expo-打造你的第一個多頁待辦事項-App/";
+    this.page.title = "用 React Native 和 Expo 打造你的第一個多頁待辦事項 App";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
