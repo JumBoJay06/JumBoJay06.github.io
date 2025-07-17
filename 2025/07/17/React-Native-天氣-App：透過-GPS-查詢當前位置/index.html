@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="React Native 天氣 App：透過 GPS 查詢當前位置我們上次完成了天氣查詢 App，這次我們來做小小的擴充，新增查詢當前位置功能，讓 App 更完整吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Native 天氣 App：透過 GPS 查詢當前位置">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/07/17/React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="React Native 天氣 App：透過 GPS 查詢當前位置我們上次完成了天氣查詢 App，這次我們來做小小的擴充，新增查詢當前位置功能，讓 App 更完整吧。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://jumbojay06.github.io/2025/07/17/React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE/rn_weather_current.png">
+<meta property="article:published_time" content="2025-07-17T03:42:43.000Z">
+<meta property="article:modified_time" content="2025-07-17T04:10:10.907Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="React Native">
+<meta property="article:tag" content="Expo">
+<meta property="article:tag" content="Redux">
+<meta property="article:tag" content="Fetch">
+<meta property="article:tag" content="async-storage">
+<meta property="article:tag" content="expo-location">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jumbojay06.github.io/2025/07/17/React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE/rn_weather_current.png">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/07/17/React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>React Native 天氣 App：透過 GPS 查詢當前位置 | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/07/17/React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React Native 天氣 App：透過 GPS 查詢當前位置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-07-17 11:42:43 / 修改時間：12:10:10" itemprop="dateCreated datePublished" datetime="2025-07-17T11:42:43+08:00">2025-07-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/" itemprop="url" rel="index"><span itemprop="name">React Native</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/Expo/" itemprop="url" rel="index"><span itemprop="name">Expo</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/Redux/" itemprop="url" rel="index"><span itemprop="name">Redux</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/Fetch/" itemprop="url" rel="index"><span itemprop="name">Fetch</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/async-storage/" itemprop="url" rel="index"><span itemprop="name">async-storage</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/React-Native/expo-location/" itemprop="url" rel="index"><span itemprop="name">expo-location</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/07/17/React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/07/17/React-Native-天氣-App：透過-GPS-查詢當前位置/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="React-Native-天氣-App：透過-GPS-查詢當前位置"><a href="#React-Native-天氣-App：透過-GPS-查詢當前位置" class="headerlink" title="React Native 天氣 App：透過 GPS 查詢當前位置"></a>React Native 天氣 App：透過 GPS 查詢當前位置</h1><p>我們上次完成了天氣查詢 App，這次我們來做小小的擴充，新增查詢當前位置功能，讓 App 更完整吧。</p>
+<span id="more"></span>
+<p>這個專案將會涵蓋幾個重要的學習重點：</p>
+<ul>
+<li>獲取當前 GPS: 使用 <code>expo-location</code> 來取得位置權限跟 GPS</li>
+</ul>
+<p>這是我們的最終目標：</p>
+<ul>
+<li>🔍 搜尋城市頁：新增查詢當前位置按鈕  <img src="/2025/07/17/React-Native-天氣-App：透過-GPS-查詢當前位置/rn_weather_current.png"  width="360" height="800"/></li>
+</ul>
+<h2 id="安裝-expo-location"><a href="#安裝-expo-location" class="headerlink" title="安裝 expo-location"></a>安裝 <code>expo-location</code></h2><p>首先，我們需要安裝 Expo 提供的官方定位套件。請在您的專案根目錄下執行以下指令：<br><code>npx expo install expo-location</code></p>
+<h2 id="新增-Redux-Thunk-weatherSlice-ts"><a href="#新增-Redux-Thunk-weatherSlice-ts" class="headerlink" title="新增 Redux Thunk (weatherSlice.ts)"></a>新增 Redux Thunk (<code>weatherSlice.ts</code>)</h2><p>現在，我們在 <code>weatherSlice.ts</code> 中新增一個 <code>fetchWeatherByGPS</code> 的 thunk，它會處理向使用者請求定位權限、取得座標，然後觸發天氣查詢的完整流程。</p>
+<ul>
+<li>我們新增了一個名為 <code>fetchWeatherByGPS</code> 的 <code>createAsyncThunk</code>。</li>
+<li>在這個 thunk 中，我們首先使用 <code>Location.requestForegroundPermissionsAsync()</code> 向使用者請求定位權限。</li>
+<li>如果使用者同意，就用 <code>Location.getCurrentPositionAsync(&#123;&#125;)</code> 取得目前的經緯度。</li>
+<li>最後，將座標傳給 <code>fetchWeatherDataAPIByLocation</code> 來取得天氣資訊。</li>
+<li>我們也為這個新的 thunk 在 <code>extraReducers</code> 中加入了 <code>pending</code>, <code>fulfilled</code>, <code>rejected</code> 的處理邏輯，與既有的查詢流程一致。</li>
+</ul>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/redux/weatherSlice.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> <span class="title class_">Location</span> <span class="keyword">from</span> <span class="string">&#x27;expo-location&#x27;</span>;</span><br><span class="line"><span class="comment">// ... (既有的 imports)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ... (既有的 fetchWeather, fetchWeatherByHistory)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 新增：建立一個 AsyncThunk 來透過 GPS 獲取天氣資料</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetchWeatherByGPS = createAsyncThunk&lt;<span class="title class_">WeatherDataWithLocation</span>, <span class="built_in">void</span>, &#123; <span class="attr">rejectValue</span>: <span class="built_in">string</span> &#125;&gt;(</span><br><span class="line">    <span class="string">&#x27;weather/fetchWeatherByGPS&#x27;</span>,</span><br><span class="line">    <span class="title function_">async</span> (_, &#123; rejectWithValue &#125;) =&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 1. 請求權限</span></span><br><span class="line">            <span class="keyword">let</span> &#123; status &#125; = <span class="keyword">await</span> <span class="title class_">Location</span>.<span class="title function_">requestForegroundPermissionsAsync</span>();</span><br><span class="line">            <span class="keyword">if</span> (status !== <span class="string">&#x27;granted&#x27;</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="title function_">rejectWithValue</span>(<span class="string">&#x27;需要定位權限才能查詢當前位置天氣&#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 2. 取得當前座標</span></span><br><span class="line">            <span class="keyword">const</span> location = <span class="keyword">await</span> <span class="title class_">Location</span>.<span class="title function_">getCurrentPositionAsync</span>(&#123;&#125;);</span><br><span class="line">            <span class="keyword">const</span> &#123; latitude, longitude &#125; = location.<span class="property">coords</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 3. 透過座標查詢天氣</span></span><br><span class="line">            <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">fetchWeatherDataAPIByLocation</span>(&#123;</span><br><span class="line">                <span class="attr">coord</span>: &#123; <span class="attr">lat</span>: latitude, <span class="attr">lon</span>: longitude &#125;,</span><br><span class="line">                <span class="comment">// 我們在這裡先不傳入 name，讓 fetchWeatherDataAPIByLocation 去反向查詢</span></span><br><span class="line">                <span class="attr">name</span>: <span class="string">&#x27;&#x27;</span> </span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="keyword">return</span> data;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="attr">error</span>: <span class="built_in">any</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">rejectWithValue</span>(error.<span class="property">message</span> || <span class="string">&#x27;無法取得當前位置天氣&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// ... (既有的 loadHistory, saveHistory, clearHistory)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> weatherSlice = <span class="title function_">createSlice</span>(&#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;weather&#x27;</span>,</span><br><span class="line">    initialState,</span><br><span class="line">    <span class="attr">reducers</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">extraReducers</span>: <span class="function">(<span class="params">builder</span>) =&gt;</span> &#123;</span><br><span class="line">        builder</span><br><span class="line">            <span class="comment">// ... (既有的 addCase)</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 新增 fetchWeatherByGPS 的處理邏輯</span></span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeatherByGPS.<span class="property">pending</span>, <span class="function">(<span class="params">state</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;pending&#x27;</span>;</span><br><span class="line">                state.<span class="property">error</span> = <span class="literal">null</span>;</span><br><span class="line">                state.<span class="property">weatherData</span> = <span class="literal">null</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeatherByGPS.<span class="property">fulfilled</span>, <span class="function">(<span class="params">state, <span class="attr">action</span>: <span class="title class_">PayloadAction</span>&lt;<span class="title class_">WeatherDataWithLocation</span>&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;succeeded&#x27;</span>;</span><br><span class="line">                state.<span class="property">weatherData</span> = action.<span class="property">payload</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeatherByGPS.<span class="property">rejected</span>, <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;failed&#x27;</span>;</span><br><span class="line">                state.<span class="property">error</span> = action.<span class="property">payload</span> ?? <span class="string">&#x27;發生未知錯誤&#x27;</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            <span class="comment">// ... (既有的 addCase)</span></span><br><span class="line">    &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> weatherSlice.<span class="property">reducer</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<details>
+
+<summary>weatherSlice.ts 完整檔案</summary>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createSlice, createAsyncThunk, <span class="title class_">PayloadAction</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@reduxjs/toolkit&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">AsyncStorage</span> <span class="keyword">from</span> <span class="string">&#x27;@react-native-async-storage/async-storage&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; fetchWeatherDataAPI, fetchWeatherDataAPIByLocation, <span class="title class_">WeatherDataWithLocation</span>, <span class="title class_">LocationData</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../api/weatherAPI&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">RootState</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./store&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> <span class="title class_">Location</span> <span class="keyword">from</span> <span class="string">&#x27;expo-location&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">HISTORY_KEY</span> = <span class="string">&#x27;@weatherHistory&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定義 state 的型別</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">WeatherState</span> &#123;</span><br><span class="line">    <span class="attr">weatherData</span>: <span class="title class_">WeatherDataWithLocation</span> | <span class="literal">null</span>;</span><br><span class="line">    <span class="attr">history</span>: <span class="title class_">LocationData</span>[];</span><br><span class="line">    <span class="attr">loading</span>: <span class="string">&#x27;idle&#x27;</span> | <span class="string">&#x27;pending&#x27;</span> | <span class="string">&#x27;succeeded&#x27;</span> | <span class="string">&#x27;failed&#x27;</span>;</span><br><span class="line">    <span class="attr">error</span>: <span class="built_in">string</span> | <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定義 state 的初始值</span></span><br><span class="line"><span class="keyword">const</span> <span class="attr">initialState</span>: <span class="title class_">WeatherState</span> = &#123;</span><br><span class="line">    <span class="attr">weatherData</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">history</span>: [],</span><br><span class="line">    <span class="attr">loading</span>: <span class="string">&#x27;idle&#x27;</span>,</span><br><span class="line">    <span class="attr">error</span>: <span class="literal">null</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 建立一個 AsyncThun 來獲取天氣資料(用戶輸入的地名)</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetchWeather = createAsyncThunk&lt;<span class="title class_">WeatherDataWithLocation</span>, <span class="built_in">string</span>, &#123; <span class="attr">rejectValue</span>: <span class="built_in">string</span> &#125;&gt;(</span><br><span class="line">    <span class="string">&#x27;weather/fetchWeather&#x27;</span>,</span><br><span class="line">    <span class="title function_">async</span> (city, &#123; rejectWithValue &#125;) =&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">fetchWeatherDataAPI</span>(city);</span><br><span class="line">            <span class="keyword">return</span> data;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="attr">error</span>: <span class="built_in">any</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">rejectWithValue</span>(error.<span class="property">message</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 建立一個 AsyncThunk 來獲取天氣資料(歷史紀錄的地名)</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetchWeatherByHistory = createAsyncThunk&lt;<span class="title class_">WeatherDataWithLocation</span>, <span class="title class_">LocationData</span>, &#123; <span class="attr">rejectValue</span>: <span class="built_in">string</span> &#125;&gt;(</span><br><span class="line">    <span class="string">&#x27;weather/fetchWeatherByHistory&#x27;</span>,</span><br><span class="line">    <span class="title function_">async</span> (history, &#123; rejectWithValue &#125;) =&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">fetchWeatherDataAPIByLocation</span>(history);</span><br><span class="line">            <span class="keyword">return</span> data;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="attr">error</span>: <span class="built_in">any</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">rejectWithValue</span>(error.<span class="property">message</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 新增：建立一個 AsyncThunk 來透過 GPS 獲取天氣資料</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetchWeatherByGPS = createAsyncThunk&lt;<span class="title class_">WeatherDataWithLocation</span>, <span class="built_in">void</span>, &#123; <span class="attr">rejectValue</span>: <span class="built_in">string</span> &#125;&gt;(</span><br><span class="line">    <span class="string">&#x27;weather/fetchWeatherByGPS&#x27;</span>,</span><br><span class="line">    <span class="title function_">async</span> (_, &#123; rejectWithValue &#125;) =&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 1. 請求權限</span></span><br><span class="line">            <span class="keyword">let</span> &#123; status &#125; = <span class="keyword">await</span> <span class="title class_">Location</span>.<span class="title function_">requestForegroundPermissionsAsync</span>();</span><br><span class="line">            <span class="keyword">if</span> (status !== <span class="string">&#x27;granted&#x27;</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="title function_">rejectWithValue</span>(<span class="string">&#x27;需要定位權限才能查詢當前位置天氣&#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 2. 取得當前座標</span></span><br><span class="line">            <span class="keyword">const</span> location = <span class="keyword">await</span> <span class="title class_">Location</span>.<span class="title function_">getCurrentPositionAsync</span>(&#123;&#125;);</span><br><span class="line">            <span class="keyword">const</span> &#123; latitude, longitude &#125; = location.<span class="property">coords</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 3. 透過座標查詢天氣</span></span><br><span class="line">            <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">fetchWeatherDataAPIByLocation</span>(&#123;</span><br><span class="line">                <span class="attr">coord</span>: &#123; <span class="attr">lat</span>: latitude, <span class="attr">lon</span>: longitude &#125;,</span><br><span class="line">                <span class="attr">name</span>: <span class="string">&#x27;當前位置&#x27;</span> </span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="keyword">return</span> data;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="attr">error</span>: <span class="built_in">any</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">rejectWithValue</span>(error.<span class="property">message</span> || <span class="string">&#x27;無法取得當前位置天氣&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 讀取歷史紀錄</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> loadHistory = createAsyncThunk&lt;<span class="title class_">LocationData</span>[]&gt;(<span class="string">&#x27;weather/loadHistory&#x27;</span>, <span class="title function_">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> historyJson = <span class="keyword">await</span> <span class="title class_">AsyncStorage</span>.<span class="title function_">getItem</span>(<span class="variable constant_">HISTORY_KEY</span>);</span><br><span class="line">    <span class="keyword">return</span> historyJson ? <span class="title class_">JSON</span>.<span class="title function_">parse</span>(historyJson) : [];</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 儲存歷史紀錄</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> saveHistory = createAsyncThunk&lt;<span class="title class_">LocationData</span>[], <span class="title class_">LocationData</span>, &#123; <span class="attr">state</span>: <span class="title class_">RootState</span> &#125;&gt;(</span><br><span class="line">    <span class="string">&#x27;weather/saveHistory&#x27;</span>,</span><br><span class="line">    <span class="title function_">async</span> (locationData, &#123; getState &#125;) =&gt; &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; history &#125; = <span class="title function_">getState</span>().<span class="property">weather</span>;</span><br><span class="line">        <span class="comment">// 把新的放前面，並移除相同名稱的紀錄</span></span><br><span class="line">        <span class="keyword">const</span> newHistory = [</span><br><span class="line">            locationData,</span><br><span class="line">            ...history.<span class="title function_">filter</span>(<span class="function"><span class="params">item</span> =&gt;</span> item.<span class="property">name</span>.<span class="title function_">toLowerCase</span>() !== locationData.<span class="property">name</span>.<span class="title function_">toLowerCase</span>())</span><br><span class="line">        ];</span><br><span class="line">        <span class="keyword">await</span> <span class="title class_">AsyncStorage</span>.<span class="title function_">setItem</span>(<span class="variable constant_">HISTORY_KEY</span>, <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(newHistory));</span><br><span class="line">        <span class="keyword">return</span> newHistory;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 清除歷史紀錄</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> clearHistory = createAsyncThunk&lt;<span class="title class_">LocationData</span>[]&gt;(<span class="string">&#x27;weather/clearHistory&#x27;</span>, <span class="title function_">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="title class_">AsyncStorage</span>.<span class="title function_">removeItem</span>(<span class="variable constant_">HISTORY_KEY</span>);</span><br><span class="line">    <span class="keyword">return</span> [];</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> weatherSlice = <span class="title function_">createSlice</span>(&#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;weather&#x27;</span>,</span><br><span class="line">    initialState,</span><br><span class="line">    <span class="comment">// 處理「這支 slice 自己定義的 action」（通常是同步行為）。</span></span><br><span class="line">    <span class="attr">reducers</span>: &#123;&#125;,</span><br><span class="line">    <span class="comment">// 處理「其它地方產生的 action」（常見於 asyncThunk、外部 action），允許 slice 對這些 action 做反應。</span></span><br><span class="line">    <span class="attr">extraReducers</span>: <span class="function">(<span class="params">builder</span>) =&gt;</span> &#123;</span><br><span class="line">        builder</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeather.<span class="property">pending</span>, <span class="function">(<span class="params">state</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;pending&#x27;</span>;</span><br><span class="line">                state.<span class="property">error</span> = <span class="literal">null</span>;</span><br><span class="line">                state.<span class="property">weatherData</span> = <span class="literal">null</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeather.<span class="property">fulfilled</span>, <span class="function">(<span class="params">state, <span class="attr">action</span>: <span class="title class_">PayloadAction</span>&lt;<span class="title class_">WeatherDataWithLocation</span>&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;succeeded&#x27;</span>;</span><br><span class="line">                state.<span class="property">weatherData</span> = action.<span class="property">payload</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeather.<span class="property">rejected</span>, <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;failed&#x27;</span>;</span><br><span class="line">                state.<span class="property">error</span> = action.<span class="property">payload</span> ?? <span class="string">&#x27;發生未知錯誤&#x27;</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeatherByHistory.<span class="property">pending</span>, <span class="function">(<span class="params">state</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;pending&#x27;</span>;</span><br><span class="line">                state.<span class="property">error</span> = <span class="literal">null</span>;</span><br><span class="line">                state.<span class="property">weatherData</span> = <span class="literal">null</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeatherByHistory.<span class="property">fulfilled</span>, <span class="function">(<span class="params">state, <span class="attr">action</span>: <span class="title class_">PayloadAction</span>&lt;<span class="title class_">WeatherDataWithLocation</span>&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;succeeded&#x27;</span>;</span><br><span class="line">                state.<span class="property">weatherData</span> = action.<span class="property">payload</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeatherByHistory.<span class="property">rejected</span>, <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;failed&#x27;</span>;</span><br><span class="line">                state.<span class="property">error</span> = action.<span class="property">payload</span> ?? <span class="string">&#x27;發生未知錯誤&#x27;</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeatherByGPS.<span class="property">pending</span>, <span class="function">(<span class="params">state</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;pending&#x27;</span>;</span><br><span class="line">                state.<span class="property">error</span> = <span class="literal">null</span>;</span><br><span class="line">                state.<span class="property">weatherData</span> = <span class="literal">null</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeatherByGPS.<span class="property">fulfilled</span>, <span class="function">(<span class="params">state, <span class="attr">action</span>: <span class="title class_">PayloadAction</span>&lt;<span class="title class_">WeatherDataWithLocation</span>&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;succeeded&#x27;</span>;</span><br><span class="line">                state.<span class="property">weatherData</span> = action.<span class="property">payload</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(fetchWeatherByGPS.<span class="property">rejected</span>, <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">loading</span> = <span class="string">&#x27;failed&#x27;</span>;</span><br><span class="line">                state.<span class="property">error</span> = action.<span class="property">payload</span> ?? <span class="string">&#x27;發生未知錯誤&#x27;</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(loadHistory.<span class="property">fulfilled</span>, <span class="function">(<span class="params">state, <span class="attr">action</span>: <span class="title class_">PayloadAction</span>&lt;<span class="title class_">LocationData</span>[]&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">history</span> = action.<span class="property">payload</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(saveHistory.<span class="property">fulfilled</span>, <span class="function">(<span class="params">state, <span class="attr">action</span>: <span class="title class_">PayloadAction</span>&lt;<span class="title class_">LocationData</span>[]&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">history</span> = action.<span class="property">payload</span>;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">addCase</span>(clearHistory.<span class="property">fulfilled</span>, <span class="function">(<span class="params">state, <span class="attr">action</span>: <span class="title class_">PayloadAction</span>&lt;<span class="title class_">LocationData</span>[]&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">                state.<span class="property">history</span> = action.<span class="property">payload</span>;</span><br><span class="line">            &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> weatherSlice.<span class="property">reducer</span>;</span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h2 id="更新搜尋頁面-SearchScreen-tsx"><a href="#更新搜尋頁面-SearchScreen-tsx" class="headerlink" title="更新搜尋頁面 (SearchScreen.tsx)"></a>更新搜尋頁面 (<code>SearchScreen.tsx</code>)</h2><p>最後，我們來修改搜尋頁面，加入新的按鈕和對應的處理函式。</p>
+<ul>
+<li>我們從 <code>@expo/vector-icons</code> 額外引入了 <code>MaterialCommunityIcons</code> 來使用 <code>crosshairs-gps</code> 圖示。</li>
+<li>在輸入框右側，我們新增了一個 <code>Pressable</code> 元件作為 GPS 定位按鈕，並為它設定了新的樣式 <code>iconButton</code>。</li>
+<li>按鈕的 <code>onPress</code> 事件會呼叫 <code>handleSearchByGPS</code>，進而 <code>dispatch</code> 我們剛剛建立的 <code>fetchWeatherByGPS</code> action。</li>
+<li>我們也微調了 <code>handleSearchAction</code> 的邏輯，確保查詢當前位置不會被記錄到歷史記錄中。</li>
+</ul>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/screens/SearchScreen.tsx</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">View</span>, <span class="title class_">TextInput</span>, <span class="title class_">Text</span>, <span class="title class_">StyleSheet</span>, <span class="title class_">ActivityIndicator</span>, <span class="title class_">Pressable</span>, <span class="title class_">ScrollView</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"><span class="comment">// 新增 MaterialCommunityIcons 來使用 GPS 圖示</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">MaterialIcons</span>, <span class="title class_">MaterialCommunityIcons</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@expo/vector-icons&#x27;</span>; </span><br><span class="line"><span class="comment">// 引入新的 action</span></span><br><span class="line"><span class="keyword">import</span> &#123; fetchWeather, fetchWeatherByHistory, fetchWeatherByGPS, saveHistory &#125; <span class="keyword">from</span> <span class="string">&#x27;../redux/weatherSlice&#x27;</span>;</span><br><span class="line"><span class="comment">// ... (其他 imports)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">SearchScreen</span>(<span class="params">&#123; route, navigation &#125;: <span class="title class_">SearchScreenProps</span></span>) &#123;</span><br><span class="line">    <span class="comment">// ... (既有的 useState, useDispatch, useSelector)</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 從 Redux store 中選擇需要的狀態 (透過 hooks)</span></span><br><span class="line">    <span class="keyword">const</span> &#123; weatherData, loading, error, history &#125; = <span class="title function_">useSelector</span>(<span class="function">(<span class="params"><span class="attr">state</span>: <span class="title class_">RootState</span></span>) =&gt;</span> state.<span class="property">weather</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定義一個通用的搜尋處理函數，接受 actionCreator 作為參數</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleSearchAction</span> = (<span class="params"><span class="attr">actionCreator</span>: <span class="built_in">any</span></span>) =&gt; <span class="function">(<span class="params"><span class="attr">searchParam</span>?: <span class="built_in">any</span></span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="title function_">dispatch</span>(<span class="title function_">actionCreator</span>(searchParam)).<span class="title function_">then</span>(<span class="function">(<span class="params"><span class="attr">action</span>: <span class="built_in">any</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (action.<span class="property">meta</span>.<span class="property">requestStatus</span> === <span class="string">&#x27;fulfilled&#x27;</span>) &#123;</span><br><span class="line">                <span class="comment">// 當前位置不存到紀錄裡</span></span><br><span class="line">                <span class="keyword">if</span> (action.<span class="property">payload</span>.<span class="property">location</span>.<span class="property">name</span> !== <span class="string">&#x27;當前位置&#x27;</span>) &#123;</span><br><span class="line">                    <span class="title function_">dispatch</span>(<span class="title function_">saveHistory</span>(action.<span class="property">payload</span>.<span class="property">location</span>));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用通用的搜尋處理函數來處理城市搜尋和歷史紀錄搜尋</span></span><br><span class="line">    <span class="keyword">const</span> handleSearchByCity = <span class="title function_">handleSearchAction</span>(fetchWeather);</span><br><span class="line">    <span class="keyword">const</span> handleSearchByHistory = <span class="title function_">handleSearchAction</span>(fetchWeatherByHistory);</span><br><span class="line">    <span class="comment">// 新增：處理 GPS 搜尋</span></span><br><span class="line">    <span class="keyword">const</span> handleSearchByGPS = <span class="title function_">handleSearchAction</span>(fetchWeatherByGPS);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... (既有的 handleSearch, handleGotoHistory, mapWeatherIcon, formatUnixTime)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... (既有的 useEffect)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;styles.pageContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;styles.inputContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">TextInput</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">style</span>=<span class="string">&#123;styles.textInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">placeholder</span>=<span class="string">&quot;輸入城市名稱 (例如: 臺中)&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">value</span>=<span class="string">&#123;city&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">onChangeText</span>=<span class="string">&#123;setCity&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">onSubmitEditing</span>=<span class="string">&#123;()</span> =&gt;</span> handleSearch(city)&#125;</span></span><br><span class="line"><span class="language-xml">                /&gt;</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Pressable</span> <span class="attr">style</span>=<span class="string">&#123;styles.searchButton&#125;</span> <span class="attr">onPress</span>=<span class="string">&#123;()</span> =&gt;</span> handleSearch(city)&#125;&gt;</span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">Text</span> <span class="attr">style</span>=<span class="string">&#123;styles.searchButtonText&#125;</span>&gt;</span>搜尋<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">Pressable</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                </span></span><br><span class="line"><span class="language-xml">                &#123;/* 新增 GPS 搜尋按鈕 */&#125;</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Pressable</span> <span class="attr">style</span>=<span class="string">&#123;styles.iconButton&#125;</span> <span class="attr">onPress</span>=<span class="string">&#123;()</span> =&gt;</span> handleSearchByGPS()&#125;&gt;</span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">MaterialCommunityIcons</span> <span class="attr">name</span>=<span class="string">&quot;crosshairs-gps&quot;</span> <span class="attr">size</span>=<span class="string">&#123;24&#125;</span> <span class="attr">color</span>=<span class="string">&quot;#007cdb&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">Pressable</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Pressable</span> <span class="attr">style</span>=<span class="string">&#123;styles.iconButton&#125;</span> <span class="attr">onPress</span>=<span class="string">&#123;handleGotoHistory&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">MaterialIcons</span> <span class="attr">name</span>=<span class="string">&quot;history&quot;</span> <span class="attr">size</span>=<span class="string">&#123;24&#125;</span> <span class="attr">color</span>=<span class="string">&quot;#007cdb&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">Pressable</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">            &#123;/* ... (既有的 UI 渲染邏輯) ... */&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> styles = <span class="title class_">StyleSheet</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">    <span class="comment">// ... (既有的 styles)</span></span><br><span class="line">    <span class="comment">// 新增 iconButton 的樣式</span></span><br><span class="line">    <span class="attr">iconButton</span>: &#123;</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">8</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 移除 historyContainer，改用 iconButton</span></span><br><span class="line">    <span class="comment">// historyContainer: &#123;</span></span><br><span class="line">    <span class="comment">//     paddingLeft: 8,</span></span><br><span class="line">    <span class="comment">// &#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<details>
+
+<summary>SearchScreen.tsx 完整檔案</summary>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">View</span>, <span class="title class_">TextInput</span>, <span class="title class_">Text</span>, <span class="title class_">StyleSheet</span>, <span class="title class_">ActivityIndicator</span>, <span class="title class_">Pressable</span>, <span class="title class_">ScrollView</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">MaterialIcons</span>, <span class="title class_">MaterialCommunityIcons</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@expo/vector-icons&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; fetchWeather, fetchWeatherByHistory, fetchWeatherByGPS, saveHistory &#125; <span class="keyword">from</span> <span class="string">&#x27;../redux/weatherSlice&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">SearchScreenProps</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../navigation/AppNavigator&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useDispatch, useSelector &#125; <span class="keyword">from</span> <span class="string">&#x27;react-redux&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">RootState</span>, <span class="title class_">AppDispatch</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../redux/store&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">HeaderInfo</span> <span class="keyword">from</span> <span class="string">&#x27;../components/HeaderInfo&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">CurrentWeather</span> <span class="keyword">from</span> <span class="string">&#x27;../components/CurrentWeather&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">HourlyForecast</span> <span class="keyword">from</span> <span class="string">&#x27;../components/HourlyForecast&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">DailyForecast</span> <span class="keyword">from</span> <span class="string">&#x27;../components/DailyForecast&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; weatherIcons &#125; <span class="keyword">from</span> <span class="string">&#x27;../config/weatherIconsConfig&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; cityNameMap&#125; <span class="keyword">from</span> <span class="string">&#x27;../config/cityMapping&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">SearchScreen</span>(<span class="params">&#123; route, navigation &#125;: <span class="title class_">SearchScreenProps</span></span>) &#123;</span><br><span class="line">    <span class="comment">// 使用 useState 來管理輸入的城市名稱</span></span><br><span class="line">    <span class="keyword">const</span> [city, setCity] = <span class="title function_">useState</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">    <span class="comment">// 使用 Redux 的 dispatch (透過 hooks)</span></span><br><span class="line">    <span class="keyword">const</span> dispatch = useDispatch&lt;<span class="title class_">AppDispatch</span>&gt;();</span><br><span class="line">    <span class="comment">// 從 Redux store 中選擇需要的狀態 (透過 hooks)</span></span><br><span class="line">    <span class="keyword">const</span> &#123; weatherData, loading, error &#125; = <span class="title function_">useSelector</span>(<span class="function">(<span class="params"><span class="attr">state</span>: <span class="title class_">RootState</span></span>) =&gt;</span> state.<span class="property">weather</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定義一個通用的搜尋處理函數，接受 actionCreator 作為參數</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleSearchAction</span> = (<span class="params"><span class="attr">actionCreator</span>: <span class="built_in">any</span></span>) =&gt; <span class="function">(<span class="params"><span class="attr">searchParam</span>: <span class="built_in">any</span></span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="title function_">dispatch</span>(<span class="title function_">actionCreator</span>(searchParam)).<span class="title function_">then</span>(<span class="function">(<span class="params"><span class="attr">action</span>: <span class="built_in">any</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (action.<span class="property">meta</span>.<span class="property">requestStatus</span> === <span class="string">&#x27;fulfilled&#x27;</span>) &#123;</span><br><span class="line">                <span class="comment">// 當前位置不存到紀錄裡</span></span><br><span class="line">                <span class="keyword">if</span> (action.<span class="property">payload</span>.<span class="property">location</span>.<span class="property">name</span> !== <span class="string">&#x27;當前位置&#x27;</span>) &#123;</span><br><span class="line">                    <span class="title function_">dispatch</span>(<span class="title function_">saveHistory</span>(action.<span class="property">payload</span>.<span class="property">location</span>));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用通用的搜尋處理函數來處理城市搜尋和歷史紀錄搜尋</span></span><br><span class="line">    <span class="keyword">const</span> handleSearchByCity = <span class="title function_">handleSearchAction</span>(fetchWeather);</span><br><span class="line">    <span class="keyword">const</span> handleSearchByHistory = <span class="title function_">handleSearchAction</span>(fetchWeatherByHistory);</span><br><span class="line">    <span class="keyword">const</span> handleSearchByGPS = <span class="title function_">handleSearchAction</span>(fetchWeatherByGPS);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 處理搜尋按鈕點擊事件</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleSearch</span> = (<span class="params"><span class="attr">searchCity</span>: <span class="built_in">string</span></span>) =&gt; &#123;</span><br><span class="line">        <span class="keyword">const</span> finalCity = searchCity.<span class="title function_">trim</span>();</span><br><span class="line">        <span class="keyword">if</span> (!finalCity) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 將輸入的城市名稱轉為小寫，並使用對照表進行映射</span></span><br><span class="line">        <span class="keyword">const</span> mappedCity = cityNameMap.<span class="property">zhToEn</span>[finalCity] || finalCity;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">handleSearchByCity</span>(mappedCity);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleGotoHistory</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">        navigation.<span class="title function_">navigate</span>(<span class="string">&#x27;History&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 將天氣圖示代碼映射到對應的圖示名稱</span></span><br><span class="line">    <span class="keyword">const</span> mapWeatherIcon = (<span class="attr">iconCode</span>: <span class="built_in">string</span>): keyof <span class="keyword">typeof</span> weatherIcons =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (iconCode.<span class="title function_">startsWith</span>(<span class="string">&#x27;01&#x27;</span>)) <span class="keyword">return</span> <span class="string">&#x27;sunny&#x27;</span>;</span><br><span class="line">        <span class="keyword">if</span> ([<span class="string">&#x27;02d&#x27;</span>, <span class="string">&#x27;02n&#x27;</span>, <span class="string">&#x27;03d&#x27;</span>, <span class="string">&#x27;03n&#x27;</span>, <span class="string">&#x27;04d&#x27;</span>, <span class="string">&#x27;04n&#x27;</span>, <span class="string">&#x27;50d&#x27;</span>, <span class="string">&#x27;50n&#x27;</span>].<span class="title function_">includes</span>(iconCode)) <span class="keyword">return</span> <span class="string">&#x27;cloudy&#x27;</span>;</span><br><span class="line">        <span class="keyword">if</span> ([<span class="string">&#x27;09d&#x27;</span>, <span class="string">&#x27;09n&#x27;</span>, <span class="string">&#x27;10d&#x27;</span>, <span class="string">&#x27;10n&#x27;</span>, <span class="string">&#x27;11d&#x27;</span>, <span class="string">&#x27;11n&#x27;</span>, <span class="string">&#x27;13d&#x27;</span>, <span class="string">&#x27;13n&#x27;</span>].<span class="title function_">includes</span>(iconCode)) <span class="keyword">return</span> <span class="string">&#x27;rainy&#x27;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;sunny&#x27;</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 將 Unix 時間戳轉換為指定格式的日期、時間或星期幾</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">formatUnixTime</span> = (<span class="params"><span class="attr">unixTime</span>: <span class="built_in">number</span>, <span class="attr">format</span>: <span class="string">&#x27;date&#x27;</span> | <span class="string">&#x27;time&#x27;</span> | <span class="string">&#x27;day&#x27;</span></span>) =&gt; &#123;</span><br><span class="line">        <span class="keyword">const</span> date = <span class="keyword">new</span> <span class="title class_">Date</span>(unixTime * <span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">switch</span> (format) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;date&#x27;</span>:</span><br><span class="line">                <span class="keyword">return</span> date.<span class="title function_">toLocaleDateString</span>(<span class="string">&#x27;zh-TW&#x27;</span>, &#123; <span class="attr">year</span>: <span class="string">&#x27;numeric&#x27;</span>, <span class="attr">month</span>: <span class="string">&#x27;2-digit&#x27;</span>, <span class="attr">day</span>: <span class="string">&#x27;2-digit&#x27;</span> &#125;);</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;time&#x27;</span>:</span><br><span class="line">                <span class="keyword">return</span> date.<span class="title function_">toLocaleTimeString</span>(<span class="string">&#x27;en-US&#x27;</span>, &#123; <span class="attr">hour</span>: <span class="string">&#x27;numeric&#x27;</span>, <span class="attr">hour12</span>: <span class="literal">true</span> &#125;).<span class="title function_">replace</span>(<span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;day&#x27;</span>:</span><br><span class="line">                <span class="keyword">return</span> date.<span class="title function_">toLocaleDateString</span>(<span class="string">&#x27;zh-TW&#x27;</span>, &#123; <span class="attr">weekday</span>: <span class="string">&#x27;long&#x27;</span> &#125;);</span><br><span class="line">            <span class="attr">default</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果有從歷史紀錄頁面傳來的城市資料，則自動填入並搜尋</span></span><br><span class="line">    <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (route.<span class="property">params</span>?.<span class="property">locationData</span>) &#123;</span><br><span class="line">            <span class="keyword">const</span> cityFromHistory = route.<span class="property">params</span>.<span class="property">locationData</span>;</span><br><span class="line">            <span class="keyword">const</span> mappedCity = cityNameMap.<span class="property">enToZh</span>[cityFromHistory.<span class="property">name</span>.<span class="title function_">toLowerCase</span>()] || cityFromHistory.<span class="property">name</span>;</span><br><span class="line">            <span class="title function_">setCity</span>(mappedCity);</span><br><span class="line">            <span class="title function_">handleSearchByHistory</span>(cityFromHistory);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, [route.<span class="property">params</span>?.<span class="property">locationData</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;styles.pageContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;styles.inputContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">TextInput</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">style</span>=<span class="string">&#123;styles.textInput&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">placeholder</span>=<span class="string">&quot;輸入城市名稱 (例如: 臺中)&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">value</span>=<span class="string">&#123;city&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">onChangeText</span>=<span class="string">&#123;setCity&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">onSubmitEditing</span>=<span class="string">&#123;()</span> =&gt;</span> handleSearch(city)&#125;</span></span><br><span class="line"><span class="language-xml">                /&gt;</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Pressable</span> <span class="attr">style</span>=<span class="string">&#123;styles.searchButton&#125;</span> <span class="attr">onPress</span>=<span class="string">&#123;()</span> =&gt;</span> handleSearch(city)&#125;&gt;</span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">Text</span> <span class="attr">style</span>=<span class="string">&#123;styles.searchButtonText&#125;</span>&gt;</span>搜尋<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">Pressable</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Pressable</span> <span class="attr">style</span>=<span class="string">&#123;styles.iconButton&#125;</span> <span class="attr">onPress</span>=<span class="string">&#123;handleSearchByGPS&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">MaterialCommunityIcons</span> <span class="attr">name</span>=<span class="string">&quot;crosshairs-gps&quot;</span> <span class="attr">size</span>=<span class="string">&#123;24&#125;</span> <span class="attr">color</span>=<span class="string">&quot;#007cdb&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">Pressable</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Pressable</span> <span class="attr">style</span>=<span class="string">&#123;styles.historyContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">MaterialIcons</span> <span class="attr">name</span>=<span class="string">&quot;history&quot;</span> <span class="attr">size</span>=<span class="string">&#123;24&#125;</span> <span class="attr">color</span>=<span class="string">&quot;#007cdb&quot;</span> <span class="attr">onPress</span>=<span class="string">&#123;handleGotoHistory&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">Pressable</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">            &#123;/* 左邊的判別式為 true 或是物件不為空，才會渲染右邊的 UI */&#125;</span></span><br><span class="line"><span class="language-xml">            &#123;loading === &#x27;pending&#x27; &amp;&amp; <span class="tag">&lt;<span class="name">ActivityIndicator</span> <span class="attr">size</span>=<span class="string">&quot;large&quot;</span> <span class="attr">color</span>=<span class="string">&quot;#007cdb&quot;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">marginTop:</span> <span class="attr">36</span> &#125;&#125; /&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">            &#123;error &amp;&amp; <span class="tag">&lt;<span class="name">Text</span> <span class="attr">style</span>=<span class="string">&#123;styles.errorText&#125;</span>&gt;</span>&#123;error&#125;<span class="tag">&lt;/<span class="name">Text</span>&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">            &#123;weatherData &amp;&amp; loading === &#x27;succeeded&#x27; &amp;&amp; (</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;styles.weatherContainer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">HeaderInfo</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                        <span class="attr">name</span>=<span class="string">&#123;cityNameMap.enToZh[weatherData.location.name.toLowerCase()]</span> || <span class="attr">weatherData.location.name</span>&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                        <span class="attr">day</span>=<span class="string">&#123;formatUnixTime(weatherData.current.dt,</span> &#x27;<span class="attr">date</span>&#x27;)&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    /&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">CurrentWeather</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                        <span class="attr">icon</span>=<span class="string">&#123;mapWeatherIcon(weatherData.current.weather[0].icon)&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                        <span class="attr">temp</span>=<span class="string">&#123;Math.round(weatherData.current.temp).toString()&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                        <span class="attr">description</span>=<span class="string">&#123;weatherData.current.weather[0].description&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    /&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">View</span> <span class="attr">style</span>=<span class="string">&#123;styles.weatherHourlyCard&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                        &#123;weatherData.hourly.slice(0, 4).map((hour, index) =&gt; (</span></span><br><span class="line"><span class="language-xml">                            <span class="tag">&lt;<span class="name">HourlyForecast</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                <span class="attr">key</span>=<span class="string">&#123;index&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                <span class="attr">time</span>=<span class="string">&#123;formatUnixTime(hour.dt,</span> &#x27;<span class="attr">time</span>&#x27;)&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                <span class="attr">icon</span>=<span class="string">&#123;mapWeatherIcon(hour.weather[0].icon)&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                <span class="attr">temp</span>=<span class="string">&#123;Math.round(hour.temp).toString()&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                            /&gt;</span></span></span><br><span class="line"><span class="language-xml">                        ))&#125;</span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">ScrollView</span> <span class="attr">style</span>=<span class="string">&#123;styles.weatherDaily&#125;</span> <span class="attr">showsVerticalScrollIndicator</span>=<span class="string">&#123;false&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                            &#123;weatherData.daily.slice(0, 7).map((day, index) =&gt; (</span></span><br><span class="line"><span class="language-xml">                                <span class="tag">&lt;<span class="name">DailyForecast</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                    <span class="attr">key</span>=<span class="string">&#123;index&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                    <span class="attr">day</span>=<span class="string">&#123;formatUnixTime(day.dt,</span> &#x27;<span class="attr">day</span>&#x27;)&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                    <span class="attr">icon</span>=<span class="string">&#123;mapWeatherIcon(day.weather[0].icon)&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                    <span class="attr">tempHigh</span>=<span class="string">&#123;Math.round(day.temp.max).toString()&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                    <span class="attr">tempLow</span>=<span class="string">&#123;Math.round(day.temp.min).toString()&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                                /&gt;</span></span></span><br><span class="line"><span class="language-xml">                            ))&#125;</span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;/<span class="name">ScrollView</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            )&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> styles = <span class="title class_">StyleSheet</span>.<span class="title function_">create</span>(&#123;</span><br><span class="line">    <span class="attr">pageContainer</span>: &#123;</span><br><span class="line">        <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">16</span>,</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;#f0f8ff&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">inputContainer</span>: &#123;</span><br><span class="line">        <span class="attr">flexDirection</span>: <span class="string">&#x27;row&#x27;</span>,</span><br><span class="line">        <span class="attr">alignItems</span>: <span class="string">&#x27;center&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">textInput</span>: &#123;</span><br><span class="line">        <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">borderWidth</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">borderColor</span>: <span class="string">&#x27;#ccc&#x27;</span>,</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">8</span>,</span><br><span class="line">        <span class="attr">marginRight</span>: <span class="number">8</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="number">8</span>,</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;#fff&#x27;</span>,</span><br><span class="line">        <span class="attr">fontSize</span>: <span class="number">16</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">errorText</span>: &#123;</span><br><span class="line">        <span class="attr">color</span>: <span class="string">&#x27;red&#x27;</span>,</span><br><span class="line">        <span class="attr">textAlign</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">        <span class="attr">marginTop</span>: <span class="number">16</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">weatherContainer</span>: &#123;</span><br><span class="line">        <span class="attr">flex</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">16</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="number">15</span>,</span><br><span class="line">        <span class="attr">marginTop</span>: <span class="number">16</span>,</span><br><span class="line">        <span class="attr">elevation</span>: <span class="number">5</span>,</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;#007cdb&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">weatherHourlyCard</span>: &#123;</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;#fff&#x27;</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="number">15</span>,</span><br><span class="line">        <span class="attr">alignItems</span>: <span class="string">&#x27;center&#x27;</span>,</span><br><span class="line">        <span class="attr">elevation</span>: <span class="number">5</span>,</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">16</span>,</span><br><span class="line">        <span class="attr">marginBottom</span>: <span class="number">16</span>,</span><br><span class="line">        <span class="attr">flexDirection</span>: <span class="string">&#x27;row&#x27;</span>, <span class="comment">// 將元件水平排列</span></span><br><span class="line">        <span class="attr">justifyContent</span>: <span class="string">&#x27;space-between&#x27;</span>, <span class="comment">// 均勻分佈元件</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">weatherDaily</span>: &#123;</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;#fff&#x27;</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="number">15</span>,</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">16</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">searchButton</span>: &#123;</span><br><span class="line">        <span class="attr">backgroundColor</span>: <span class="string">&#x27;#007cdb&#x27;</span>,</span><br><span class="line">        <span class="attr">padding</span>: <span class="number">8</span>,</span><br><span class="line">        <span class="attr">borderRadius</span>: <span class="number">8</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">searchButtonText</span>: &#123;</span><br><span class="line">        <span class="attr">color</span>: <span class="string">&#x27;#fff&#x27;</span>,</span><br><span class="line">        <span class="attr">fontSize</span>: <span class="number">16</span>,</span><br><span class="line">        <span class="attr">textAlign</span>: <span class="string">&#x27;center&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">historyContainer</span>: &#123;</span><br><span class="line">        <span class="attr">paddingLeft</span>: <span class="number">8</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">iconButton</span>: &#123;</span><br><span class="line">        <span class="attr">paddingLeft</span>: <span class="number">8</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</details>
+    
+<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>現在，當您重新啟動 App 後，就會在搜尋框旁邊看到一個新的 GPS 定位圖示。點擊它，App 就會請求定位權限，並顯示您目前位置的天氣資訊了！</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/07/17/React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE/" title="React Native 天氣 App：透過 GPS 查詢當前位置">https://jumbojay06.github.io/2025/07/17/React-Native-天氣-App：透過-GPS-查詢當前位置/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React-Native/" rel="tag"># React Native</a>
+              <a href="/tags/Expo/" rel="tag"># Expo</a>
+              <a href="/tags/Redux/" rel="tag"># Redux</a>
+              <a href="/tags/Fetch/" rel="tag"># Fetch</a>
+              <a href="/tags/async-storage/" rel="tag"># async-storage</a>
+              <a href="/tags/expo-location/" rel="tag"># expo-location</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/07/16/%E6%89%93%E9%80%A0%E4%B8%80%E5%80%8B%E5%8A%9F%E8%83%BD%E9%BD%8A%E5%85%A8%E7%9A%84-React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E5%BE%9E-API-%E4%B8%B2%E6%8E%A5%E5%88%B0%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86/" rel="prev" title="打造一個功能齊全的 React Native 天氣 App：從 API 串接到狀態管理">
+      <i class="fa fa-chevron-left"></i> 打造一個功能齊全的 React Native 天氣 App：從 API 串接到狀態管理
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">React Native 天氣 App：透過 GPS 查詢當前位置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D-expo-location"><span class="nav-number">1.1.</span> <span class="nav-text">安裝 expo-location</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E-Redux-Thunk-weatherSlice-ts"><span class="nav-number">1.2.</span> <span class="nav-text">新增 Redux Thunk (weatherSlice.ts)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E6%90%9C%E5%B0%8B%E9%A0%81%E9%9D%A2-SearchScreen-tsx"><span class="nav-number">1.3.</span> <span class="nav-text">更新搜尋頁面 (SearchScreen.tsx)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B8%BD%E7%B5%90"><span class="nav-number">1.4.</span> <span class="nav-text">總結</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/07/17/React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE/";
+    this.page.identifier = "2025/07/17/React-Native-天氣-App：透過-GPS-查詢當前位置/";
+    this.page.title = "React Native 天氣 App：透過 GPS 查詢當前位置";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
