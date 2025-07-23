@@ -44,20 +44,20 @@
   const analytics = getAnalytics(app);
 </script>
 
-  <meta name="description" content="StatefulWidget 和 setState()利用 setState() 使其 Widget 與子 Widget 刷新頁面，一種簡單暴力的狀態管理方式。">
+  <meta name="description" content="Compose Multiplatform 介紹介紹過 Flutter 跟 React Native 了，怎麼能少 Compose Multiplatform，這次我們就用 Compose Multiplatform 寫一個待辦事項的 App 吧。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Flutter StatefulWidget 和 setState()">
-<meta property="og:url" content="https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/">
+<meta property="og:title" content="Compose Multiplatform 介紹">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/07/23/Compose-Multiplatform-%E4%BB%8B%E7%B4%B9/">
 <meta property="og:site_name" content="JumBoJay 小小筆記">
-<meta property="og:description" content="StatefulWidget 和 setState()利用 setState() 使其 Widget 與子 Widget 刷新頁面，一種簡單暴力的狀態管理方式。">
+<meta property="og:description" content="Compose Multiplatform 介紹介紹過 Flutter 跟 React Native 了，怎麼能少 Compose Multiplatform，這次我們就用 Compose Multiplatform 寫一個待辦事項的 App 吧。">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2025-05-13T10:15:50.000Z">
-<meta property="article:modified_time" content="2025-05-14T08:49:54.965Z">
+<meta property="article:published_time" content="2025-07-23T10:18:33.000Z">
+<meta property="article:modified_time" content="2025-07-23T10:19:55.088Z">
 <meta property="article:author" content="JumBoJay">
-<meta property="article:tag" content="setState()">
+<meta property="article:tag" content="Compose Multiplatform">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/">
+<link rel="canonical" href="https://jumbojay06.github.io/2025/07/23/Compose-Multiplatform-%E4%BB%8B%E7%B4%B9/">
 
 
 <script id="page-configurations">
@@ -70,7 +70,7 @@
   };
 </script>
 
-  <title>Flutter StatefulWidget 和 setState() | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  <title>Compose Multiplatform 介紹 | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
     <script>
@@ -192,7 +192,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/07/23/Compose-Multiplatform-%E4%BB%8B%E7%B4%B9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -205,7 +205,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Flutter StatefulWidget 和 setState()
+          Compose Multiplatform 介紹
         </h1>
 
         <div class="post-meta">
@@ -214,16 +214,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
+              
 
-              <time title="創建時間：2025-05-13 18:15:50" itemprop="dateCreated datePublished" datetime="2025-05-13T18:15:50+08:00">2025-05-13</time>
+              <time title="創建時間：2025-07-23 18:18:33 / 修改時間：18:19:55" itemprop="dateCreated datePublished" datetime="2025-07-23T18:18:33+08:00">2025-07-23</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2025-05-14 16:49:54" itemprop="dateModified" datetime="2025-05-14T16:49:54+08:00">2025-05-14</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -234,11 +228,7 @@
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Flutter/" itemprop="url" rel="index"><span itemprop="name">Flutter</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Flutter/%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">狀態管理</span></a>
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Compose-Multiplatform/" itemprop="url" rel="index"><span itemprop="name">Compose Multiplatform</span></a>
                 </span>
             </span>
 
@@ -251,8 +241,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/13/Flutter-StatefulWidget-和-setState/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2025/07/23/Compose-Multiplatform-%E4%BB%8B%E7%B4%B9/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/07/23/Compose-Multiplatform-介紹/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -267,17 +257,87 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="StatefulWidget-和-setState"><a href="#StatefulWidget-和-setState" class="headerlink" title="StatefulWidget 和 setState()"></a>StatefulWidget 和 setState()</h1><p>利用 <code>setState()</code> 使其 Widget 與子 Widget 刷新頁面，一種簡單暴力的狀態管理方式。</p>
+        <h1 id="Compose-Multiplatform-介紹"><a href="#Compose-Multiplatform-介紹" class="headerlink" title="Compose Multiplatform 介紹"></a>Compose Multiplatform 介紹</h1><p>介紹過 Flutter 跟 React Native 了，怎麼能少 Compose Multiplatform，這次我們就用 Compose Multiplatform 寫一個待辦事項的 App 吧。</p>
 <span id="more"></span>
-<p>當執行 setState() 時，會標記此 Widget 與子 Widget 為 dirty，當系統刷新時就會更新被標記 dirty的 Widget，由這種方式達到畫面與狀態同步。</p>
+<p>在開始前，你可能也有聽過 Kotlin Multiplatform，這兩個有什麼差別呢？</p>
+<table>
+<thead>
+<tr>
+<th>技術</th>
+<th>負責層面</th>
+<th>功用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kotlin Multiplatform (KMP)</td>
+<td>邏輯層 (Logic Layer)</td>
+<td>共享應用程式的商業邏輯、資料處理等非 UI 相關的程式碼。</td>
+</tr>
+<tr>
+<td>Compose Multiplatform</td>
+<td>介面層 (UI Layer)</td>
+<td>共享應用程式的使用者介面。</td>
+</tr>
+</tbody></table>
+<p>當這兩者結合使用時，開發者可以達到近乎 100% 的程式碼共享。整個專案的架構會非常清晰：</p>
+<ol>
+<li>共享模組 (<strong>Shared Module</strong>)： 使用 <strong>Kotlin Multiplatform</strong> 開發所有平台通用的商業邏輯和資料處理。</li>
+<li>共享 UI： 在共享模組中，使用 <strong>Compose Multiplatform</strong> 來編寫跨平台的 UI 介面。</li>
+<li>平台特定程式碼： 針對需要與底層硬體或作業系統深度互動的功能（例如特定的感測器或平台獨有的 API），再編寫少量的平台特定程式碼。</li>
+</ol>
+<p>總結來說，您可以將 <strong>Kotlin Multiplatform</strong> 視為一個強大的基礎，讓您的應用程式擁有一致且可靠的核心。而 <strong>Compose Multiplatform</strong> 則是建立在這個基礎之上的一項利器，讓您能用最有效率的方式，為您的應用程式打造出在各個平台上都美觀且一致的使用者體驗。</p>
+<h2 id="建立你的第一個-Compose-Multiplatform-專案"><a href="#建立你的第一個-Compose-Multiplatform-專案" class="headerlink" title="建立你的第一個 Compose Multiplatform 專案"></a>建立你的第一個 Compose Multiplatform 專案</h2><h3 id="如何建立專案"><a href="#如何建立專案" class="headerlink" title="如何建立專案"></a>如何建立專案</h3><p>IDE 一般來說會選擇 <strong>IntelliJ IDEA</strong> 或者 <strong>Android Studio</strong>，以下會以 <strong>Android Studio</strong>為主</p>
 <ul>
-<li>Example</li>
+<li><a target="_blank" rel="noopener" href="https://kmp.jetbrains.com/?android=true&ios=true&iosui=compose&desktop=true&web=true&includeTests=true">Kotlin Multiplatform Wizard</a>: 使用 JetBrains 官方提供的網頁版專案精靈來建立專案</li>
+<li>Compose Multipatform: 使用 IDE 的 Plugin 來建立專案</li>
 </ul>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:my_sample/generated/l10n.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SetStatePage</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> SetStatePage(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  State&lt;SetStatePage&gt; createState() =&gt; _SetStatePageState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SetStatePageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">SetStatePage</span>&gt; </span>&#123;</span><br><span class="line">  <span class="built_in">int</span> _counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> _incrementCounter() &#123;</span><br><span class="line">    <span class="comment">// 會使整個頁面刷新</span></span><br><span class="line">    setState(() &#123;</span><br><span class="line">      _counter++;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment"><span class="language-markdown">/**</span></span></span><br><span class="line"><span class="language-markdown"><span class="comment"><span class="bullet">	*</span> 當畫面刷新時，</span></span></span><br><span class="line"><span class="language-markdown"><span class="comment"><span class="bullet">	*</span> 只會執行 build</span></span></span><br><span class="line"><span class="language-markdown"><span class="comment"><span class="bullet">	*</span> 其他生命週期都不會執行</span></span></span><br><span class="line"><span class="language-markdown"><span class="comment"><span class="code">	*/</span></span></span></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(MyLocalizations.of(context).example_set_state_title),</span><br><span class="line">      ),</span><br><span class="line">      body: Center(</span><br><span class="line">        child: Column(</span><br><span class="line">          mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            Text(MyLocalizations.of(context).example_set_state_content),</span><br><span class="line">            Text(</span><br><span class="line">              <span class="string">&#x27;<span class="subst">$_counter</span>&#x27;</span>,</span><br><span class="line">              style: Theme.of(context).textTheme.headlineLarge,</span><br><span class="line">            ),</span><br><span class="line">          ],</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">      floatingActionButton: FloatingActionButton(</span><br><span class="line">        onPressed: _incrementCounter,</span><br><span class="line">        tooltip: <span class="string">&#x27;Increment&#x27;</span>,</span><br><span class="line">        child: <span class="keyword">const</span> Icon(Icons.add),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/JumBoJay06/FlutterExample">程式碼</a></p>
-</blockquote>
+<p>這兩者都可以建立專案，可以選一個你方便的來用。</p>
+<h3 id="設定專案"><a href="#設定專案" class="headerlink" title="設定專案"></a>設定專案</h3><ul>
+<li>Project Name: KmpTodoList (或任何你喜歡的名字)</li>
+<li>Project ID: com.example.kmptodolist (package name)</li>
+<li>Platforms: 勾選 Android, iOS 等等。</li>
+</ul>
+<h3 id="專案結構解析"><a href="#專案結構解析" class="headerlink" title="專案結構解析"></a>專案結構解析</h3><p>打開專案後，你會看到這樣的結構：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">KmpTodoList/</span><br><span class="line">├── composeApp/              # 主要的共享模組</span><br><span class="line">│   ├── build.gradle.kts     # 這個模組的建構腳本</span><br><span class="line">│   └── src/</span><br><span class="line">│       ├── commonMain/      # 100% 共享的 Kotlin 程式碼 (UI, 業務邏輯)</span><br><span class="line">│       ├── androidMain/     # 僅限 Android 的程式碼 (e.g., Android 特有的 API)</span><br><span class="line">│       ├── desktopMain/     # 僅限 Desktop 的程式碼</span><br><span class="line">│       └── iosMain/         # 僅限 iOS 的程式碼 (e.g., 平台服務的實作)</span><br><span class="line">├── iosApp/                  # Xcode 專案，用來建構 iOS App</span><br><span class="line">├── desktopApp/              # Desktop 專案的原始碼</span><br><span class="line">├── gradle/</span><br><span class="line">└── build.gradle.kts         # 根專案的建構腳本</span><br><span class="line">└── gradle.properties        # Gradle 屬性設定</span><br><span class="line">└── settings.gradle.kts      # 專案模組設定</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>/build.gradle.kts</code><ul>
+<li>用途：這是根專案的 Gradle 建構腳本。它的主要作用是為所有子專案（模組）定義通用的 Gradle 插件版本。</li>
+<li>內容分析：透過 <code>plugins &#123; ... &#125; apply false</code> 的語法，它在此處宣告了專案會用到的插件（如 Android Application, Kotlin Multiplatform 等），但並不在根專案中實際應用它們。這樣做可以讓所有子模組共享相同的插件版本，避免版本衝突。</li>
+</ul>
+</li>
+<li><code>/settings.gradle.kts</code><ul>
+<li>用途：這是 Gradle 的設定檔，用於定義專案的結構。</li>
+<li>內容分析：它設定了根專案的名稱為 KmpTodoList，並透過 <code>include(&quot;:composeApp&quot;)</code> 將 <code>composeApp</code> 這個模組納入專案中。它也設定了依賴解析時要從哪些倉庫（如 <code>google()</code>, <code>mavenCentral()</code>）去尋找函式庫。</li>
+</ul>
+</li>
+<li><code>/gradlew</code>, <code>/gradlew.bat</code>, <code>/gradle/wrapper/gradle-wrapper.properties</code><ul>
+<li>用途：這些是 Gradle Wrapper 的檔案。它們確保了無論在哪台電腦上建構這個專案，都會使用 <code>gradle-wrapper.properties</code> 中指定的、完全相同的 Gradle 版本 (gradle-8.13-bin.zip)。這大大提升了建構的一致性。</li>
+</ul>
+</li>
+<li><code>/gradlew/libs.versions.toml</code><ul>
+<li>用途：管理全部的依賴，非必要但是建議使用，有助於保持版本一致性及簡化 <code>build.gradle.kts</code> 文件。</li>
+</ul>
+</li>
+<li>composeApp 模組<br>這是 KMP 專案的核心，包含了絕大部分的程式碼。<ul>
+<li><code>/composeApp/build.gradle.kts</code><ul>
+<li>用途：<code>composeApp</code> 模組的 Gradle 建構腳本，是整個專案最核心的設定檔。</li>
+<li>內容分析：<ul>
+<li>Plugins: 實際應用了 <code>KMP</code>、<code>Compose</code> 等插件。</li>
+<li>Kotlin 平台目標: 定義了專案要建構哪些平台的目標，包括 <code>androidTarget</code> 和 <code>ios</code> (<code>iosX64</code>, <code>iosArm64</code>, <code>iosSimulatorArm64</code>)。</li>
+<li>Source Sets: 為 <code>commonMain</code>、<code>androidMain</code>、<code>iosMain</code> 等源集分別定義了它們的依賴函式庫。</li>
+<li>Android 設定: 包含了 Android App 的 <code>namespace</code>、<code>compileSdk</code>、<code>minSdk</code>、<code>applicationId</code> 等標準設定。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>commonMain</code> (共享程式碼)<br>  這是所有平台（Android, iOS）共享的程式碼。</li>
+<li><code>androidMain</code> (Android 專屬程式碼)</li>
+<li><code>iosMain</code> (iOS 專屬程式碼)</li>
+</ul>
+</li>
+<li>iosApp 模組<br>這是包裝 composeApp 的 Xcode 專案，使其能在 iOS 上運行。</li>
+</ul>
+<h1 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h1><p>有了這些基礎管念，我們接下來就進入實作吧～</p>
 
     </div>
 
@@ -293,7 +353,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>文章連結：</strong>
-    <a href="https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/" title="Flutter StatefulWidget 和 setState()">https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-和-setState/</a>
+    <a href="https://jumbojay06.github.io/2025/07/23/Compose-Multiplatform-%E4%BB%8B%E7%B4%B9/" title="Compose Multiplatform 介紹">https://jumbojay06.github.io/2025/07/23/Compose-Multiplatform-介紹/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
@@ -304,7 +364,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/setState/" rel="tag"># setState()</a>
+              <a href="/tags/Compose-Multiplatform/" rel="tag"># Compose Multiplatform</a>
           </div>
 
         
@@ -313,13 +373,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/05/13/Flutter-%E5%85%A7%E5%BB%BA%E7%9A%84%E7%8B%80%E6%85%8B%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95/" rel="prev" title="Flutter 內建的狀態管理方法">
-      <i class="fa fa-chevron-left"></i> Flutter 內建的狀態管理方法
+    <a href="/2025/07/17/React-Native-%E5%A4%A9%E6%B0%A3-App%EF%BC%9A%E9%80%8F%E9%81%8E-GPS-%E6%9F%A5%E8%A9%A2%E7%95%B6%E5%89%8D%E4%BD%8D%E7%BD%AE/" rel="prev" title="React Native 天氣 App：透過 GPS 查詢當前位置">
+      <i class="fa fa-chevron-left"></i> React Native 天氣 App：透過 GPS 查詢當前位置
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/05/14/Flutter-InheritedWidget/" rel="next" title="Flutter InheritedWidget">
-      Flutter InheritedWidget <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -385,7 +442,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#StatefulWidget-%E5%92%8C-setState"><span class="nav-number">1.</span> <span class="nav-text">StatefulWidget 和 setState()</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Compose-Multiplatform-%E4%BB%8B%E7%B4%B9"><span class="nav-number">1.</span> <span class="nav-text">Compose Multiplatform 介紹</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B-Compose-Multiplatform-%E5%B0%88%E6%A1%88"><span class="nav-number">1.1.</span> <span class="nav-text">建立你的第一個 Compose Multiplatform 專案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E5%B0%88%E6%A1%88"><span class="nav-number">1.1.1.</span> <span class="nav-text">如何建立專案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A%E5%B0%88%E6%A1%88"><span class="nav-number">1.1.2.</span> <span class="nav-text">設定專案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%88%E6%A1%88%E7%B5%90%E6%A7%8B%E8%A7%A3%E6%9E%90"><span class="nav-number">1.1.3.</span> <span class="nav-text">專案結構解析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AA%9E"><span class="nav-number">2.</span> <span class="nav-text">結語</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -517,9 +574,9 @@
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "https://jumbojay06.github.io/2025/05/13/Flutter-StatefulWidget-%E5%92%8C-setState/";
-    this.page.identifier = "2025/05/13/Flutter-StatefulWidget-和-setState/";
-    this.page.title = "Flutter StatefulWidget 和 setState()";
+    this.page.url = "https://jumbojay06.github.io/2025/07/23/Compose-Multiplatform-%E4%BB%8B%E7%B4%B9/";
+    this.page.identifier = "2025/07/23/Compose-Multiplatform-介紹/";
+    this.page.title = "Compose Multiplatform 介紹";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
