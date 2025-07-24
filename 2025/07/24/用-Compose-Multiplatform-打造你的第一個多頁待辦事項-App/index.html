@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="用 Compose Multiplatform 打造你的第一個多頁待辦事項 App上一篇介紹了 Compose Multiplatform，這次我們就開始打造待辦事項 App 吧。完成後，你的 App 將會有兩個頁面：一個是待辦事項的清單頁，你可以在這裡新增、刪除、標記完成；另一個是詳細內容頁，點擊清單中的任何一項就可以進入編輯。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 Compose Multiplatform 打造你的第一個多頁待辦事項 App">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="用 Compose Multiplatform 打造你的第一個多頁待辦事項 App上一篇介紹了 Compose Multiplatform，這次我們就開始打造待辦事項 App 吧。完成後，你的 App 將會有兩個頁面：一個是待辦事項的清單頁，你可以在這裡新增、刪除、標記完成；另一個是詳細內容頁，點擊清單中的任何一項就可以進入編輯。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://jumbojay06.github.io/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/cmp_todolist_list.png">
+<meta property="og:image" content="https://jumbojay06.github.io/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/cmp_todolist_detail.png">
+<meta property="article:published_time" content="2025-07-24T09:21:01.000Z">
+<meta property="article:modified_time" content="2025-07-24T09:27:32.357Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="Compose Multiplatform">
+<meta property="article:tag" content="Voyager">
+<meta property="article:tag" content="SQLDelight">
+<meta property="article:tag" content="Koin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jumbojay06.github.io/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/cmp_todolist_list.png">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>用 Compose Multiplatform 打造你的第一個多頁待辦事項 App | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用 Compose Multiplatform 打造你的第一個多頁待辦事項 App
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-07-24 17:21:01 / 修改時間：17:27:32" itemprop="dateCreated datePublished" datetime="2025-07-24T17:21:01+08:00">2025-07-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Compose-Multiplatform/" itemprop="url" rel="index"><span itemprop="name">Compose Multiplatform</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Compose-Multiplatform/Voyager/" itemprop="url" rel="index"><span itemprop="name">Voyager</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Compose-Multiplatform/SQLDelight/" itemprop="url" rel="index"><span itemprop="name">SQLDelight</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Compose-Multiplatform/Koin/" itemprop="url" rel="index"><span itemprop="name">Koin</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/07/24/用-Compose-Multiplatform-打造你的第一個多頁待辦事項-App/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="用-Compose-Multiplatform-打造你的第一個多頁待辦事項-App"><a href="#用-Compose-Multiplatform-打造你的第一個多頁待辦事項-App" class="headerlink" title="用 Compose Multiplatform 打造你的第一個多頁待辦事項 App"></a>用 Compose Multiplatform 打造你的第一個多頁待辦事項 App</h1><p>上一篇介紹了 Compose Multiplatform，這次我們就開始打造待辦事項 App 吧。<br>完成後，你的 App 將會有兩個頁面：一個是待辦事項的清單頁，你可以在這裡新增、刪除、標記完成；另一個是詳細內容頁，點擊清單中的任何一項就可以進入編輯。</p>
+<span id="more"></span>
+<p>這是我們的最終目標：</p>
+<ul>
+<li>清單頁 (List): 顯示所有待辦事項，並可新增、刪除、標記完成。<img src="/2025/07/24/用-Compose-Multiplatform-打造你的第一個多頁待辦事項-App/cmp_todolist_list.png"  width="360" height="800"/></li>
+<li>詳細頁 (Detail): 顯示單一事項的詳細內容，並可編輯。<img src="/2025/07/24/用-Compose-Multiplatform-打造你的第一個多頁待辦事項-App/cmp_todolist_detail.png"  width="360" height="800"/></li>
+</ul>
+<h2 id="加入常用套件-管理依賴"><a href="#加入常用套件-管理依賴" class="headerlink" title="加入常用套件 (管理依賴)"></a>加入常用套件 (管理依賴)</h2><p>建立好你的專案後，我們使用 <code>libs.versions.toml</code> 檔案來統一管理專案的套件版本，這個檔案位於 <code>gradle/</code> 資料夾下。<br>打開 <code>gradle/libs.versions.toml</code>，在 <code>[versions]</code>、<code>[plugins]</code> 和 <code>[libraries]</code> 區塊加入我們需要的套件。</p>
+<ul>
+<li>Voyager：Navigation 套件</li>
+<li>SQLDelight：Database 套件</li>
+<li>Koin：Dependency Injection 套件</li>
+</ul>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gradle/libs.versions.toml</span></span><br><span class="line"></span><br><span class="line"><span class="section">[versions]</span></span><br><span class="line"><span class="comment"># ... (既有的版本)</span></span><br><span class="line"><span class="attr">voyager</span> = <span class="string">&quot;1.1.0-beta03&quot;</span></span><br><span class="line"><span class="attr">sqldelight</span> = <span class="string">&quot;2.1.0&quot;</span></span><br><span class="line"><span class="attr">koin</span> = <span class="string">&quot;4.1.0&quot;</span></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line"><span class="section">[libraries]</span></span><br><span class="line"><span class="comment"># ... (既有的函式庫)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Voyager (Navigation)</span></span><br><span class="line"><span class="attr">voyager-navigator</span> = &#123; module = <span class="string">&quot;cafe.adriel.voyager:voyager-navigator&quot;</span>, version.ref = <span class="string">&quot;voyager&quot;</span> &#125;</span><br><span class="line"><span class="attr">voyager-koin</span> = &#123; module = <span class="string">&quot;cafe.adriel.voyager:voyager-koin&quot;</span>, version.ref = <span class="string">&quot;voyager&quot;</span> &#125;</span><br><span class="line"><span class="attr">voyager-screenmodel</span> = &#123; module = <span class="string">&quot;cafe.adriel.voyager:voyager-screenmodel&quot;</span>, version.ref = <span class="string">&quot;voyager&quot;</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># SQLDelight (Database)</span></span><br><span class="line"><span class="attr">sqldelight-driver-android</span> = &#123; module = <span class="string">&quot;app.cash.sqldelight:android-driver&quot;</span>, version.ref = <span class="string">&quot;sqldelight&quot;</span> &#125;</span><br><span class="line"><span class="attr">sqldelight-driver-native</span> = &#123; module = <span class="string">&quot;app.cash.sqldelight:native-driver&quot;</span>, version.ref = <span class="string">&quot;sqldelight&quot;</span> &#125;</span><br><span class="line"><span class="attr">sqldelight-coroutines-extensions</span> = &#123; module = <span class="string">&quot;app.cash.sqldelight:coroutines-extensions&quot;</span>, version.ref = <span class="string">&quot;sqldelight&quot;</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Koin (Dependency Injection)</span></span><br><span class="line"><span class="attr">koin-core</span> = &#123; module = <span class="string">&quot;io.insert-koin:koin-core&quot;</span>, version.ref = <span class="string">&quot;koin&quot;</span> &#125;</span><br><span class="line"><span class="attr">koin-compose</span> = &#123; module = <span class="string">&quot;io.insert-koin:koin-compose&quot;</span>, version.ref = <span class="string">&quot;koin&quot;</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="section">[plugins]</span></span><br><span class="line"><span class="comment"># ... (既有的插件)</span></span><br><span class="line"><span class="comment"># SQLDelight (Database)</span></span><br><span class="line"><span class="attr">sqldelightLibrary</span> = &#123; id = <span class="string">&quot;app.cash.sqldelight&quot;</span>, version.ref = <span class="string">&quot;sqldelight&quot;</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+<p>接著，打開 <code>composeApp/build.gradle.kts</code>，我們需要：</p>
+<ol>
+<li>加入 SQLDelight 的 Gradle 插件。</li>
+<li>在 sourceSets 的 androidMain、commonMain、iosMain 中分別加入依賴。</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// composeApp/build.gradle.kts</span></span><br><span class="line"></span><br><span class="line">plugins &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    alias(libs.plugins.sqldelightLibrary) <span class="comment">// 加入 SQLDelight 插件</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">sqldelight &#123;</span><br><span class="line">    databases &#123;</span><br><span class="line">        create(<span class="string">&quot;AppDatabase&quot;</span>) &#123;</span><br><span class="line">            packageName.<span class="keyword">set</span>(<span class="string">&quot;com.example.kmptodolist.db&quot;</span>)</span><br><span class="line">            verifyMigrations.<span class="keyword">set</span>(<span class="literal">true</span>)</span><br><span class="line">            version = <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">kotlin &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    sourceSets &#123;</span><br><span class="line">        <span class="keyword">val</span> commonMain <span class="keyword">by</span> getting &#123;</span><br><span class="line">            dependencies &#123;</span><br><span class="line">                <span class="comment">// Compose Multiplatform - Core</span></span><br><span class="line">                implementation(compose.runtime)</span><br><span class="line">                implementation(compose.foundation)</span><br><span class="line">                implementation(compose.material3)</span><br><span class="line">                <span class="meta">@OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)</span></span><br><span class="line">                implementation(compose.components.resources)</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// Compose Multiplatform - Material Icons (for ArrowBack, etc.)</span></span><br><span class="line">                implementation(compose.materialIconsExtended)</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Voyager (Navigation)</span></span><br><span class="line">                api(libs.voyager.navigator)</span><br><span class="line">                api(libs.voyager.screenmodel)</span><br><span class="line">                api(libs.voyager.koin)</span><br><span class="line"></span><br><span class="line">                <span class="comment">// SQLDelight (Database)</span></span><br><span class="line">                 implementation(libs.sqldelight.coroutines.extensions)</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Koin (Dependency Injection)</span></span><br><span class="line">                api(libs.koin.core)</span><br><span class="line">                api(libs.koin.compose)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> androidMain <span class="keyword">by</span> getting &#123;</span><br><span class="line">            dependencies &#123;</span><br><span class="line">                <span class="comment">// ...</span></span><br><span class="line">                api(libs.sqldelight.driver.android)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">val</span> iosMain <span class="keyword">by</span> getting &#123;</span><br><span class="line">            dependencies &#123;</span><br><span class="line">                <span class="comment">// ...</span></span><br><span class="line">                implementation(libs.sqldelight.driver.native)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改完後，點擊 IDE 上方的 <code>Sync Gradle</code> 按鈕</p>
+<h2 id="打造-TodoList-App-資料層-SQLDelight"><a href="#打造-TodoList-App-資料層-SQLDelight" class="headerlink" title="打造 TodoList App - 資料層 (SQLDelight)"></a>打造 TodoList App - 資料層 (SQLDelight)</h2><h3 id="建立資料庫-Schema"><a href="#建立資料庫-Schema" class="headerlink" title="建立資料庫 Schema"></a>建立資料庫 Schema</h3><ol>
+<li>在 <code>composeApp/src/commonMain</code> 下建立一個新目錄 <code>sqldelight</code>。</li>
+<li>在 <code>sqldelight</code> 目錄下，再建立一個目錄 <code>com/example/kmptodolist/db</code>。</li>
+<li>在這個目錄下，建立一個檔案 <code>Todo.sq</code>。</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">import kotlin.Boolean;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> Todo (</span><br><span class="line">    id <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span> <span class="keyword">PRIMARY KEY</span> AUTOINCREMENT,</span><br><span class="line">    title TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    content TEXT, <span class="comment">-- 內文可以 null</span></span><br><span class="line">    is_completed <span class="type">INTEGER</span> <span class="keyword">AS</span> <span class="type">Boolean</span> <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="comment">-- DB 內存放 (0 or 1)，轉物件時會轉成 Boolean</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">selectAll: <span class="comment">-- 取得全部</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Todo <span class="keyword">ORDER</span> <span class="keyword">BY</span> id <span class="keyword">DESC</span>;</span><br><span class="line"></span><br><span class="line">selectById: <span class="comment">-- 依照 id 撈取 Todo</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Todo <span class="keyword">WHERE</span> id <span class="operator">=</span> ?;</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span>: <span class="comment">-- 新增時只提供 title，content 會是 NULL，is_completed 會是預設的 0(false)</span></span><br><span class="line"><span class="keyword">INSERT INTO</span> Todo(title) <span class="keyword">VALUES</span> (?);</span><br><span class="line"></span><br><span class="line">updateCompletion: <span class="comment">-- 完成時，只更改特定 id 的 is_completed</span></span><br><span class="line"><span class="keyword">UPDATE</span> Todo <span class="keyword">SET</span> is_completed <span class="operator">=</span> ? <span class="keyword">WHERE</span> id <span class="operator">=</span> ?;</span><br><span class="line"></span><br><span class="line">updateTodo: <span class="comment">-- 用於更新特定 id 的標題和內容</span></span><br><span class="line"><span class="keyword">UPDATE</span> Todo <span class="keyword">SET</span> title <span class="operator">=</span> ?, content <span class="operator">=</span> ? <span class="keyword">WHERE</span> id <span class="operator">=</span> ?;</span><br><span class="line"></span><br><span class="line">deleteById: <span class="comment">-- 刪除特定 id 的 Todo</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> Todo <span class="keyword">WHERE</span> id <span class="operator">=</span> ?;</span><br></pre></td></tr></table></figure>
+<p>一樣點擊 IDE 上方的 <code>Sync Gradle</code> 按鈕，Gradle 同步後，SQLDelight 會自動產生對應的 Kotlin 類別和函式。<br>自動產生的檔案會在<code>composeApp/build/generated/sqldelight/</code>底下。</p>
+<h3 id="建立平台相關的-Driver"><a href="#建立平台相關的-Driver" class="headerlink" title="建立平台相關的 Driver"></a>建立平台相關的 Driver</h3><p>資料庫在不同平台 (Android, iOS) 上需要不同的驅動程式。我們使用 <code>expect</code>&#x2F;<code>actual</code> 機制來實現。</p>
+<ol>
+<li>在 <code>commonMain</code> 中建立 <code>data/local/DatabaseDriverFactory.kt</code>實作<code>expect</code></li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// composeApp/src/commonMain/kotlin/com/example/kmptodolist/data/local/DatabaseDriverFactory.kt</span></span><br><span class="line"><span class="keyword">package</span> com.example.kmptodolist.<span class="keyword">data</span>.local</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> app.cash.sqldelight.db.SqlDriver</span><br><span class="line"></span><br><span class="line"><span class="keyword">expect</span> <span class="keyword">class</span> <span class="title class_">DatabaseDriverFactory</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">createDriver</span><span class="params">()</span></span>: SqlDriver</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>在 <code>androidMain</code> 中建立 <code>actual</code> 實作：</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// composeApp/src/androidMain/kotlin/com/example/kmptodolist/data/local/DatabaseDriverFactory.kt</span></span><br><span class="line"><span class="keyword">package</span> com.example.kmptodolist.<span class="keyword">data</span>.local</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context</span><br><span class="line"><span class="keyword">import</span> app.cash.sqldelight.db.SqlDriver</span><br><span class="line"><span class="keyword">import</span> app.cash.sqldelight.driver.android.AndroidSqliteDriver</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.db.AppDatabase</span><br><span class="line"></span><br><span class="line"><span class="keyword">actual</span> <span class="keyword">class</span> <span class="title class_">DatabaseDriverFactory</span>(<span class="keyword">private</span> <span class="keyword">val</span> context: Context) &#123;</span><br><span class="line">    <span class="keyword">actual</span> <span class="function"><span class="keyword">fun</span> <span class="title">createDriver</span><span class="params">()</span></span>: SqlDriver &#123;</span><br><span class="line">        <span class="keyword">return</span> AndroidSqliteDriver(AppDatabase.Schema, context, <span class="string">&quot;todo.db&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>在 <code>iosMain</code> 中建立 <code>actual</code> 實作：</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// composeApp/src/iosMain/kotlin/com/example/kmptodolist/data/local/DatabaseDriverFactory.kt</span></span><br><span class="line"><span class="keyword">package</span> com.example.kmptodolist.<span class="keyword">data</span>.local</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> app.cash.sqldelight.db.SqlDriver</span><br><span class="line"><span class="keyword">import</span> app.cash.sqldelight.driver.native.NativeSqliteDriver</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.db.AppDatabase</span><br><span class="line"></span><br><span class="line"><span class="keyword">actual</span> <span class="keyword">class</span> <span class="title class_">DatabaseDriverFactory</span> &#123;</span><br><span class="line">    <span class="keyword">actual</span> <span class="function"><span class="keyword">fun</span> <span class="title">createDriver</span><span class="params">()</span></span>: SqlDriver &#123;</span><br><span class="line">        <span class="keyword">return</span> NativeSqliteDriver(AppDatabase.Schema, <span class="string">&quot;todo.db&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="打造-TodoList-App-業務邏輯與畫面"><a href="#打造-TodoList-App-業務邏輯與畫面" class="headerlink" title="打造 TodoList App - 業務邏輯與畫面"></a>打造 TodoList App - 業務邏輯與畫面</h2><h3 id="設定-Koin-依賴注入"><a href="#設定-Koin-依賴注入" class="headerlink" title="設定 Koin (依賴注入)"></a>設定 Koin (依賴注入)</h3><p>Koin 幫助我們管理物件的生命週期和依賴關係。</p>
+<ol>
+<li>在 <code>commonMain</code> 中建立 <code>di/Koin.kt</code>：</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// composeApp/src/commonMain/kotlin/com/example/kmptodolist/di/Koin.kt</span></span><br><span class="line"><span class="keyword">package</span> com.example.kmptodolist.di</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> androidx.lifecycle.viewmodel.viewModelFactory</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.<span class="keyword">data</span>.local.DatabaseDriverFactory</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.db.AppDatabase</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.ui.screens.detail.TodoDetailViewModel</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.ui.screens.todolist.TodoListViewModel</span><br><span class="line"><span class="keyword">import</span> org.koin.core.KoinApplication</span><br><span class="line"><span class="keyword">import</span> org.koin.core.context.startKoin</span><br><span class="line"><span class="keyword">import</span> org.koin.dsl.module</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 這是通用的 Koin 模組，只包含所有平台共享的依賴。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">val</span> commonModule = module &#123;</span><br><span class="line">    <span class="comment">// DatabaseDriverFactory 是平台相關的，它將由每個平台的特定模組提供。</span></span><br><span class="line"></span><br><span class="line">    single &#123; AppDatabase(<span class="keyword">get</span>&lt;DatabaseDriverFactory&gt;().createDriver()) &#125;</span><br><span class="line">    single &#123; <span class="keyword">get</span>&lt;AppDatabase&gt;().todoQueries &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ViewModel(後面會建立，可以等到建立完後再補上來)</span></span><br><span class="line">    factory &#123; TodoListViewModel(<span class="keyword">get</span>()) &#125;</span><br><span class="line">    factory &#123; (todoId: <span class="built_in">Long</span>) -&gt; TodoDetailViewModel(todoId, <span class="keyword">get</span>()) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * initKoin 函數，使其接受一個配置區塊 (lambda)。</span></span><br><span class="line"><span class="comment"> * 這讓我們可以在各個平台（例如 Android）啟動 Koin 時，傳入特定的配置。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">initKoin</span><span class="params">(appDeclaration: <span class="type">KoinApplication</span>.() -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    startKoin &#123;</span><br><span class="line">        appDeclaration()</span><br><span class="line">        modules(commonModule)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="建立-ViewModel"><a href="#建立-ViewModel" class="headerlink" title="建立 ViewModel"></a>建立 ViewModel</h3><p>ViewModel 負責處理 UI 的狀態和業務邏輯。</p>
+<ul>
+<li><code>TodoListViewModel</code><br>首先，先建立列表頁的 ViewModel，主要負責顯示所有待辦事項，並可新增、刪除、標記完成。<ul>
+<li>在 <code>commonMain</code> 中建立 <code>ui/screens/list/TodoListViewModel.kt</code>並繼承<code>ScreenModel</code>。</li>
+<li>主要功能的詳細說明：<ul>
+<li>管理待辦事項狀態： 它持有目前待辦事項清單的狀態 (<code>todos</code>) 以及用於新增待辦事項的輸入文字 (<code>newTodoText</code>)。</li>
+<li>處理使用者互動： 它提供了函式來回應使用者的操作，例如：<ul>
+<li><code>onNewTodoTextChange(text: String)</code>：當使用者在輸入欄位中輸入文字時更新 <code>newTodoText</code>。</li>
+<li><code>addTodo()</code>：將新的待辦事項新增到資料庫，並清除輸入欄位。</li>
+<li><code>toggleTodoCompletion(id: Long, isCompleted: Boolean)</code>：更新特定待辦事項的完成狀態。</li>
+<li><code>deleteTodo(id: Long)</code>：從資料庫中刪除特定的待辦事項。</li>
+</ul>
+</li>
+<li>與資料庫互動： 它使用 <code>todoQueries</code> (一個 <code>TodoQueries</code> 的實例，由 SQLDelight 產生) 來執行資料庫操作，例如插入、更新、刪除和查詢待辦事項。</li>
+<li>公開 UI 可觀察的狀態：<ul>
+<li><code>newTodoText</code>: 一個 <code>StateFlow&lt;String&gt;</code>，公開目前新待辦事項輸入欄位的文字。UI 可以觀察此流程以更新輸入欄位。</li>
+<li><code>todos</code>: 一個 <code>StateFlow&lt;List&lt;Todo&gt;&gt;</code>，公開目前的待辦事項清單。UI 可以觀察此流程以在待辦事項變更時重新呈現清單。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<details>
+
+<summary>TodoListViewModel 完整檔案</summary>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.kmptodolist.ui.screens.todolist</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> app.cash.sqldelight.coroutines.asFlow</span><br><span class="line"><span class="keyword">import</span> app.cash.sqldelight.coroutines.mapToList</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.core.model.ScreenModel</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.core.model.screenModelScope</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.db.Todo</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.db.TodoQueries</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.Dispatchers</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.IO</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.flow.MutableStateFlow</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.flow.StateFlow</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.flow.asStateFlow</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.flow.stateIn</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.flow.update</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.launch</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TodoListViewModel</span>(</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> todoQueries: TodoQueries</span><br><span class="line">) : ScreenModel &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> _newTodoText = MutableStateFlow(<span class="string">&quot;&quot;</span>)</span><br><span class="line">    <span class="keyword">val</span> newTodoText = _newTodoText.asStateFlow()</span><br><span class="line">    <span class="keyword">val</span> todos: StateFlow&lt;List&lt;Todo&gt;&gt; =</span><br><span class="line">        todoQueries.selectAll().asFlow().mapToList(Dispatchers.IO).stateIn(</span><br><span class="line">            scope = screenModelScope,</span><br><span class="line">            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(<span class="number">5000</span>),</span><br><span class="line">            initialValue = emptyList()</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onNewTodoTextChange</span><span class="params">(text: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        _newTodoText.update &#123; text &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">addTodo</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (_newTodoText.value.isBlank()) <span class="keyword">return</span></span><br><span class="line">        screenModelScope.launch &#123;</span><br><span class="line">            todoQueries.insert(_newTodoText.value)</span><br><span class="line">            _newTodoText.update &#123; <span class="string">&quot;&quot;</span> &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">toggleTodoCompletion</span><span class="params">(id: <span class="type">Long</span>, isCompleted: <span class="type">Boolean</span>)</span></span> &#123;</span><br><span class="line">        screenModelScope.launch &#123;</span><br><span class="line">            todoQueries.updateCompletion(isCompleted, id)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">deleteTodo</span><span class="params">(id: <span class="type">Long</span>)</span></span> &#123;</span><br><span class="line">        screenModelScope.launch &#123;</span><br><span class="line">            todoQueries.deleteById(id)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</details>
+
+<ul>
+<li><code>TodoDetailViewModel</code><br>建立詳細頁的 ViewModel，主要負責顯示單一事項的詳細內容，並可編輯。<ul>
+<li>在 <code>commonMain</code> 中建立 <code>ui/screens/detail/TodoDetailViewModel.kt</code>並繼承<code>ScreenModel</code>。</li>
+<li>載入待辦事項詳細資料： 根據傳入的 <code>todoId</code> 從資料庫中載入特定待辦事項的標題和內容。</li>
+<li>管理編輯狀態： 它持有待辦事項標題 (<code>editedTitle</code>) 和內容 (<code>editedContent</code>) 的目前編輯狀態。</li>
+<li>處理使用者輸入：<ul>
+<li><code>onTitleChange(newTitle: String)</code>：當使用者修改標題輸入欄位時更新 <code>editedTitle</code>。</li>
+<li><code>onContentChange(newContent: String)</code>：當使用者修改內容輸入欄位時更新 <code>editedContent</code>。</li>
+</ul>
+</li>
+<li>儲存變更：<ul>
+<li><code>saveTodo()</code>：將對標題和內容所做的編輯儲存回資料庫。</li>
+</ul>
+</li>
+<li>與資料庫互動： 它使用 <code>todoQueries</code> (一個 TodoQueries 的實例) 來執行資料庫操作，特別是根據 ID 查詢待辦事項和更新待辦事項。</li>
+<li>公開 UI 可觀察的狀態：<ul>
+<li><code>editedTitle</code>: 一個 <code>StateFlow&lt;String&gt;</code>，公開目前正在編輯的待辦事項標題。</li>
+<li><code>editedContent</code>: 一個 <code>StateFlow&lt;String&gt;</code>，公開目前正在編輯的待辦事項內容。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<details>
+
+<summary>TodoDetailViewModel 完整檔案</summary>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.kmptodolist.ui.screens.detail</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.core.model.ScreenModel</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.core.model.screenModelScope</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.db.TodoQueries</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.flow.MutableStateFlow</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.flow.asStateFlow</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.flow.update</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.launch</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TodoDetailViewModel</span>(</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> todoId: <span class="built_in">Long</span>,</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> todoQueries: TodoQueries</span><br><span class="line">) : ScreenModel &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> _editedTitle = MutableStateFlow(<span class="string">&quot;&quot;</span>)</span><br><span class="line">    <span class="keyword">val</span> editedTitle = _editedTitle.asStateFlow()</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> _editedContent = MutableStateFlow(<span class="string">&quot;&quot;</span>)</span><br><span class="line">    <span class="keyword">val</span> editedContent = _editedContent.asStateFlow()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        loadTodo()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">loadTodo</span><span class="params">()</span></span> &#123;</span><br><span class="line">        screenModelScope.launch &#123;</span><br><span class="line">            <span class="keyword">val</span> todo = todoQueries.selectById(todoId).executeAsOneOrNull()</span><br><span class="line">            _editedTitle.update &#123; todo?.title ?: <span class="string">&quot;&quot;</span> &#125;</span><br><span class="line">            _editedContent.update &#123; todo?.content ?: <span class="string">&quot;&quot;</span> &#125; <span class="comment">// 初始化 content 狀態</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onTitleChange</span><span class="params">(newTitle: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        _editedTitle.update &#123; newTitle &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 新增 content 的處理函式</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onContentChange</span><span class="params">(newContent: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        _editedContent.update &#123; newContent &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">saveTodo</span><span class="params">()</span></span> &#123;</span><br><span class="line">        screenModelScope.launch &#123;</span><br><span class="line">            <span class="keyword">val</span> title = _editedTitle.value</span><br><span class="line">            <span class="keyword">if</span> (title.isNotBlank()) &#123;</span><br><span class="line">                todoQueries.updateTodo(</span><br><span class="line">                    title = _editedTitle.value,</span><br><span class="line">                    content = _editedContent.value,</span><br><span class="line">                    id = todoId</span><br><span class="line">                )</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</details>
+
+<h3 id="Screen-建立"><a href="#Screen-建立" class="headerlink" title="Screen 建立"></a>Screen 建立</h3><ul>
+<li><code>TodoListScreen</code><br>在 <code>commonMain</code> 中建立 <code>ui/screens/list/TodoListScreen.kt</code>並繼承<code>Voyager</code>的<code>Screen</code>，實作待辦事項應用的主畫面。<br>使用者可以在這個畫面上：<ul>
+<li><blockquote>
+<p>1.查看所有待辦事項。<br>  2.新增一個新的待辦事項。<br>  3.將待辦事項標記為完成。<br>  4.刪除一個待辦事項（有確認對話框）。<br>  5.點擊一個待辦事項以跳轉到詳情頁面。</p>
+</blockquote>
+</li>
+<li><p>它主要由兩個可組合函式 (<code>Composable</code>) 組成：</p>
+<ul>
+<li><code>TodoListScreen.Content()</code>：建構整個畫面的佈局，包含頂部標題列、輸入框、按鈕和待辦事項列表。</li>
+<li><code>TodoItemRow()</code>：一個獨立的元件，專門用來顯示單一的待辦事項。</li>
+</ul>
+</li>
+<li><p>重點參數：</p>
+<ul>
+<li><code>viewModel</code>：透過<code>koinScreenModel</code> di 注入</li>
+<li><code>newTodoText</code>：從 <code>viewModel</code> 觀察新待辦事項的變化</li>
+<li><code>todos</code>：從 <code>viewModel</code> 觀察待辦事項列表的變化</li>
+<li><code>navigator</code>：取得 Voyager 導航器，跳轉頁面用</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<details>
+
+<summary>TodoListScreen 完整檔案</summary>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.kmptodolist.ui.screens.list</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> androidx.compose.foundation.layout.*</span><br><span class="line"><span class="keyword">import</span> androidx.compose.foundation.lazy.LazyColumn</span><br><span class="line"><span class="keyword">import</span> androidx.compose.foundation.lazy.items</span><br><span class="line"><span class="keyword">import</span> androidx.compose.material.icons.Icons</span><br><span class="line"><span class="keyword">import</span> androidx.compose.material.icons.filled.Delete</span><br><span class="line"><span class="keyword">import</span> androidx.compose.material3.*</span><br><span class="line"><span class="keyword">import</span> androidx.compose.runtime.*</span><br><span class="line"><span class="keyword">import</span> androidx.compose.ui.Alignment</span><br><span class="line"><span class="keyword">import</span> androidx.compose.ui.Modifier</span><br><span class="line"><span class="keyword">import</span> androidx.compose.ui.graphics.Color</span><br><span class="line"><span class="keyword">import</span> androidx.compose.ui.text.style.TextDecoration</span><br><span class="line"><span class="keyword">import</span> androidx.compose.ui.unit.dp</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.core.screen.Screen</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.koin.koinScreenModel</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.navigator.LocalNavigator</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.navigator.currentOrThrow</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.db.Todo</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.ui.screens.detail.TodoDetailScreen</span><br><span class="line"><span class="keyword">import</span> org.jetbrains.compose.ui.tooling.preview.Preview</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 待辦事項列表畫面。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TodoListScreen</span> : <span class="type">Screen</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@OptIn(ExperimentalMaterial3Api::class)</span></span><br><span class="line">    <span class="meta">@Preview</span></span><br><span class="line">    <span class="meta">@Composable</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">Content</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">// 取得 ViewModel</span></span><br><span class="line">        <span class="keyword">val</span> viewModel = koinScreenModel&lt;TodoListViewModel&gt;()</span><br><span class="line">        <span class="comment">// 觀察新待辦事項文字的變化</span></span><br><span class="line">        <span class="keyword">val</span> newTodoText <span class="keyword">by</span> viewModel.newTodoText.collectAsState()</span><br><span class="line">        <span class="comment">// 觀察待辦事項列表的變化</span></span><br><span class="line">        <span class="keyword">val</span> todos <span class="keyword">by</span> viewModel.todos.collectAsState()</span><br><span class="line">        <span class="comment">// 取得 Voyager 導航器</span></span><br><span class="line">        <span class="keyword">val</span> navigator = LocalNavigator.currentOrThrow</span><br><span class="line">        <span class="comment">// 狀態：要刪除的 id</span></span><br><span class="line">        <span class="keyword">var</span> showDeleteDialog <span class="keyword">by</span> remember &#123; mutableStateOf&lt;<span class="built_in">Long</span>?&gt;(<span class="literal">null</span>) &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 刪除確認對話框</span></span><br><span class="line">        <span class="keyword">if</span> (showDeleteDialog != <span class="literal">null</span>) &#123;</span><br><span class="line">            AlertDialog(</span><br><span class="line">                onDismissRequest = &#123; showDeleteDialog = <span class="literal">null</span> &#125;,</span><br><span class="line">                title = &#123; Text(<span class="string">&quot;確認刪除&quot;</span>) &#125;,</span><br><span class="line">                text = &#123; Text(<span class="string">&quot;你確定要刪除這個待辦事項嗎？&quot;</span>) &#125;,</span><br><span class="line">                confirmButton = &#123;</span><br><span class="line">                    Button(</span><br><span class="line">                        onClick = &#123;</span><br><span class="line">                            showDeleteDialog?.let &#123; viewModel.deleteTodo(it) &#125;</span><br><span class="line">                            showDeleteDialog = <span class="literal">null</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    ) &#123;</span><br><span class="line">                        Text(<span class="string">&quot;確認&quot;</span>)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                dismissButton = &#123;</span><br><span class="line">                    Button(onClick = &#123; showDeleteDialog = <span class="literal">null</span> &#125;) &#123;</span><br><span class="line">                        Text(<span class="string">&quot;取消&quot;</span>)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Scaffold(</span><br><span class="line">            topBar = &#123;</span><br><span class="line">                TopAppBar(title = &#123; Text(<span class="string">&quot;待辦事項列表&quot;</span>) &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        ) &#123; paddingValues -&gt;</span><br><span class="line">            Column(</span><br><span class="line">                modifier = Modifier</span><br><span class="line">                    .fillMaxSize()</span><br><span class="line">                    .padding(paddingValues)</span><br><span class="line">                    .padding(<span class="number">16.</span>dp)</span><br><span class="line">            ) &#123;</span><br><span class="line">                <span class="comment">// 輸入框和按鈕</span></span><br><span class="line">                Row(</span><br><span class="line">                    modifier = Modifier.fillMaxWidth(),</span><br><span class="line">                    verticalAlignment = Alignment.CenterVertically</span><br><span class="line">                ) &#123;</span><br><span class="line">                    OutlinedTextField(</span><br><span class="line">                        value = newTodoText,</span><br><span class="line">                        onValueChange = viewModel::onNewTodoTextChange,</span><br><span class="line">                        label = &#123; Text(<span class="string">&quot;新的待辦事項&quot;</span>) &#125;,</span><br><span class="line">                        modifier = Modifier.weight(<span class="number">1f</span>)</span><br><span class="line">                    )</span><br><span class="line">                    Spacer(modifier = Modifier.width(<span class="number">8.</span>dp))</span><br><span class="line">                    Button(onClick = viewModel::addTodo) &#123;</span><br><span class="line">                        Text(<span class="string">&quot;新增&quot;</span>)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 分隔線</span></span><br><span class="line">                HorizontalDivider(modifier = Modifier.padding(vertical = <span class="number">8.</span>dp))</span><br><span class="line"></span><br><span class="line">                Spacer(modifier = Modifier.height(<span class="number">16.</span>dp))</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (todos.isEmpty()) &#123;</span><br><span class="line">                    <span class="comment">// 如果沒有待辦事項，顯示提示</span></span><br><span class="line">                    Box(</span><br><span class="line">                        modifier = Modifier.fillMaxSize(),</span><br><span class="line">                        contentAlignment = Alignment.Center</span><br><span class="line">                    ) &#123;</span><br><span class="line">                        Text(<span class="string">&quot;目前沒有待辦事項&quot;</span>, style = MaterialTheme.typography.bodyLarge)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 待辦事項列表</span></span><br><span class="line">                    LazyColumn(modifier = Modifier.fillMaxSize()) &#123;</span><br><span class="line">                        items(todos, key = &#123; it.id &#125;) &#123; todo -&gt; <span class="comment">// 使用 key 提升性能</span></span><br><span class="line">                            TodoItemRow(</span><br><span class="line">                                todo = todo,</span><br><span class="line">                                onToggle = viewModel::toggleTodoCompletion,</span><br><span class="line">                                onDelete = &#123; id -&gt;</span><br><span class="line">                                    showDeleteDialog = id <span class="comment">// 點擊刪除時，設置要刪除的 id</span></span><br><span class="line">                                &#125;,</span><br><span class="line">                                onClick = &#123;</span><br><span class="line">                                    navigator.push(TodoDetailScreen(todo.id))</span><br><span class="line">                                &#125;</span><br><span class="line">                            )</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 待辦事項列表中的單一項目。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> todo 待辦事項。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> onToggle 切換完成狀態的回呼。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> onDelete 刪除的回呼。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> onClick 點擊的回呼。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">TodoItemRow</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    todo: <span class="type">Todo</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">    onToggle: (<span class="type">id</span>: <span class="type">Long</span>, <span class="type">isCompleted</span>: <span class="type">Boolean</span>) -&gt; <span class="type">Unit</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">    onDelete: (<span class="type">id</span>: <span class="type">Long</span>) -&gt; <span class="type">Unit</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">    onClick: () -&gt; <span class="type">Unit</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span> &#123;</span><br><span class="line">    Card(</span><br><span class="line">        modifier = Modifier</span><br><span class="line">            .fillMaxWidth()</span><br><span class="line">            .padding(vertical = <span class="number">4.</span>dp),</span><br><span class="line">        elevation = CardDefaults.cardElevation(<span class="number">4.</span>dp),</span><br><span class="line">        colors = CardDefaults.cardColors().copy(</span><br><span class="line">            containerColor = <span class="keyword">if</span> (todo.is_completed) Color.LightGray <span class="keyword">else</span> Color.White</span><br><span class="line">        ),</span><br><span class="line">        onClick = onClick</span><br><span class="line">    ) &#123;</span><br><span class="line">        Row(</span><br><span class="line">            modifier = Modifier</span><br><span class="line">                .fillMaxWidth()</span><br><span class="line">                .padding(vertical = <span class="number">8.</span>dp),</span><br><span class="line">            verticalAlignment = Alignment.CenterVertically</span><br><span class="line">        ) &#123;</span><br><span class="line">            Checkbox(</span><br><span class="line">                checked = todo.is_completed,</span><br><span class="line">                onCheckedChange = &#123; onToggle(todo.id, it) &#125;</span><br><span class="line">            )</span><br><span class="line">            Spacer(modifier = Modifier.width(<span class="number">8.</span>dp))</span><br><span class="line">            Column(modifier = Modifier.weight(<span class="number">1f</span>)) &#123;</span><br><span class="line">                Text(</span><br><span class="line">                    text = todo.title,</span><br><span class="line">                    style = <span class="keyword">if</span> (todo.is_completed) &#123;</span><br><span class="line">                        MaterialTheme.typography.bodyLarge.copy(textDecoration = TextDecoration.LineThrough)</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        MaterialTheme.typography.bodyLarge</span><br><span class="line">                    &#125;</span><br><span class="line">                )</span><br><span class="line">                <span class="comment">// 處理可能為 null 的 content</span></span><br><span class="line">                <span class="keyword">if</span> (todo.content != <span class="literal">null</span>) &#123;</span><br><span class="line">                    Spacer(modifier = Modifier.width(<span class="number">4.</span>dp))</span><br><span class="line">                    Text(</span><br><span class="line">                        text = todo.content,</span><br><span class="line">                        style = <span class="keyword">if</span> (todo.is_completed) &#123;</span><br><span class="line">                            MaterialTheme.typography.bodyMedium.copy(textDecoration = TextDecoration.LineThrough)</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            MaterialTheme.typography.bodyMedium</span><br><span class="line">                        &#125;</span><br><span class="line">                    )</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 至左的刪除按鈕</span></span><br><span class="line">            IconButton(</span><br><span class="line">                modifier = Modifier.padding(end = <span class="number">8.</span>dp),</span><br><span class="line">                onClick = &#123; onDelete(todo.id) &#125;</span><br><span class="line">            ) &#123;</span><br><span class="line">                Icon(</span><br><span class="line">                    imageVector = Icons.Default.Delete,</span><br><span class="line">                    tint = Color.Red,</span><br><span class="line">                    contentDescription = <span class="string">&quot;刪除待辦事項&quot;</span></span><br><span class="line">                )</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</details>    
+
+<ul>
+<li><code>TodoDetailScreen</code><br>在 <code>commonMain</code> 中建立 <code>ui/screens/detail/TodoDetailScreen.kt</code>並繼承<code>Voyager</code>的<code>Screen</code>，實作待辦事項應用的主畫面。<br>使用者可以在這個畫面上：<ul>
+<li><blockquote>
+<p>1.查看特定一筆的待辦事項。<br>  2.可以編輯標題與內容。</p>
+</blockquote>
+</li>
+<li><p>它主要由一個可組合函式 (<code>Composable</code>) 組成：</p>
+<ul>
+<li><code>TodoDetailScreen.Content()</code>：建構整個畫面的佈局，包含頂部標題列、待辦事項的可編輯標題與內容與置底的保存按鈕。</li>
+</ul>
+</li>
+<li><p>重點參數：</p>
+<ul>
+<li><code>viewModel</code>：透過<code>koinScreenModel</code> di 注入，並傳遞 <code>todoId</code> 給 <code>ViewModel</code></li>
+<li><code>editedTitle</code>：從 <code>viewModel</code> 觀察編輯後的標題的變化</li>
+<li><code>editedContent</code>：從 <code>viewModel</code> 觀察編輯後的內容的變化</li>
+<li><code>navigator</code>：取得 Voyager 導航器，跳轉頁面用</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<details>
+
+<summary>TodoDetailScreen 完整檔案</summary>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.kmptodolist.ui.screens.detail</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> androidx.compose.foundation.layout.*</span><br><span class="line"><span class="keyword">import</span> androidx.compose.material.icons.Icons</span><br><span class="line"><span class="keyword">import</span> androidx.compose.material.icons.automirrored.filled.ArrowBack</span><br><span class="line"><span class="keyword">import</span> androidx.compose.material3.*</span><br><span class="line"><span class="keyword">import</span> androidx.compose.runtime.*</span><br><span class="line"><span class="keyword">import</span> androidx.compose.ui.Alignment</span><br><span class="line"><span class="keyword">import</span> androidx.compose.ui.Modifier</span><br><span class="line"><span class="keyword">import</span> androidx.compose.ui.unit.dp</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.core.screen.Screen</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.koin.koinScreenModel</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.navigator.LocalNavigator</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.navigator.currentOrThrow</span><br><span class="line"><span class="keyword">import</span> org.koin.core.parameter.parametersOf</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 待辦事項詳細資訊畫面。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> todoId 待辦事項的 ID。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TodoDetailScreen</span>(<span class="keyword">private</span> <span class="keyword">val</span> todoId: <span class="built_in">Long</span>) : Screen &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@OptIn(ExperimentalMaterial3Api::class)</span></span><br><span class="line">    <span class="meta">@Composable</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">Content</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">// 取得 Voyager 導航器</span></span><br><span class="line">        <span class="keyword">val</span> navigator = LocalNavigator.currentOrThrow</span><br><span class="line">        <span class="comment">// 使用 Koin 傳遞 todoId 給 ViewModel</span></span><br><span class="line">        <span class="keyword">val</span> viewModel = koinScreenModel&lt;TodoDetailViewModel&gt; &#123;</span><br><span class="line">            parametersOf(todoId)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 觀察編輯後的標題的變化</span></span><br><span class="line">        <span class="keyword">val</span> editedTitle <span class="keyword">by</span> viewModel.editedTitle.collectAsState()</span><br><span class="line">        <span class="comment">// 觀察編輯後的內容的變化</span></span><br><span class="line">        <span class="keyword">val</span> editedContent <span class="keyword">by</span> viewModel.editedContent.collectAsState()</span><br><span class="line"></span><br><span class="line">        Scaffold(</span><br><span class="line">            topBar = &#123;</span><br><span class="line">                TopAppBar(</span><br><span class="line">                    title = &#123; Text(<span class="string">&quot;編輯待辦事項&quot;</span>) &#125;,</span><br><span class="line">                    navigationIcon = &#123;</span><br><span class="line">                        IconButton(onClick = &#123; navigator.pop() &#125;) &#123;</span><br><span class="line">                            Icon(</span><br><span class="line">                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,</span><br><span class="line">                                contentDescription = <span class="string">&quot;返回&quot;</span></span><br><span class="line">                            )</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                )</span><br><span class="line">            &#125;</span><br><span class="line">        ) &#123; paddingValues -&gt;</span><br><span class="line">            <span class="keyword">if</span> (editedTitle.isEmpty()) &#123;</span><br><span class="line">                <span class="comment">// 如果標題為空，顯示載入中</span></span><br><span class="line">                Box(</span><br><span class="line">                    modifier = Modifier.fillMaxSize().padding(paddingValues),</span><br><span class="line">                    contentAlignment = Alignment.Center</span><br><span class="line">                ) &#123;</span><br><span class="line">                    CircularProgressIndicator()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                Column(</span><br><span class="line">                    modifier = Modifier</span><br><span class="line">                        .fillMaxSize()</span><br><span class="line">                        .padding(paddingValues)</span><br><span class="line">                        .padding(<span class="number">16.</span>dp)</span><br><span class="line">                ) &#123;</span><br><span class="line">                    <span class="comment">// 標題輸入框</span></span><br><span class="line">                    OutlinedTextField(</span><br><span class="line">                        value = editedTitle,</span><br><span class="line">                        onValueChange = viewModel::onTitleChange,</span><br><span class="line">                        label = &#123; Text(<span class="string">&quot;標題&quot;</span>) &#125;,</span><br><span class="line">                        modifier = Modifier.fillMaxWidth()</span><br><span class="line">                    )</span><br><span class="line">                    Spacer(modifier = Modifier.height(<span class="number">16.</span>dp))</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 內容輸入框</span></span><br><span class="line">                    OutlinedTextField(</span><br><span class="line">                        value = editedContent,</span><br><span class="line">                        onValueChange = viewModel::onContentChange,</span><br><span class="line">                        label = &#123; Text(<span class="string">&quot;內容&quot;</span>) &#125;,</span><br><span class="line">                        modifier = Modifier.fillMaxWidth().weight(<span class="number">1f</span>) <span class="comment">// 讓它填滿剩餘空間</span></span><br><span class="line">                    )</span><br><span class="line"></span><br><span class="line">                    Spacer(modifier = Modifier.height(<span class="number">16.</span>dp))</span><br><span class="line">                    <span class="comment">// 儲存按鈕</span></span><br><span class="line">                    Button(</span><br><span class="line">                        onClick = &#123;</span><br><span class="line">                            viewModel.saveTodo()</span><br><span class="line">                            navigator.pop()</span><br><span class="line">                        &#125;,</span><br><span class="line">                        modifier = Modifier.fillMaxWidth()</span><br><span class="line">                    ) &#123;</span><br><span class="line">                        Text(<span class="string">&quot;儲存&quot;</span>)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</details>    
+
+<h2 id="組合起來-設定-App-入口與導航"><a href="#組合起來-設定-App-入口與導航" class="headerlink" title="組合起來 - 設定 App 入口與導航"></a>組合起來 - 設定 App 入口與導航</h2><h3 id="入口點"><a href="#入口點" class="headerlink" title="入口點"></a>入口點</h3><ul>
+<li><code>commonMain/App.kt</code><br>這是我們 App 的共享入口點。我們在這裡設定 Voyager 的導航器。</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.kmptodolist</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> androidx.compose.material3.MaterialTheme</span><br><span class="line"><span class="keyword">import</span> androidx.compose.runtime.Composable</span><br><span class="line"><span class="keyword">import</span> cafe.adriel.voyager.navigator.Navigator</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.ui.screens.list.TodoListScreen</span><br><span class="line"><span class="keyword">import</span> org.jetbrains.compose.ui.tooling.preview.Preview</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 應用程式的進入點。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="meta">@Preview</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">App</span><span class="params">()</span></span> &#123;</span><br><span class="line">    MaterialTheme &#123;</span><br><span class="line">        <span class="comment">// 使用 Voyager 的 Navigator 來管理畫面</span></span><br><span class="line">        Navigator(TodoListScreen())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="初始化-Koin"><a href="#初始化-Koin" class="headerlink" title="初始化 Koin"></a>初始化 Koin</h3><p>我們需要在各平台的入口點初始化 Koin。</p>
+<ul>
+<li>Android:<ul>
+<li>(<code>androidMain/kotlin/example/kmptodolist/di/KoinAndroid.kt</code>):<br>  將 Android 平台所需的模組放到這裡</li>
+</ul>
+  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.kmptodolist.di</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.<span class="keyword">data</span>.local.DatabaseDriverFactory</span><br><span class="line"><span class="keyword">import</span> org.koin.core.module.Module</span><br><span class="line"><span class="keyword">import</span> org.koin.dsl.module</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 這是 Android 平台的特定模組。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">val</span> androidModule: Module = module &#123;</span><br><span class="line">    <span class="comment">// 在這裡我們提供 DatabaseDriverFactory 的具體實作。</span></span><br><span class="line">    <span class="comment">// Android 的 SQLDelight driver 需要 Context，所以我們使用 get() 來從 Koin 取得它。</span></span><br><span class="line">    single &#123; DatabaseDriverFactory(<span class="keyword">get</span>()) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>(<code>androidMain/kotlin/example/kmptodolist/TodoListApp.kt</code>):<br>  Android 應用的 Application 類別，我們在這裡初始化 Android 平台的 Koin。<br>  Application 可能不會預設建立在專案內，需要額外建立。</li>
+</ul>
+  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.kmptodolist</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Application</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.di.androidModule</span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.di.initKoin</span><br><span class="line"><span class="keyword">import</span> org.koin.android.ext.koin.androidContext</span><br><span class="line"><span class="keyword">import</span> org.koin.android.ext.koin.androidLogger</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Android 應用的 Application 類別。</span></span><br><span class="line"><span class="comment"> * 須在 AndroidManifest.xml 中註冊，application 內的 name。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TodoListApp</span> : <span class="type">Application</span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate()</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 啟動 Koin</span></span><br><span class="line">        initKoin &#123;</span><br><span class="line">            <span class="comment">// 提供 Android Logger</span></span><br><span class="line">            androidLogger()</span><br><span class="line">            <span class="comment">// 提供 Android Context，這樣上面步驟中的 get() 才能正常運作</span></span><br><span class="line">            androidContext(<span class="keyword">this</span><span class="symbol">@TodoListApp</span>)</span><br><span class="line">            <span class="comment">// 載入 Android 平台的模組</span></span><br><span class="line">            modules(androidModule)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>iOS<ul>
+<li>(<code>iosMain/kotlin/example/kmptodolist/di/KoinIOS.kt</code>):<br>  將 iOS 平台所需的模組放到這裡</li>
+</ul>
+  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.kmptodolist.di</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.kmptodolist.<span class="keyword">data</span>.local.DatabaseDriverFactory</span><br><span class="line"><span class="keyword">import</span> org.koin.dsl.module</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * iOS 平台的 Koin 初始化函式。</span></span><br><span class="line"><span class="comment"> * 會在 iosApp.swift 中被呼叫。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">initKoinIos</span><span class="params">()</span></span> = initKoin &#123;</span><br><span class="line">    modules(iosModule)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * iOS 平台的 Koin 模組。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">val</span> iosModule = module &#123;</span><br><span class="line">    <span class="comment">// 提供 DatabaseDriverFactory 的單例實例</span></span><br><span class="line">    single &#123; DatabaseDriverFactory() &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>(<code>iosApp/iosApp/iOSApp.swift</code>):<br>  這個是 iOS App 的入口點，我們在這裡初始化 iOS 的 Koin。</li>
+</ul>
+  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> SwiftUI</span><br><span class="line"><span class="keyword">import</span> ComposeApp</span><br><span class="line"></span><br><span class="line"><span class="meta">@main</span></span><br><span class="line">struct iOSApp: App &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//  在 App 的初始化方法中啟動 Koin</span></span><br><span class="line">    <span class="keyword">init</span>() &#123;</span><br><span class="line">        KoinIOSKt.doInitKoinIos()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> body: some Scene &#123;</span><br><span class="line">        WindowGroup &#123;</span><br><span class="line">            ContentView()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>希望這份詳細的教學對你有幫助。Compose Multiplatform 的世界非常廣闊，我們一起努力。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/JumBoJay06/KmpTodoList">程式碼</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/" title="用 Compose Multiplatform 打造你的第一個多頁待辦事項 App">https://jumbojay06.github.io/2025/07/24/用-Compose-Multiplatform-打造你的第一個多頁待辦事項-App/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Compose-Multiplatform/" rel="tag"># Compose Multiplatform</a>
+              <a href="/tags/Voyager/" rel="tag"># Voyager</a>
+              <a href="/tags/SQLDelight/" rel="tag"># SQLDelight</a>
+              <a href="/tags/Koin/" rel="tag"># Koin</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/07/23/Compose-Multiplatform-%E4%BB%8B%E7%B4%B9/" rel="prev" title="Compose Multiplatform 介紹">
+      <i class="fa fa-chevron-left"></i> Compose Multiplatform 介紹
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App"><span class="nav-number">1.</span> <span class="nav-text">用 Compose Multiplatform 打造你的第一個多頁待辦事項 App</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E5%B8%B8%E7%94%A8%E5%A5%97%E4%BB%B6-%E7%AE%A1%E7%90%86%E4%BE%9D%E8%B3%B4"><span class="nav-number">1.1.</span> <span class="nav-text">加入常用套件 (管理依賴)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E9%80%A0-TodoList-App-%E8%B3%87%E6%96%99%E5%B1%A4-SQLDelight"><span class="nav-number">1.2.</span> <span class="nav-text">打造 TodoList App - 資料層 (SQLDelight)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E8%B3%87%E6%96%99%E5%BA%AB-Schema"><span class="nav-number">1.2.1.</span> <span class="nav-text">建立資料庫 Schema</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%B9%B3%E5%8F%B0%E7%9B%B8%E9%97%9C%E7%9A%84-Driver"><span class="nav-number">1.2.2.</span> <span class="nav-text">建立平台相關的 Driver</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E9%80%A0-TodoList-App-%E6%A5%AD%E5%8B%99%E9%82%8F%E8%BC%AF%E8%88%87%E7%95%AB%E9%9D%A2"><span class="nav-number">1.3.</span> <span class="nav-text">打造 TodoList App - 業務邏輯與畫面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A-Koin-%E4%BE%9D%E8%B3%B4%E6%B3%A8%E5%85%A5"><span class="nav-number">1.3.1.</span> <span class="nav-text">設定 Koin (依賴注入)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B-ViewModel"><span class="nav-number">1.3.2.</span> <span class="nav-text">建立 ViewModel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Screen-%E5%BB%BA%E7%AB%8B"><span class="nav-number">1.3.3.</span> <span class="nav-text">Screen 建立</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B5%84%E5%90%88%E8%B5%B7%E4%BE%86-%E8%A8%AD%E5%AE%9A-App-%E5%85%A5%E5%8F%A3%E8%88%87%E5%B0%8E%E8%88%AA"><span class="nav-number">1.4.</span> <span class="nav-text">組合起來 - 設定 App 入口與導航</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A5%E5%8F%A3%E9%BB%9E"><span class="nav-number">1.4.1.</span> <span class="nav-text">入口點</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96-Koin"><span class="nav-number">1.4.2.</span> <span class="nav-text">初始化 Koin</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B8%BD%E7%B5%90"><span class="nav-number">1.5.</span> <span class="nav-text">總結</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/";
+    this.page.identifier = "2025/07/24/用-Compose-Multiplatform-打造你的第一個多頁待辦事項-App/";
+    this.page.title = "用 Compose Multiplatform 打造你的第一個多頁待辦事項 App";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
