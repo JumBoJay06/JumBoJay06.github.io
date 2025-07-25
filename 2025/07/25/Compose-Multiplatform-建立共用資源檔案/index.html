@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jumbojay06.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkuH0gFzHYIQBq0qewWSLvEiofDF5StcM",
+    authDomain: "myblog-73629.firebaseapp.com",
+    projectId: "myblog-73629",
+    storageBucket: "myblog-73629.firebasestorage.app",
+    messagingSenderId: "496090564418",
+    appId: "1:496090564418:web:c97828463c3d7cb8fdeadb",
+    measurementId: "G-CFZ2K6D04Y"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+  <meta name="description" content="Compose Multiplatform 建立共用資源檔案我們在上一篇已經完成了一個 App，這次我們再來進階一點，建立共用資源檔，讓 App 更加完整。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Compose Multiplatform 建立共用資源檔案">
+<meta property="og:url" content="https://jumbojay06.github.io/2025/07/25/Compose-Multiplatform-%E5%BB%BA%E7%AB%8B%E5%85%B1%E7%94%A8%E8%B3%87%E6%BA%90%E6%AA%94%E6%A1%88/">
+<meta property="og:site_name" content="JumBoJay 小小筆記">
+<meta property="og:description" content="Compose Multiplatform 建立共用資源檔案我們在上一篇已經完成了一個 App，這次我們再來進階一點，建立共用資源檔，讓 App 更加完整。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2025-07-25T06:40:50.000Z">
+<meta property="article:modified_time" content="2025-07-25T06:49:07.328Z">
+<meta property="article:author" content="JumBoJay">
+<meta property="article:tag" content="多國語系">
+<meta property="article:tag" content="Compose Multiplatform">
+<meta property="article:tag" content="Theme">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://jumbojay06.github.io/2025/07/25/Compose-Multiplatform-%E5%BB%BA%E7%AB%8B%E5%85%B1%E7%94%A8%E8%B3%87%E6%BA%90%E6%AA%94%E6%A1%88/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>Compose Multiplatform 建立共用資源檔案 | JumBoJay 小小筆記 - 主要以學習筆記與生活分享為主</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TZMDCG8Q6J"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TZMDCG8Q6J');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">JumBoJay 小小筆記</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主要以學習筆記與生活分享為主</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://jumbojay06.github.io/2025/07/25/Compose-Multiplatform-%E5%BB%BA%E7%AB%8B%E5%85%B1%E7%94%A8%E8%B3%87%E6%BA%90%E6%AA%94%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="JumBoJay">
+      <meta itemprop="description" content="程式與攝影的交集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JumBoJay 小小筆記">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Compose Multiplatform 建立共用資源檔案
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2025-07-25 14:40:50 / 修改時間：14:49:07" itemprop="dateCreated datePublished" datetime="2025-07-25T14:40:50+08:00">2025-07-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">程式語言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Compose-Multiplatform/" itemprop="url" rel="index"><span itemprop="name">Compose Multiplatform</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Compose-Multiplatform/%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/" itemprop="url" rel="index"><span itemprop="name">多國語系</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/Compose-Multiplatform/Theme/" itemprop="url" rel="index"><span itemprop="name">Theme</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/07/25/Compose-Multiplatform-%E5%BB%BA%E7%AB%8B%E5%85%B1%E7%94%A8%E8%B3%87%E6%BA%90%E6%AA%94%E6%A1%88/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/07/25/Compose-Multiplatform-建立共用資源檔案/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Compose-Multiplatform-建立共用資源檔案"><a href="#Compose-Multiplatform-建立共用資源檔案" class="headerlink" title="Compose Multiplatform 建立共用資源檔案"></a>Compose Multiplatform 建立共用資源檔案</h1><p>我們在上一篇已經完成了一個 App，這次我們再來進階一點，建立共用資源檔，讓 App 更加完整。</p>
+<span id="more"></span>
+<p>這次目標大致上有兩個：</p>
+<ul>
+<li>建立語系檔</li>
+<li>建立 App Theme</li>
+</ul>
+<h2 id="語系檔"><a href="#語系檔" class="headerlink" title="語系檔"></a>語系檔</h2><p>你可能想說，我只有一個語系也要建立嗎？<br>建議還是要有比較好喔，有了語系檔可以讓統一管理全部的字串，避免文檔四散各地不好管理</p>
+<h3 id="怎麼建立"><a href="#怎麼建立" class="headerlink" title="怎麼建立"></a>怎麼建立</h3><p>首先，共用的資源檔都會在<code>composeApp/src/commonMain/composeResources/</code>裡，會依照檔案性質區分資料夾，如 <code>drawable</code>、<code>values</code>等等，有時候不會預設幫你建立資了夾，這時自己手動新增就可以了。<br>這邊就先專注在如何建立語系檔吧～</p>
+<ul>
+<li><code>values</code><br>  我們的語系檔會在這個資料夾之下</li>
+</ul>
+<h4 id="建立語系"><a href="#建立語系" class="headerlink" title="建立語系"></a>建立語系</h4><p>語系檔會在<code>valus</code>之下，那要怎麼區分各個語系呢～<br>首先，<code>values</code>你可以當作是預設的設置，沒支援到的語系都會以<code>values</code>為主。<br>建立語系會以資料夾來區分，資料夾的命名規則是<code>values-&lt;language_code&gt;_&lt;country_code&gt;</code>，其中<code>&lt;language_code&gt;</code>是 ISO 639-1 的語言代碼，<code>&lt;country_code&gt;</code>是 ISO 3166-1 alpha-2 的國家代碼，可以不用加。</p>
+<ul>
+<li>對於英文，資料夾名稱就是<code>values-en</code>。</li>
+<li>對於日文，資料夾名稱就是<code>values-ja</code>。</li>
+<li>對於韓文，資料夾名稱就是<code>values-ko</code>。</li>
+<li>對於中文(台灣)，資料夾名稱就是<code>values-zh_TW</code>。</li>
+</ul>
+<p>你的目錄結構看起來會像這樣：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">composeApp/</span><br><span class="line">└── src/</span><br><span class="line">    └── commonMain/</span><br><span class="line">        └── composeResources/</span><br><span class="line">            ├── drawable/</span><br><span class="line">            │   └── compose-multiplatform.xml</span><br><span class="line">            └── values/                &lt;-- 預設語言 (目前是繁體中文)</span><br><span class="line">            │   └── strings.xml</span><br><span class="line">            └── values-en/             &lt;-- 新增的英文目錄</span><br><span class="line">                └── strings.xml</span><br></pre></td></tr></table></figure>
+<p>再來就是在每個語系資料夾內建立<code>strings.xml</code>並新增文檔，他是以Xml的格式建立，主要內容為<code>&lt;string name=&quot;your_key&quot;&gt;字串內容&lt;/string&gt;</code>。<br>以我們的 App 為例，我們將中文當作我們的預設語言，先在<code>values/</code>新增<code>strings.xml</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;app_name&quot;</span>&gt;</span>KmpTodoList<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;todo_list_title&quot;</span>&gt;</span>待辦事項列表<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;new_todo_placeholder&quot;</span>&gt;</span>新的待辦事項<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;add_button&quot;</span>&gt;</span>新增<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;delete_dialog_title&quot;</span>&gt;</span>確認刪除<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;delete_dialog_text&quot;</span>&gt;</span>你確定要刪除這個待辦事項嗎？<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;confirm_button&quot;</span>&gt;</span>確認<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;cancel_button&quot;</span>&gt;</span>取消<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;no_todos_text&quot;</span>&gt;</span>目前沒有待辦事項<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;delete_todo_description&quot;</span>&gt;</span>刪除待辦事項<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;edit_todo_title&quot;</span>&gt;</span>編輯待辦事項<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;title_placeholder&quot;</span>&gt;</span>標題<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;content_placeholder&quot;</span>&gt;</span>內容<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;save_button&quot;</span>&gt;</span>儲存<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;back_button_description&quot;</span>&gt;</span>返回<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>再來我們複製一份到你新增的語系資料夾底下，並把內容翻譯成該語系，這邊以英文為例。<br><code>composeApp/src/commonMain/composeResources/values-en/strings.xml</code> 的內容範例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;app_name&quot;</span>&gt;</span>KmpTodoList<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;todo_list_title&quot;</span>&gt;</span>Todo List<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;new_todo_placeholder&quot;</span>&gt;</span>New Todo Item<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;add_button&quot;</span>&gt;</span>Add<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;delete_dialog_title&quot;</span>&gt;</span>Confirm Deletion<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;delete_dialog_text&quot;</span>&gt;</span>Are you sure you want to delete this todo?<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;confirm_button&quot;</span>&gt;</span>Confirm<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;cancel_button&quot;</span>&gt;</span>Cancel<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;no_todos_text&quot;</span>&gt;</span>No todo items yet<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;delete_todo_description&quot;</span>&gt;</span>Delete todo item<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;edit_todo_title&quot;</span>&gt;</span>Edit Todo<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;title_placeholder&quot;</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;content_placeholder&quot;</span>&gt;</span>Content<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;save_button&quot;</span>&gt;</span>Save<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;back_button_description&quot;</span>&gt;</span>Back<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用語系"><a href="#使用語系" class="headerlink" title="使用語系"></a>使用語系</h3><p>使用上十分簡單，當你建立好語系檔後，IDE會自動幫你產生對應的唯一值(如：<code>Res.string.todo_list_title</code>)，如果沒有的話，執行 rebuild 也會產生。<br>有了唯一值，再來透過<code>stringResource</code>取得當前語系的字串。<br>例如，<code>stringResource(Res.string.todo_list_title)</code> 這段程式碼：</p>
+<ul>
+<li>在系統語言為繁體中文的裝置上，會顯示「待辦事項列表」。</li>
+<li>在系統語言為英文的裝置上，會顯示「Todo List」。</li>
+</ul>
+<h2 id="App-Theme"><a href="#App-Theme" class="headerlink" title="App Theme"></a>App Theme</h2><p><code>MaterialTheme</code> 是 Jetpack Compose 中實作 Google Material Design 設計系統的核心。簡單來說，它是一個集中管理你 App 整體外觀和風格的框架，讓你的 UI 擁有一致的視覺表現。</p>
+<p>你可以將 <code>MaterialTheme</code> 想像成一個包裹在你 App UI 外層的「主題設定器」。所有放在它裡面的 Composable（可組合項），例如按鈕、文字、卡片等，都會自動套用你定義好的風格。</p>
+<h3 id="MaterialTheme-的三大核心元素"><a href="#MaterialTheme-的三大核心元素" class="headerlink" title="MaterialTheme 的三大核心元素"></a><code>MaterialTheme</code> 的三大核心元素</h3><p>MaterialTheme 主要由以下三個部分構成:</p>
+<ol>
+<li><p>色彩配置 (Color Scheme)<br> 這是定義 App 顏色的地方。Material Design 3 (M3) 定義了一系列具有特定語義的顏色角色，而不是像過去一樣只用 <code>primary</code>, <code>secondary</code>。例如：</p>
+<ul>
+<li><code>primary</code>: 主要互動元素（如按鈕、輸入框焦點）的顏色。</li>
+<li><code>surface</code>: UI 元件「表面」的顏色，如卡片、對話框的背景。</li>
+<li><code>background</code>: 整個畫面的背景色。</li>
+<li><code>onPrimary</code>, <code>onSurface</code>, <code>onBackground</code>: 在上述顏色「之上」的內容（通常是文字或圖示）所使用的顏色，以確保對比度和可讀性。</li>
+</ul>
+<p> 透過 <code>MaterialTheme.colorScheme</code>，可以在任何 Composable 中輕鬆取用這些預先定義好的顏色。</p>
+</li>
+<li><p>排版 (Typography)<br> 這裡定義了 App 中所有文字的樣式，例如字體、大小、粗細和行高等。Material Design 提供了一套排版層級，例如：</p>
+<ul>
+<li><code>displayLarge</code>, <code>displayMedium</code>, <code>displaySmall</code></li>
+<li><code>headlineLarge</code>, <code>headlineMedium</code>, <code>headlineSmall</code></li>
+<li><code>titleLarge</code>, <code>titleMedium</code>, <code>titleSmall</code></li>
+<li><code>bodyLarge</code>, <code>bodyMedium</code>, <code>bodySmall</code></li>
+<li><code>labelLarge</code>, <code>labelMedium</code>, <code>labelSmall</code></li>
+</ul>
+<p> 然後在需要的地方透過 <code>MaterialTheme.typography</code> 來套用，例如 <code>Text(&quot;Hello&quot;, style = MaterialTheme.typography.titleLarge)</code>。這能確保整個 App 的文字風格一致。</p>
+</li>
+<li><p>形狀 (Shapes)<br> 這裡定義了 UI 元件的邊角形狀，例如按鈕、卡片、對話框的圓角大小。可以定義不同尺寸的形狀：</p>
+<ul>
+<li><code>extraSmall</code>, <code>small</code>, <code>medium</code>, <code>large</code>, <code>extraLarge</code></li>
+</ul>
+<p> 元件會根據其大小和用途自動選用合適的形狀。例如，一個 <code>Card</code> 可能會使用 <code>medium</code> 的圓角，而一個 <code>FloatingActionButton</code> 可能會使用 <code>large</code> 的圓角。可以透過 <code>MaterialTheme.shapes</code> 來取用這些設定。</p>
+</li>
+</ol>
+<h3 id="使用-MaterialTheme"><a href="#使用-MaterialTheme" class="headerlink" title="使用 MaterialTheme"></a>使用 MaterialTheme</h3><p>通常會在<code>ui/theme</code>資料夾下建立主題檔案（例如<code>Theme.kt</code>）。</p>
+<h4 id="定義主題"><a href="#定義主題" class="headerlink" title="定義主題"></a>定義主題</h4><p>在<code>Theme.kt</code>中，建立類似這樣的 Composable 函數：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> DarkColorScheme = darkColorScheme(</span><br><span class="line">    primary = PrimaryBlue80,</span><br><span class="line">    secondary = SecondaryGrey80,</span><br><span class="line">    tertiary = TertiaryAccent80,</span><br><span class="line">    background = BackgroundDark,</span><br><span class="line">    error = Red</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> LightColorScheme = lightColorScheme(</span><br><span class="line">    primary = PrimaryBlue40,</span><br><span class="line">    secondary = SecondaryGrey40,</span><br><span class="line">    tertiary = TertiaryAccent40,</span><br><span class="line">    background = BackgroundLight,</span><br><span class="line">    error = Red</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">KmpTodoListTheme</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    darkTheme: <span class="type">Boolean</span> = isSystemInDarkTheme()</span></span>,</span><br><span class="line">    content: <span class="meta">@Composable</span> () -&gt; <span class="built_in">Unit</span></span><br><span class="line">) &#123;</span><br><span class="line">    <span class="keyword">val</span> colorScheme = <span class="keyword">when</span> &#123;</span><br><span class="line">        darkTheme -&gt; DarkColorScheme</span><br><span class="line">        <span class="keyword">else</span> -&gt; LightColorScheme</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    MaterialTheme(</span><br><span class="line">        colorScheme = colorScheme,</span><br><span class="line">        typography = MaterialTheme.typography, <span class="comment">// 你也可以另外建立</span></span><br><span class="line">        content = content</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在-App-中套用主題"><a href="#在-App-中套用主題" class="headerlink" title="在 App 中套用主題"></a>在 App 中套用主題</h4><p>只需要在 App 的最外層用自訂的主題 <code>KmpTodoListTheme</code> 包裹住所有內容。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 應用程式的進入點。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="meta">@Preview</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">App</span><span class="params">()</span></span> &#123;</span><br><span class="line">    KmpTodoListTheme &#123;</span><br><span class="line">        <span class="comment">// 使用 Voyager 的 Navigator 來管理畫面</span></span><br><span class="line">        Navigator(TodoListScreen())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在-Composable-中取用主題值"><a href="#在-Composable-中取用主題值" class="headerlink" title="在 Composable 中取用主題值"></a>在 Composable 中取用主題值</h4><p>一般來說，UI 元件會自己套用 theme，可以不用特別設置，但並非每個 UI 元件都有這種配置，這時可以用手動的方式設置。<br>在任何被 <code>KmpTodoListTheme</code> 包裹的 Composable 中，都可以輕鬆取得主題設定：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">MyMainScreen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    Column(</span><br><span class="line">        modifier = Modifier</span><br><span class="line">            .fillMaxSize()</span><br><span class="line">            .background(MaterialTheme.colorScheme.background) <span class="comment">// 使用主題背景色</span></span><br><span class="line">            .padding(<span class="number">16.</span>dp)</span><br><span class="line">    ) &#123;</span><br><span class="line">        Text(</span><br><span class="line">            text = <span class="string">&quot;Welcome!&quot;</span>,</span><br><span class="line">            style = MaterialTheme.typography.headlineMedium, <span class="comment">// 使用主題排版</span></span><br><span class="line">            color = MaterialTheme.colorScheme.primary       <span class="comment">// 使用主題主要顏色</span></span><br><span class="line">        )</span><br><span class="line">        Spacer(modifier = Modifier.height(<span class="number">16.</span>dp))</span><br><span class="line">        Button(</span><br><span class="line">            onClick = &#123; <span class="comment">/* ... */</span> &#125;,</span><br><span class="line">            <span class="comment">// Button 會自動使用主題的 shape 和 color</span></span><br><span class="line">        ) &#123;</span><br><span class="line">            Text(<span class="string">&quot;Click Me&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h1><p>現在 App 以小專案來說已經十分完善了，希望這個敲門磚有讓你比較好入門。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>JumBoJay
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://jumbojay06.github.io/2025/07/25/Compose-Multiplatform-%E5%BB%BA%E7%AB%8B%E5%85%B1%E7%94%A8%E8%B3%87%E6%BA%90%E6%AA%94%E6%A1%88/" title="Compose Multiplatform 建立共用資源檔案">https://jumbojay06.github.io/2025/07/25/Compose-Multiplatform-建立共用資源檔案/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%9A%E5%9C%8B%E8%AA%9E%E7%B3%BB/" rel="tag"># 多國語系</a>
+              <a href="/tags/Compose-Multiplatform/" rel="tag"># Compose Multiplatform</a>
+              <a href="/tags/Theme/" rel="tag"># Theme</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/07/24/%E7%94%A8-Compose-Multiplatform-%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E5%80%8B%E5%A4%9A%E9%A0%81%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85-App/" rel="prev" title="用 Compose Multiplatform 打造你的第一個多頁待辦事項 App">
+      <i class="fa fa-chevron-left"></i> 用 Compose Multiplatform 打造你的第一個多頁待辦事項 App
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Compose-Multiplatform-%E5%BB%BA%E7%AB%8B%E5%85%B1%E7%94%A8%E8%B3%87%E6%BA%90%E6%AA%94%E6%A1%88"><span class="nav-number">1.</span> <span class="nav-text">Compose Multiplatform 建立共用資源檔案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AA%9E%E7%B3%BB%E6%AA%94"><span class="nav-number">1.1.</span> <span class="nav-text">語系檔</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E9%BA%BC%E5%BB%BA%E7%AB%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">怎麼建立</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E8%AA%9E%E7%B3%BB"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">建立語系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%AA%9E%E7%B3%BB"><span class="nav-number">1.1.2.</span> <span class="nav-text">使用語系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#App-Theme"><span class="nav-number">1.2.</span> <span class="nav-text">App Theme</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MaterialTheme-%E7%9A%84%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%85%83%E7%B4%A0"><span class="nav-number">1.2.1.</span> <span class="nav-text">MaterialTheme 的三大核心元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-MaterialTheme"><span class="nav-number">1.2.2.</span> <span class="nav-text">使用 MaterialTheme</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E7%BE%A9%E4%B8%BB%E9%A1%8C"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">定義主題</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8-App-%E4%B8%AD%E5%A5%97%E7%94%A8%E4%B8%BB%E9%A1%8C"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">在 App 中套用主題</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8-Composable-%E4%B8%AD%E5%8F%96%E7%94%A8%E4%B8%BB%E9%A1%8C%E5%80%BC"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">在 Composable 中取用主題值</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B8%BD%E7%B5%90"><span class="nav-number">2.</span> <span class="nav-text">總結</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">JumBoJay</p>
+  <div class="site-description" itemprop="description">程式與攝影的交集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JumBoJay</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-jumbojay06-github-io.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://jumbojay06.github.io/2025/07/25/Compose-Multiplatform-%E5%BB%BA%E7%AB%8B%E5%85%B1%E7%94%A8%E8%B3%87%E6%BA%90%E6%AA%94%E6%A1%88/";
+    this.page.identifier = "2025/07/25/Compose-Multiplatform-建立共用資源檔案/";
+    this.page.title = "Compose Multiplatform 建立共用資源檔案";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-jumbojay06-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
